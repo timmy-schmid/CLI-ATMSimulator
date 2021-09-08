@@ -1,0 +1,3 @@
+Here, we can write general rules, git commands + setting up for testing and any notes on merging conflicts or problems faced etc
+
+Check and edit the google doc for git commands if needed
