@@ -22,7 +22,7 @@ public class Session {
         return null;
     }
 
-    public StatusCode validateSession(){
+    public SessionStatus validateSession(){
         return null;
     }
 
