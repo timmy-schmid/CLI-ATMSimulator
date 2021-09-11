@@ -5,9 +5,13 @@ Check and edit the google doc for git commands if needed
 # FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
 git checkout master --> gut pull --> git checkout your_branch_name --> git merge master
  
-# FOLLOW THIS TO SUBMIT YOUR BRANCH/PART ONTO GITHUB!! 
-Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push
+# FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
+Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
 
+# FOLLOW THIS TO MERGE UR CHANGES  TO MASTER!!
+-> git pull (do this first to prevent merge conflicts) 
+    THEN:
+-> git checkout master --> git merge branch_name --> git push
 
 # TODO !!!!! [Add below any other notes to check out]
 
