@@ -1,7 +1,7 @@
 package R18_G2_ASM1;
 
 public class Session {
-    private ATM attachedATM;
+    private ATM1 attachedATM;
     private int sessionID;
     private SessionStatusCode currentStatus;
     private Transaction transaction;
