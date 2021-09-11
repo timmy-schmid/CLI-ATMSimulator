@@ -1,27 +1,35 @@
-Here, we can write general rules, git commands + setting up for testing and any notes on merging conflicts or problems faced etc
+ASSIGNMENT 1 WORKING IN PROGRESS!
 
 Check and edit the google doc for git commands if needed
 
-# getting started
+# FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
+git checkout master --> gut pull --> git checkout your_branch_name --> git merge master
+ 
+# FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
+Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
 
-<b> Git clone URL </b> # download this repository → first time only
-<b> Cd directory_name </b> 
-Git checkout -b branch_name #creates new branch then switch to this branch
+# FOLLOW THIS TO MERGE UR CHANGES  TO MASTER!!
+-> git pull (do this first to prevent merge conflicts) 
+    THEN:
+-> git checkout master --> git merge branch_name --> git push
 
+# TODO !!!!! [Add below any other notes to check out]
 
-# Edit or create any files
+-> make sure indenting is 2 spaces, use CamelCase for variable naming!
 
-Git add <file>
-Git commit -m “comment”
-Git checkout origin
-Git merge branch_name
+-> Creating/merging Card, Account class
 
-# Making changes to a file: <u> always pull before a push! </u>
+-> keep code consistent + nicely styled + minimise redundancy
 
-<b> Git checkout master </b> #go to master 
-Git pull #ensures changes are updated
-<b> Git checkout branch_name</b> #if branch_name already exists, else to create new branch: git checkout -b new_branch_name
-Git merge master #add changes updated in master and merges back into your own branch
-If there is a merge conflict it means someone edited the same line you were working on earlier <<<<< HEAD (represents you), ====== (someone else added this)
-Go to lines 14-17.
-<b> Git push -u origin branch_name </b>#this branch is pushed onto github
+-> WITHDRAWAL CLASS
+  -> Consider what if the highest amount for MoneyType runs out (user wants to withdraw money), then use the next available highest amount to do calculations
+
+-> How to handle user's deposit? 
+  -> "prompt the user on how many of each denomination they want to deposit, calling from ATM class function ATM.askForMoneyStack()" - Tim
+
+-> Should we have a list to store a multiple cards of 1 user?
+
+# GUI Design
+
+Website for our design inspiration: https://www.commbank.com.au/content/dam/commbank/personal/apply-online/download-printed-forms/atm-guide-for-users-with-low-vision-accessible.pdf
+
