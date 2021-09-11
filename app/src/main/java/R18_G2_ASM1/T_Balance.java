@@ -1,4 +1,4 @@
-// package R18_G2_ASM1;
+package R18_G2_ASM1;
 
 public class T_Balance extends Transaction {
     private Card1 card;

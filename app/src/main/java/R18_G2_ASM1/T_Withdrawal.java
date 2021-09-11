@@ -1,4 +1,4 @@
-// package R18_G2_ASM1;
+package R18_G2_ASM1;
 
 /*
     all extensions from abstract class Transaction should have overriding methods???!!
