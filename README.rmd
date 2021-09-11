@@ -1,3 +1,27 @@
 Here, we can write general rules, git commands + setting up for testing and any notes on merging conflicts or problems faced etc
 
 Check and edit the google doc for git commands if needed
+
+# getting started
+
+<b> Git clone URL </b> # download this repository → first time only
+<b> Cd directory_name </b> 
+Git checkout -b branch_name #creates new branch then switch to this branch
+
+
+# Edit or create any files
+
+Git add <file>
+Git commit -m “comment”
+Git checkout origin
+Git merge branch_name
+
+# Making changes to a file: <u> always pull before a push! </u>
+
+<b> Git checkout master </b> #go to master 
+Git pull #ensures changes are updated
+<b> Git checkout branch_name</b> #if branch_name already exists, else to create new branch: git checkout -b new_branch_name
+Git merge master #add changes updated in master and merges back into your own branch
+If there is a merge conflict it means someone edited the same line you were working on earlier <<<<< HEAD (represents you), ====== (someone else added this)
+Go to lines 14-17.
+<b> Git push -u origin branch_name </b>#this branch is pushed onto github
