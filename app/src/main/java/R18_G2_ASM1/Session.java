@@ -14,6 +14,11 @@ public class Session {
     public void run(int cardNum){
 
     }
+    public Session(ATM1 ATM, Card1 card, Transaction transaction){
+        this.attachedATM = ATM;
+        this.card = card;
+        this.transaction = transaction;
+    }
 
     public SessionStatus getStatus(){
         return null;
@@ -22,7 +27,7 @@ public class Session {
         return null;
     }
 
-    public StatusCode validateSession(){
+    public SessionStatus validateSession(){
         return null;
     }
 
@@ -34,8 +39,12 @@ public class Session {
 
     }
 
-    public void checkPIN(){
-        
+    public boolean checkPIN(){
+        if (card.getPIN().equals(attachedATM.askForPIN)){
+            return true;
+        }
+        return false;
+
     }
 
 
