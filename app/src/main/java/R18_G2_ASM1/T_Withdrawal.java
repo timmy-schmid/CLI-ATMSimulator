@@ -1,4 +1,4 @@
-package R18_G2_ASM1;
+// package R18_G2_ASM1;
 
 /*
     all extensions from abstract class Transaction should have overriding methods???!!
@@ -11,7 +11,7 @@ package R18_G2_ASM1;
 import java.util.Date;
 
 public class T_Withdrawal extends Transaction {
-    protected Card1 card;
+    protected Card card;
 
     // private int MaxWithdrawalAmount;
     // private int MinWithdrawalAmount;
@@ -30,7 +30,7 @@ public class T_Withdrawal extends Transaction {
         super(attachedATM, type, account,  deductAmount, date, transactionID);
     }
     
-    // public void check_withdrawal_limit(Card1 card){ //get card used (function in Card class returning which card from list)
+    // public void check_withdrawal_limit(Card card){ //get card used (function in Card class returning which card from list)
     //     ;
     //     //error message if reached max withdrawal amount/min withdrawal amount (prompt to input again)
     // }
@@ -39,12 +39,4 @@ public class T_Withdrawal extends Transaction {
 
     // option 1: let user on screen decide ether larger cash note or smaller cash note 
     // option 2: user can only pick larger amount on screen to withdrawal, if they dont want to, then 'cancel' and select a smaller amount   
-    
-
-    //checks whether card has enough money on it
-    public void check_max_limit(Card1 card){ //pass in list of cards from acc?
-    }
-
-    public void check_min_limit(Card1 card){
-    }
 }

@@ -2,7 +2,7 @@
 import java.util.Date;
 
 public class T_Deposit extends Transaction {
-    // protected Card1 card;
+    // protected Card card;
     private int totalAmountStored;
     protected double deductAmount;
 
@@ -30,6 +30,8 @@ public class T_Deposit extends Transaction {
         //call atm.askForMoneyStack() in this function
 
         //this function prompt the user to select on how many of each denomination they want to deposit
+
+        //then call deposit() (from Card class)
     }
 
    

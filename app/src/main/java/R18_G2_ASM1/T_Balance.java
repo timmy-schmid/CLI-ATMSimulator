@@ -1,12 +1,8 @@
-<<<<<<< HEAD
-package R18_G2_ASM1;
-=======
 // package R18_G2_ASM1;
 import java.util.Date;
->>>>>>> 47f870d89e34b6f53b80954a49dae355d7e8c84d
 
 public class T_Balance extends Transaction {
-    // private Card1 card;
+    // private Card card;
     private int totalAmountStored;
     protected double deductAmount;
 

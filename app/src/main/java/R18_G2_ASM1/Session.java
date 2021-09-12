@@ -9,14 +9,14 @@ public class Session {
     private int sessionID;
     private SessionStatus currentStatus;
     private Transaction transaction;
-    private Card1 card;
+    private Card card;
     private int pinAttemptNum;
 
 
     public void run(int cardNum){
 
     }
-    public Session(ATM1 ATM, Card1 card, Transaction transaction){
+    public Session(ATM1 ATM, Card card, Transaction transaction){
         this.attachedATM = ATM;
         this.card = card;
         this.transaction = transaction;
@@ -34,7 +34,7 @@ public class Session {
     }
 
 
-    public List<Card1> retrieveCardDB(){
+    public List<Card> retrieveCardDB(){
         return null;
     }
 
@@ -43,7 +43,7 @@ public class Session {
     }
 
     public boolean checkPIN(){
-        if (card.getPIN().equals(attachedATM.askForPIN)){
+        if (card.getPin().equals(attachedATM.askForPIN)){
             return true;
         }
         return false;

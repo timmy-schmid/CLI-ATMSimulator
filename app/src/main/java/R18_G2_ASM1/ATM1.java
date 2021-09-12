@@ -3,8 +3,8 @@
 public class ATM1{
     private int total_amount_stored;
 
-    private int MAX_withdrawal_amount;
-    private int MIN_withdrawal_amount;
+    // private int MAX_withdrawal_amount;
+    // private int MIN_withdrawal_amount;
     
     /*
         according to commbank AUS: max withdrawal amount = $500/day, max deposit amount = $100,000/day
@@ -16,8 +16,8 @@ public class ATM1{
     */
     
     public ATM1(){
-        this.MAX_withdrawal_amount = 1000; //say, per day
-        this.MIN_withdrawal_amount = 20;
+        // this.MAX_withdrawal_amount = 1000; //say, per day
+        // this.MIN_withdrawal_amount = 20;
         this.total_amount_stored = 100000;
     }
 
@@ -25,4 +25,6 @@ public class ATM1{
         ATM1 atm = new ATM1();
 
     }
+
+    
 }

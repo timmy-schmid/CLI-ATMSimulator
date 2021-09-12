@@ -1,25 +1,53 @@
-// package R18_G2_ASM1
-
 import java.util.*;
 
 public class Account {
+  
   private int accountID;
+  private double balance;
+  private ArrayList<Card> cards;
 
-  private List<Card1> cardsList;
-  public Account(int accountID, List<Card1> cardsList){
+  public Account(int accountID, double balance, ArrayList<Card> cards) { //is balance in constructor necessary?
     this.accountID = accountID;
-    this.cardsList = cardsList;
-  }
-  public int getAccountID(){
-    return this.accountID;
-  }
-  public List<Card1> getCardsList(){
-    return this.cardsList;
+    this.balance = balance;
+    this.cards = cards;
   }
 
-  public void getBalance(){ //for 1 card?
-    // System.out.println("Total amount stored in this card is " + card.totalAmount);
+  public int getAccountID() {
+    return accountID;
+  }
 
+  public double getBalance() {
+    return balance;
+  }
+
+  public ArrayList<Card> getCards() {
+    return cards;
+  }
+
+  public void setAccountID(int accountID) {
+    this.accountID = accountID;
+  }
+
+  public void setBalance(double balance) {
+    this.balance = balance;
+  }
+
+  public void setCards(ArrayList<Card> cards) {
+    this.cards = cards;
+  }
+
+  public ArrayList<Card> getCardsList() {
+    return this.cards;
+  }
+
+  public void withdraw(int amount) {
+    double b = getBalance();
+    this.balance = b - amount;
+  }
+
+  public void deposit(int amount) {
+    double b = getBalance();
+    this.balance = b + amount;
   }
 
   public void printAllCardBalance(){

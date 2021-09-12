@@ -2,13 +2,13 @@ ASSIGNMENT 1 WORKING IN PROGRESS!
 
 Check and edit the google doc for git commands if needed
 
-# FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
+# 1. FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
 git checkout master --> gut pull --> git checkout your_branch_name --> git merge master
  
-# FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
+# 2. FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
 Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
 
-# FOLLOW THIS TO MERGE UR CHANGES  TO MASTER!!
+# 3. FOLLOW THIS TO MERGE UR CHANGES  TO MASTER!!
 -> git pull (do this first to prevent merge conflicts) 
     THEN:
 -> git checkout master --> git merge branch_name --> git push
@@ -17,7 +17,7 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 
 -> make sure indenting is 2 spaces, use CamelCase for variable naming!
 
--> Creating/merging Card, Account class
+-> add a user "Name" in card constructor??
 
 -> keep code consistent + nicely styled + minimise redundancy
 
