@@ -2,7 +2,7 @@ import java.util.*;
 import java.text.*;
 
 public class Card { //CARD_ROBIN (RENAMED)
-  protected int totalAmount;
+  protected double totalAmount;
   private int cardNumber;
   private Date start_date;
   private Date expiration_date;
@@ -11,11 +11,12 @@ public class Card { //CARD_ROBIN (RENAMED)
   private boolean is_expire;
   private int pin;
   private Account account;
+  private String name;
 
-  //maybe add user Name???
-  
-  public Card(int totalAmount, int cardNumber, Date start_date, Date expiration_date,
-      boolean is_lost, boolean is_blocked, boolean is_expire, int pin, Account account) {
+  public Card(String name, double totalAmount, int cardNumber, Date start_date, Date expiration_date,
+      boolean is_lost, boolean is_blocked, boolean is_expire, int pin, Account account){
+    
+    this.name = name;
     this.totalAmount = totalAmount;
     this.cardNumber = cardNumber;
     this.start_date = start_date;
@@ -33,6 +34,10 @@ public class Card { //CARD_ROBIN (RENAMED)
 
   public boolean isIs_blocked() {
     return is_blocked;
+  }
+
+  public String getName() {
+    return this.name;
   }
 
   public boolean isIs_lost() {
@@ -79,7 +84,7 @@ public class Card { //CARD_ROBIN (RENAMED)
     this.pin = pin;
   }
 
-  public void setTotalAmount(int totalAmount) {
+  public void setTotalAmount(double totalAmount) {
     this.totalAmount = totalAmount;
   }
 
@@ -104,7 +109,7 @@ public class Card { //CARD_ROBIN (RENAMED)
     boolean is_AfterStartDate = false;
     int signal = now_date.compareTo(start_date);
     if(signal >= 0) {
-      boolean is_AfterStartDate = true;
+      is_AfterStartDate = true;
     }
     return is_AfterStartDate;
   }
@@ -112,10 +117,12 @@ public class Card { //CARD_ROBIN (RENAMED)
   public void blockCard() {
   }
 
-  public void getCardDetails(){
-    System.out.println("\nPrinting card details below!!!");
-    System.out.println("Card name " + name + ", amount stored  = " + this.getTotalAmount() + ", expires on: "  + this.end_date);
+  public double getTotalAmount(){
+    return this.totalAmount;
   }
 
-
+  public void getCardDetails(){
+    System.out.println("\nPrinting card details below!!!");
+    System.out.println("Card name " + this.name + ", amount stored  = " + this.getTotalAmount() + ", expires on: "  + this.expiration_date);
+  }
 }

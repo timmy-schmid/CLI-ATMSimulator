@@ -9,8 +9,6 @@ import java.util.HashMap;
 Transaction class is abstract (can be subclassed into 3 categories but NOT instantiated)
 
 NOTES: ATM has no restriction on amount withdrawn (NO MAX/MINAMOUNT??)
-
-- all these astract methods are to be implemented in child classes
 */
 
 public abstract class Transaction { //ABSTRACT CLASS
@@ -23,15 +21,10 @@ public abstract class Transaction { //ABSTRACT CLASS
     protected double deductAmount; 
 
     private int totalAmountStored;
-
-    // private int MaxWithdrawalAmount; //NO LIMIT!
-    // private int MinWithdrawalAmount;
-
     protected HashMap<String, Integer> remainderStorageMap;
 
     protected TransactionType type;
     // protected TransactionStatusCode currentStatus;
-    // protected Account account;
     private ATM1 attachedATM;
     protected Account account;
 

@@ -43,7 +43,7 @@ public class Session {
     }
 
     public boolean checkPIN(){
-        if (card.getPIN().equals(attachedATM.askForPIN)){
+        if (card.getPin().equals(attachedATM.askForPIN)){
             return true;
         }
         return false;
