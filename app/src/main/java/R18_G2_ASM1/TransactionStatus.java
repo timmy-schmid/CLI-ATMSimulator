@@ -1,6 +1,6 @@
 package R18_G2_ASM1;
 
-public enum TranscationStatus {
+public enum TransactionStatus {
   FAIL_WITHDRAWAL("The withdrawal failed"),
   SUCCESS_WITHDRAWAL("The withdrawal was successful"),
   FAIL_DEPOSIT("The deposit failed"),
@@ -10,7 +10,7 @@ public enum TranscationStatus {
 
   private String description;
 
-  private TranscationStatus(String description) {
+  private TransactionStatus(String description) {
     this.description = description;
   }
 

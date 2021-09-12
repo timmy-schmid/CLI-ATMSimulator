@@ -1,13 +1,11 @@
-package R18_G2_ASM1;
 import java.util.*;
 
 public class Account {
-  
   private int accountID;
   private double balance;
   private ArrayList<Card> cards;
 
-  public Account(int accountID, double balance, ArrayList<Card> cards) { //is balance in constructor necessary?
+  public Account(int accountID, double balance, ArrayList<Card> cards) {
     this.accountID = accountID;
     this.balance = balance;
     this.cards = cards;
@@ -37,10 +35,6 @@ public class Account {
     this.cards = cards;
   }
 
-  public ArrayList<Card> getCardsList() {
-    return this.cards;
-  }
-
   public void withdraw(int amount) {
     double b = getBalance();
     this.balance = b - amount;
@@ -49,10 +43,5 @@ public class Account {
   public void deposit(int amount) {
     double b = getBalance();
     this.balance = b + amount;
-  }
-
-  public void printAllCardBalance(){
-    //loop through cardsLIST, printing balance stored
-
   }
 }

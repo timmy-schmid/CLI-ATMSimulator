@@ -1,9 +1,7 @@
-package R18_G2_ASM1;
-
 import java.util.*;
 import java.text.*;
 
-public class Card { //CARD_ROBIN (RENAMED)
+public class Card {
   protected int totalAmount;
   private int cardNumber;
   private Date start_date;
@@ -14,8 +12,6 @@ public class Card { //CARD_ROBIN (RENAMED)
   private int pin;
   private Account account;
 
-  //maybe add user Name???
-  
   public Card(int totalAmount, int cardNumber, Date start_date, Date expiration_date,
       boolean is_lost, boolean is_blocked, boolean is_expire, int pin, Account account) {
     this.totalAmount = totalAmount;
@@ -118,4 +114,6 @@ public class Card { //CARD_ROBIN (RENAMED)
     System.out.println("\nPrinting card details below!!!");
     System.out.println("Card name " + name + ", amount stored  = " + this.getTotalAmount() + ", expires on: "  + this.end_date);
   }
+
+
 }

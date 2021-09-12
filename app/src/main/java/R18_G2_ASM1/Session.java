@@ -1,20 +1,26 @@
-package R18_G2_ASM1;
+// package R18_G2_ASM1;
+import java.util.*;
+
+
+import java.util.List;
 
 import java.util.List;
 
 public class Session {
-    private ATM attachedATM;
+    private ATM1 attachedATM;
     private int sessionID;
     private SessionStatus currentStatus;
     private Transaction transaction;
     private Card card;
     private int pinAttemptNum;
 
-    public Session(ATM atm) {
-    }
-
     public void run(int cardNum){
 
+    }
+    public Session(ATM1 ATM, Card card, Transaction transaction){
+        this.attachedATM = ATM;
+        this.card = card;
+        this.transaction = transaction;
     }
 
     public List<Transaction> getTransactions(){
@@ -25,6 +31,7 @@ public class Session {
         return null;
     }
 
+
     public List<Card> retrieveCardDB(){
         return null;
     }
@@ -33,7 +40,14 @@ public class Session {
 
     }
 
-    public void checkPIN(){
+    public boolean checkPIN(){
+        if (card.getPIN().equals(attachedATM.askForPIN)){
+            return true;
+        }
+        return false;
+
+    }
+
 
     }
 
