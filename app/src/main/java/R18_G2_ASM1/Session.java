@@ -1,4 +1,5 @@
-package R18_G2_ASM1;
+// package R18_G2_ASM1;
+import java.util.*;
 
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class Session {
     private Transaction transaction;
     private Card1 card;
     private int pinAttemptNum;
+
 
     public void run(int cardNum){
 
@@ -30,6 +32,7 @@ public class Session {
     public SessionStatus validateSession(){
         return null;
     }
+
 
     public List<Card1> retrieveCardDB(){
         return null;

@@ -7,11 +7,14 @@
 // package R18_G2_ASM1; //removing this gives no error when compiling????
 
 import java.util.HashMap;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 public class App {
 
-    public static final int MAX_AMOUNT = 500;
-    public static final int MIN_AMOUNT = 5;
+    // public static final int MAX_AMOUNT = 500;
+    // public static final int MIN_AMOUNT = 5;
 
     
     public String getGreeting() {
@@ -70,21 +73,35 @@ public class App {
     }
 
     public static void main(String[] args) {
-        
+        ATM1 atm1 = new ATM1();
+
+        List<Card1> cardsListA = new ArrayList<>();
+        List<Card1> cardsListB = new ArrayList<>();
+        List<Card1> cardsListC = new ArrayList<>();
+
         Card1 userA = new Card1("BOB", 111,1000, "15/08/2019", "20/08/2022");
+        cardsListA.add(userA);
+        Account userAAccount = new Account(userA.getID(), cardsListA);
 
-        Card1 userB = new Card1("DYLAN", 111,1000, "25/08/2020", "15/10/2022");
+        Card1 userB = new Card1("DYLAN", 121,1000, "25/08/2020", "15/10/2022");
+        cardsListB.add(userB);
+        Account userBAccount = new Account(userB.getID(), cardsListB);
 
-        Card1 userC = new Card1("MILLY", 111,1000, "01/04/2020", "25/12/2021");
+        Card1 userC = new Card1("MILLY", 131,1000, "01/04/2020", "25/12/2021");
+        cardsListC.add(userC);
+        Account userCAccount = new Account(userC.getID(), cardsListC);
 
+
+        Date date = new Date();
         double deductAmountAB = 59.50;
         double deductAmountC = 120.00;
 
-        Transaction withdrawalA = new T_Withdrawal(TransactionType.WITHDRAWAL, userA, deductAmountAB, MAX_AMOUNT, MIN_AMOUNT);
+        //where transactionID = userID? 
+        Transaction withdrawalA = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userAAccount, deductAmountAB, date, userA.getID());
 
-        Transaction withdrawalB = new T_Withdrawal(TransactionType.WITHDRAWAL, userB, deductAmountAB, MAX_AMOUNT, MIN_AMOUNT);
+        Transaction withdrawalB = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userBAccount, deductAmountAB, date, userB.getID());
 
-        Transaction withdrawalC = new T_Withdrawal(TransactionType.WITHDRAWAL, userC, deductAmountC, MAX_AMOUNT, MIN_AMOUNT);
+        Transaction withdrawalC = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userCAccount, deductAmountC, date, userC.getID());
 
         // testCashRemainder(withdrawal);
         // testDeductFromATM(withdrawal);
