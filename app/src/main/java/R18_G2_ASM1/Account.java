@@ -6,6 +6,8 @@ public class Account {
   private double balance;
   private ArrayList<Card> cards;
 
+  //how to distinguish between which card is currently being used for transaction? [user input picks a card from their list of cards available??]
+
   public Account(int accountID, double balance, ArrayList<Card> cards) { //is balance in constructor necessary?
     this.accountID = accountID;
     this.balance = balance;
@@ -40,18 +42,21 @@ public class Account {
     return this.cards;
   }
 
-  public void withdraw(int amount) {
+  public void withdraw(double amount) {
     double b = getBalance();
     this.balance = b - amount;
   }
 
-  public void deposit(int amount) {
+  public void deposit(double amount) {
     double b = getBalance();
     this.balance = b + amount;
   }
 
   public void printAllCardBalance(){
     //loop through cardsLIST, printing balance stored
-
   }
 }
+
+//savings, check, offset --> homeloan, homeloan
+// 1 user has multiple accounts (), 1 acc = 1 card
+// 1 card stores a few accounts 

@@ -14,7 +14,7 @@ public class Card { //CARD_ROBIN (RENAMED)
   private String name;
 
   public Card(String name, double totalAmount, int cardNumber, Date start_date, Date expiration_date,
-      boolean is_lost, boolean is_blocked, boolean is_expire, int pin, Account account){
+      boolean is_lost, boolean is_blocked, boolean is_expire, int pin) {//Account account){
     
     this.name = name;
     this.totalAmount = totalAmount;
@@ -25,7 +25,7 @@ public class Card { //CARD_ROBIN (RENAMED)
     this.is_blocked = false;
     this.is_expire = false;
     this.pin = pin;
-    this.account = account;
+    this.account = null; //account;
   }
 
   public Account getAccount() {
