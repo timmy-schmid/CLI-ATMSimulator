@@ -1,4 +1,5 @@
 package R18_G2_ASM1;
+
 import java.util.*;
 
 
@@ -42,12 +43,12 @@ public class Session {
 
     }
 
-    public boolean checkPIN(){
-        if (card.getPin().equals(attachedATM.askForPIN)){
-            return true;
-        }
-        return false;
+    // public boolean checkPIN(){
+    //     if (card.getPin().equals(attachedATM.askForPIN)){
+    //         return true;
+    //     }
+    //     return false;
 
-    }
+    // }
 
 }

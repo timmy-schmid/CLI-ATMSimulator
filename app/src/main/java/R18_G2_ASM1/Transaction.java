@@ -1,14 +1,10 @@
-// package R18_G2_ASM1;
+package R18_G2_ASM1;
 
 import java.util.Date;
 import java.lang.Math;
 import java.util.HashMap;
 
 /*
-
-Transaction class is abstract (can be subclassed into 3 categories but NOT instantiated)
-
-NOTES: ATM has no restriction on amount withdrawn (NO MAX/MINAMOUNT??)
 
 TransactionStatusCode: used to record the state of the transaction i.e. if user doesn't have enough money in their account when withdrawing --> transaction status should be set to FailDeposit Enum
 
@@ -19,11 +15,10 @@ public abstract class Transaction { //ABSTRACT CLASS
     //declaring fields + nonabstract methods
     protected int transactionID;
     protected Date date;
-    protected boolean toCancel;
     protected double amount; 
 
     private int totalAmountStored;
-    protected HashMap<String, Integer> remainderStorageMap;
+    protected HashMap <String, Integer> splitWithdrawalAmountMap; // remainderStorageMap 
 
     protected TransactionType type;
     // protected TransactionStatusCode currentStatus;
@@ -31,29 +26,30 @@ public abstract class Transaction { //ABSTRACT CLASS
     protected Account account;
 
     //where amount represents deductAmount or addAmount
-
     public Transaction(ATM1 attachedATM, TransactionType type, Account account, double amount, Date date, int transactionID){
+        
         this.amount = amount; //how much user wants to extract from ATM! from here or from Card.deductAmount()???
         this.type = type;
         this.totalAmountStored = 100000; //comes from ATM getTotalAmountStored()? 
         this.attachedATM = attachedATM;
         this.account = account;
-        this.remainderStorageMap = new HashMap<>();
+        this.splitWithdrawalAmountMap = new HashMap<>();
         this.date = date;
         this.transactionID = transactionID;
     }
 
-    public int getID(){ // returns account ID
+    // returns account ID
+    public int getID(){ 
         return this.account.getAccountID();
     }
     
-    public Account getAccount(){ // returns account ID
+    // returns account ID
+    public Account getAccount(){
         return this.account;
     }
 
-
-    public HashMap<String, Integer> getRemainderStorageMap(){
-        return this.remainderStorageMap;
+    public HashMap<String, Integer> getSplitWithdrawalAmountMap(){
+        return this.splitWithdrawalAmountMap;
     }
 
     // retrieves which type it is from user input?
@@ -79,17 +75,9 @@ public abstract class Transaction { //ABSTRACT CLASS
     public void run(){ //call in App class (where each button associates with its subclass (transaction, deposit or balance check?))
     }
     
-    public boolean canDeduct(Card card){ //amount can be taken from card --> basically validate card amount
-        if (card != null && card.getTotalAmount() >= this.amount){ //can withdraw
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public boolean canDeductFromCard(Card card){ //where this card is the card user picked out of all cards found in Account (cardsList)
         //first validate card, then deduct amount
-        if (card!= null && canDeduct(card) == true){
+        if (card != null && card.getTotalAmount() >= this.amount){
             // card.totalAmount -= this.amount;
             //withdraw from account or from card class?
             return true;
@@ -97,10 +85,9 @@ public abstract class Transaction { //ABSTRACT CLASS
             return false;
         }
     }
-    
+
     //finds remainder then stores the amount=deductAmount into a map and returns it
     public void findRemainder(){//double removeAmount){ //compare this against moneytypes
-
         // System.out.printf("LINE132 TRANSACTION ----------------- initial deductAmount = [%.2f]\n", this.amount);
         double temp1 = amount;
 
@@ -114,7 +101,6 @@ public abstract class Transaction { //ABSTRACT CLASS
         int fifty_c = 0;
 
         if (temp1 >= 100){
-            // System.out.println("STEP 1: >= 100");
             hundred = (int)(temp1/100);
             temp1 = temp1 % 100;
         }
@@ -123,57 +109,46 @@ public abstract class Transaction { //ABSTRACT CLASS
             fifty = (int)(temp1/50);
             temp1 = temp1 % 50;
 
-            // System.out.printf("fifty = [%d], temp = [%.2f]\n", fifty, temp1);
         } if (temp1 >= 20){
-            // System.out.println("STEP 3 >= 20");
             twenty = (int)(temp1/20);
             temp1 = temp1 % 20;
 
         } if (temp1 >= 10){ // < 20
-            // System.out.println("STEP 4 >= 10");
             ten = (int)(temp1/10);
             temp1 = temp1 % 10;
 
         } if (temp1 >= 5){
-            // System.out.println("STEP 5 >= 5");
             five = (int)(temp1/5);
             temp1 = temp1 % 5;
 
         } if (temp1 >= 2){
-            // System.out.println("STEP 6 >= 2: use $2 coin");
             two = (int)(temp1/2);
             temp1 = temp1 % 2;
-            // System.out.printf("TWO = [%d], temp = [%.2f]\n", two, temp1);
 
         } if (temp1 >= 1){
-            // System.out.println("STEP 7 >= 1: use $1 coin");
             one = (int)(temp1/1);
             temp1 = temp1 % 1;
-            // System.out.printf("ONE = [%d], temp = [%.2f]\n", one, temp1);
 
         } else {
-            // System.out.println("STEP 8 >= 0.5: use 50c coin CENTS CHECK!");
             fifty_c = (int)(temp1/0.5);
             temp1 = temp1 % 0.5;
-            // System.out.printf("fifty CENTS = [%d], temp = [%.2f]\n", fifty_c, temp1);
         }
 
         //STORE THE RESULTS INTO THE HASHMAP!!!
 
-        this.remainderStorageMap.put("hundred", hundred);
-        this.remainderStorageMap.put("fifty", fifty);
-        this.remainderStorageMap.put("twenty", twenty);
-        this.remainderStorageMap.put("ten", ten);
-        this.remainderStorageMap.put("five", five);
-        this.remainderStorageMap.put("two", two);
-        this.remainderStorageMap.put("one", one);
-        this.remainderStorageMap.put("fifty_c", fifty_c);
+        this.splitWithdrawalAmountMap.put("hundred", hundred);
+        this.splitWithdrawalAmountMap.put("fifty", fifty);
+        this.splitWithdrawalAmountMap.put("twenty", twenty);
+        this.splitWithdrawalAmountMap.put("ten", ten);
+        this.splitWithdrawalAmountMap.put("five", five);
+        this.splitWithdrawalAmountMap.put("two", two);
+        this.splitWithdrawalAmountMap.put("one", one);
+        this.splitWithdrawalAmountMap.put("fifty_c", fifty_c);
     }
 
-    public void printRemainderStorageMap(){
-        for (HashMap.Entry<String, Integer> entry : this.getRemainderStorageMap().entrySet()) {
-            if (entry.getValue() > 0){
-                //print only those with amount != 0
+    public void printSplitWithdrawalAmountMap(){
+        for (HashMap.Entry<String, Integer> entry : this.getSplitWithdrawalAmountMap().entrySet()) {
+            if (entry.getValue() > 0){ //print only those with amount != 0
                 System.out.printf("Money type: $%s ------ amount:[%d]\n", entry.getKey(), entry.getValue());
             }
         }
@@ -226,14 +201,16 @@ public abstract class Transaction { //ABSTRACT CLASS
 
     public void WITHDRAW_MONEY(Card card){
         this.findRemainder(); //store the amount into a map [notes/coins]
-        this.compareReqWithMoneyTypeAmount(this.getRemainderStorageMap());
+        this.compareReqWithMoneyTypeAmount(this.getSplitWithdrawalAmountMap());
+        
         if (this.canDeductFromCard(card) == true) {
             card.totalAmount -= this.amount;
             System.out.println(TransactionStatus.SUCCESS_WITHDRAWAL.toString());
         } else {
             System.out.println(TransactionStatus.FAIL_WITHDRAWAL.toString());
         }
-        //also deduct for account????
         return;
     }
+
+
 }

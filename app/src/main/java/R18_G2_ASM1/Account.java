@@ -1,3 +1,5 @@
+package R18_G2_ASM1;
+
 import java.util.*;
 
 public class Account {
@@ -38,16 +40,12 @@ public class Account {
     this.cards = cards;
   }
 
-  public ArrayList<Card> getCardsList() {
-    return this.cards;
-  }
-
   public void withdraw(double amount) {
     double b = getBalance();
     this.balance = b - amount;
   }
 
-  public void deposit(double amount) {
+  public void deposit(double amount) {  //also modify for card? --> this.card from this.getCardsList() --> add amount?
     double b = getBalance();
     this.balance = b + amount;
   }

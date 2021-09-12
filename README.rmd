@@ -17,7 +17,7 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 
 -> make sure indenting is 2 spaces, use CamelCase for variable naming!
 
--> add a user "Name" in card constructor??
+-> how to distinguish between which card is currently being used for transaction? [user input picks a card from their list of cards available??]
 
 -> keep code consistent + nicely styled + minimise redundancy
 
@@ -29,9 +29,9 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 -> How to handle user's deposit? 
   -> "prompt the user on how many of each denomination they want to deposit, calling from ATM class function ATM.askForMoneyStack()" - Tim
 
--> Should we have a list to store a multiple cards of 1 user?
+-> 1 card is linked with 1 account!
 
--> CARD CLASS: store a list of diff types/in constructor add 'type'
+-> CARD CLASS: store a list of diff types/in constructor add 'type' [for later to work on if there's time]
 
 # GUI Design
 
