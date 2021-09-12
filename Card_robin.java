@@ -1,7 +1,7 @@
 import java.util.*;
 import java.text.*;
 
-public class Card {
+public class Card_robin {
   protected int totalAmount;
   private int cardNumber;
   private Date start_date;
@@ -12,7 +12,7 @@ public class Card {
   private int pin;
   private Account account;
 
-  public Card(int totalAmount, int cardNumber, Date start_date, Date expiration_date,
+  public Card_robin(int totalAmount, int cardNumber, Date start_date, Date expiration_date,
       boolean is_lost, boolean is_blocked, boolean is_expire, int pin, Account account) {
     this.totalAmount = totalAmount;
     this.cardNumber = cardNumber;
@@ -51,6 +51,10 @@ public class Card {
 
   public int getPin() {
     return pin;
+  }
+
+  public int getTotalAmount() {
+    return totalAmount;
   }
 
   public void setAccount(Account account) {
@@ -102,7 +106,7 @@ public class Card {
     boolean is_AfterStartDate = false;
     int signal = now_date.compareTo(start_date);
     if(signal >= 0) {
-      boolean is_AfterStartDate = true;
+      is_AfterStartDate = true;
     }
     return is_AfterStartDate;
   }
@@ -112,7 +116,7 @@ public class Card {
 
   public void getCardDetails(){
     System.out.println("\nPrinting card details below!!!");
-    System.out.println("Card name " + name + ", amount stored  = " + this.getTotalAmount() + ", expires on: "  + this.end_date);
+    System.out.println("Card name " + cardNumber + ", amount stored  = " + getTotalAmount() + ", expires on: "  + this.expiration_date);
   }
 
 
