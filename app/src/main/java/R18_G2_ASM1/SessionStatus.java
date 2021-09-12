@@ -7,6 +7,8 @@ public enum SessionStatus {
   CARD_EXPIRED("The card entered has expired"),
   CARD_LOST("The card entered has been reported as lost/stolen"),
   CARD_BLOCKED("The card entered has been blocked due to too many PIN attempts"),
+  ADMIN_MODE("The ATM is now in Admin Mode"),
+  CANCELLED("The session was cancelled."),
   SUCCESS("The session was succesfully completed");
 
   private String description;

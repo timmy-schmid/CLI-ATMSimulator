@@ -4,11 +4,8 @@
 package R18_G2_ASM1;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        ATM a = new ATM("Canberra");
+        a.run();
     }
 }
