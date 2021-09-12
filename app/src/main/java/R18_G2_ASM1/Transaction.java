@@ -9,6 +9,9 @@ import java.util.HashMap;
 Transaction class is abstract (can be subclassed into 3 categories but NOT instantiated)
 
 NOTES: ATM has no restriction on amount withdrawn (NO MAX/MINAMOUNT??)
+
+TransactionStatusCode: used to record the state of the transaction i.e. if user doesn't have enough money in their account when withdrawing --> transaction status should be set to FailDeposit Enum
+
 */
 
 public abstract class Transaction { //ABSTRACT CLASS
@@ -17,8 +20,7 @@ public abstract class Transaction { //ABSTRACT CLASS
     protected int transactionID;
     protected Date date;
     protected boolean toCancel;
-    protected Card card;
-    protected double deductAmount; 
+    protected double amount; 
 
     private int totalAmountStored;
     protected HashMap<String, Integer> remainderStorageMap;
@@ -28,11 +30,12 @@ public abstract class Transaction { //ABSTRACT CLASS
     private ATM1 attachedATM;
     protected Account account;
 
-    public Transaction(ATM1 attachedATM, TransactionType type, Account account, double deductAmount, Date date, int transactionID){
-        this.deductAmount = deductAmount; //how much user wants to extract from ATM! from here or from Card.deductAmount()???
+    //where amount represents deductAmount or addAmount
+
+    public Transaction(ATM1 attachedATM, TransactionType type, Account account, double amount, Date date, int transactionID){
+        this.amount = amount; //how much user wants to extract from ATM! from here or from Card.deductAmount()???
         this.type = type;
-        // this.card = card;
-        this.totalAmountStored = 100000;
+        this.totalAmountStored = 100000; //comes from ATM getTotalAmountStored()? 
         this.attachedATM = attachedATM;
         this.account = account;
         this.remainderStorageMap = new HashMap<>();
@@ -43,6 +46,11 @@ public abstract class Transaction { //ABSTRACT CLASS
     public int getID(){ // returns account ID
         return this.account.getAccountID();
     }
+    
+    public Account getAccount(){ // returns account ID
+        return this.account;
+    }
+
 
     public HashMap<String, Integer> getRemainderStorageMap(){
         return this.remainderStorageMap;
@@ -53,57 +61,48 @@ public abstract class Transaction { //ABSTRACT CLASS
         return this.type;
     }
     
-    public double getDeductAmount(){
-        return this.deductAmount;
+    public double getAmount(){
+        return this.amount;
     }
-    // public void validateCardAmount(Card card){
-    //     //checks card amount --> call from card class function?
-    // }
 
     public void cancelOption(){
     }
 
-    //FIRST CREATE TransactionStatusCode + ACCOUNT CLASS FILE BEFORE UNCOMMENTING THIS OUT!!!!!
-
-
-    // public TransactionStatusCode getStatus(){
+    // public TransactionStatusCode getStatus(){ //create a transactionStatusCode class file?
     //     return this.currentStatus;
     // }
-    // public void modify(Account acc){
 
-    // }
+    public void modify(Account acc){
+        account.deposit(amount);
+    }
 
     public void run(){ //call in App class (where each button associates with its subclass (transaction, deposit or balance check?))
     }
     
-    public boolean canDeduct(){//Card card){ //amount can be taken from card
-        if (this.card != null && this.card.getTotalAmount() >= this.deductAmount){
+    public boolean canDeduct(Card card){ //amount can be taken from card --> basically validate card amount
+        if (card != null && card.getTotalAmount() >= this.amount){ //can withdraw
             return true;
         } else {
             return false;
         }
     }
 
-    public void deductFromCard(){
+    public boolean canDeductFromCard(Card card){ //where this card is the card user picked out of all cards found in Account (cardsList)
         //first validate card, then deduct amount
-        if (this.card!= null && canDeduct() == true){
-            this.card.totalAmount -= this.deductAmount;
-            System.out.printf("LINE 26 IN T+WITHDRAWAL CLASS: card amount = [%2f], deductAmount = [%2f]\n", this.card.getTotalAmount(), this.deductAmount);
-            return;
-        } else if (this.card != null && this.canDeduct() == false) {
-            System.out.println("cannot deduct money. Either not enough in account card or too much withdrawn thats not ok!");
-            return;
-        } else { //card is null
-            System.out.println("Card is not valid! Unable to deduct amount.");
+        if (card!= null && canDeduct(card) == true){
+            // card.totalAmount -= this.amount;
+            //withdraw from account or from card class?
+            return true;
+        } else {
+            return false;
         }
     }
     
-    //finds remainder then stores the deductAmount into a map and returns it
+    //finds remainder then stores the amount=deductAmount into a map and returns it
     public void findRemainder(){//double removeAmount){ //compare this against moneytypes
 
-        // System.out.printf("LINE132 TRANSACTION ----------------- initial deductAmount = [%.2f]\n", deductAmount);
-        double temp1 = deductAmount;
-        // int temp1 = (int)temp;
+        // System.out.printf("LINE132 TRANSACTION ----------------- initial deductAmount = [%.2f]\n", this.amount);
+        double temp1 = amount;
 
         int hundred = 0;
         int fifty = 0;
@@ -118,11 +117,9 @@ public abstract class Transaction { //ABSTRACT CLASS
             // System.out.println("STEP 1: >= 100");
             hundred = (int)(temp1/100);
             temp1 = temp1 % 100;
-            // System.out.printf("hundred = [%d], temp = [%.2f]\n", hundred, temp1);
         }
 
         if (temp1 >= 50){
-            System.out.println("STEP 2 >= 50");
             fifty = (int)(temp1/50);
             temp1 = temp1 % 50;
 
@@ -171,7 +168,6 @@ public abstract class Transaction { //ABSTRACT CLASS
         this.remainderStorageMap.put("two", two);
         this.remainderStorageMap.put("one", one);
         this.remainderStorageMap.put("fifty_c", fifty_c);
-
     }
 
     public void printRemainderStorageMap(){
@@ -213,7 +209,6 @@ public abstract class Transaction { //ABSTRACT CLASS
             MoneyType.TWO_DOLLARS.amount -= keyValMap.get("two");
         }
 
-
         if (keyValMap.get("one") > 0 && MoneyType.ONE_DOLLAR.getAmount() >= keyValMap.get("one")){ 
             MoneyType.ONE_DOLLAR.amount -= keyValMap.get("one");
         }
@@ -229,4 +224,16 @@ public abstract class Transaction { //ABSTRACT CLASS
     public void checkRunOut(){ //skip to next highest available amount and deduct from there
     }
 
+    public void WITHDRAW_MONEY(Card card){
+        this.findRemainder(); //store the amount into a map [notes/coins]
+        this.compareReqWithMoneyTypeAmount(this.getRemainderStorageMap());
+        if (this.canDeductFromCard(card) == true) {
+            card.totalAmount -= this.amount;
+            System.out.println(TransactionStatus.SUCCESS_WITHDRAWAL.toString());
+        } else {
+            System.out.println(TransactionStatus.FAIL_WITHDRAWAL.toString());
+        }
+        //also deduct for account????
+        return;
+    }
 }

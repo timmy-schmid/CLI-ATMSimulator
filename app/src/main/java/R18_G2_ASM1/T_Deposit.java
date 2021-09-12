@@ -2,9 +2,8 @@
 import java.util.Date;
 
 public class T_Deposit extends Transaction {
-    // protected Card card;
     private int totalAmountStored;
-    protected double deductAmount;
+    protected double amount;
 
     protected TransactionType type;
     private ATM1 attachedATM;
@@ -13,26 +12,30 @@ public class T_Deposit extends Transaction {
     protected int transactionID;
     protected Date date;
 
-    //TODO: pass in an instance of ATM class so can extract its methods!
-
-    public T_Deposit(ATM1 attachedATM, TransactionType type, Account account, double deductAmount, Date date, int transactionID){
-        super(attachedATM, type, account, deductAmount, date, transactionID);
+    public T_Deposit(ATM1 attachedATM, TransactionType type, Account account, double amount, Date date, int transactionID){
+        super(attachedATM, type, account, amount, date, transactionID);
     }
    
     public void validateDeposit(){ //...
     }
 
-    public void modify(Account account){ //call inside proceedDepositTransaction function
-
+    //overrides transaction's modify function
+    public void modify(Account account){
+        if (account != null) {
+            account.deposit(amount); //or just modify that 1 card's totalAmount
+            System.out.println(TransactionStatus.SUCCESS_DEPOSIT.toString()); 
+        } else {
+            System.out.println(TransactionStatus.FAIL_DEPOSIT.toString()); 
+        }
+        //account.getCardsList().get(0) --> user's 1st card --> deduct amount?
     }
     
-    public void proceedDepositTransaction(){
+    public void proceedDepositTransaction(Account account){
         //call atm.askForMoneyStack() in this function
 
         //this function prompt the user to select on how many of each denomination they want to deposit
 
         //then call deposit() (from Card class)
-    }
-
-   
+        this.modify(account);
+    }  
 }

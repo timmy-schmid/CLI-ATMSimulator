@@ -4,7 +4,7 @@ import java.util.Date;
 public class T_Balance extends Transaction {
     // private Card card;
     private int totalAmountStored;
-    protected double deductAmount;
+    protected double amount;
 
     protected TransactionType type;
     private ATM1 attachedATM;
@@ -14,8 +14,8 @@ public class T_Balance extends Transaction {
     protected Date date;
 
 
-    public T_Balance(ATM1 attachedATM, TransactionType type, Account account, double deductAmount, Date date, int transactionID){
-        super(attachedATM, type, account, deductAmount, date, transactionID);
+    public T_Balance(ATM1 attachedATM, TransactionType type, Account account, double amount, Date date, int transactionID){
+        super(attachedATM, type, account, amount, date, transactionID);
     }
 
     //prints ALL card details ???
@@ -24,6 +24,7 @@ public class T_Balance extends Transaction {
             if (account.getCardsList() != null){
                 //loop through account cards list, printing details for them all
                 account.printAllCardBalance();
+                System.out.println(TransactionStatus.SUCCESS_BALANCE.toString()); //prints status info in the end
             } else {
                 System.out.println("No available cards found on account. Cannot find balance.");
                 return;

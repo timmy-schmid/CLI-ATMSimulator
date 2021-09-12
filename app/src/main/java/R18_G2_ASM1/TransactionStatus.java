@@ -1,4 +1,4 @@
-package R18_G2_ASM1;
+// package R18_G2_ASM1;
 
 public enum TransactionStatus {
   FAIL_WITHDRAWAL("The withdrawal failed"),
