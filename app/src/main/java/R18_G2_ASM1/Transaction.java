@@ -1,4 +1,4 @@
-package R18_G2_ASM1;
+// package R18_G2_ASM1;
 
 import java.util.Date;
 import java.lang.Math;
@@ -19,7 +19,7 @@ public abstract class Transaction { //ABSTRACT CLASS
     protected int transactionID;
     protected Date date;
     protected boolean toCancel;
-    protected Card1 card1;
+    protected Card card;
     protected double deductAmount; 
 
     private int totalAmountStored;
@@ -36,9 +36,9 @@ public abstract class Transaction { //ABSTRACT CLASS
     protected Account account;
 
     public Transaction(ATM1 attachedATM, TransactionType type, Account account, double deductAmount, Date date, int transactionID){
-        this.deductAmount = deductAmount; //how much user wants to extract from ATM! from here or from Card1.deductAmount()???
+        this.deductAmount = deductAmount; //how much user wants to extract from ATM! from here or from Card.deductAmount()???
         this.type = type;
-        // this.card1 = card1;
+        // this.card = card;
         this.totalAmountStored = 100000;
         this.attachedATM = attachedATM;
         this.account = account;
@@ -63,7 +63,7 @@ public abstract class Transaction { //ABSTRACT CLASS
     public double getDeductAmount(){
         return this.deductAmount;
     }
-    // public void validateCardAmount(Card1 card1){
+    // public void validateCardAmount(Card card){
     //     //checks card amount --> call from card class function?
     // }
 
@@ -83,8 +83,8 @@ public abstract class Transaction { //ABSTRACT CLASS
     public void run(){ //call in App class (where each button associates with its subclass (transaction, deposit or balance check?))
     }
     
-    public boolean canDeduct(){//Card1 card){ //amount can be taken from card
-        if (this.card1 != null && this.card1.getTotalAmount() >= this.deductAmount){
+    public boolean canDeduct(){//Card card){ //amount can be taken from card
+        if (this.card != null && this.card.getTotalAmount() >= this.deductAmount){
             return true;
         } else {
             return false;
@@ -93,11 +93,11 @@ public abstract class Transaction { //ABSTRACT CLASS
 
     public void deductFromCard(){
         //first validate card, then deduct amount
-        if (this.card1!= null && canDeduct() == true){
-            this.card1.totalAmount -= this.deductAmount;
-            System.out.printf("LINE 26 IN T+WITHDRAWAL CLASS: card amount = [%2f], deductAmount = [%2f]\n", this.card1.getTotalAmount(), this.deductAmount);
+        if (this.card!= null && canDeduct() == true){
+            this.card.totalAmount -= this.deductAmount;
+            System.out.printf("LINE 26 IN T+WITHDRAWAL CLASS: card amount = [%2f], deductAmount = [%2f]\n", this.card.getTotalAmount(), this.deductAmount);
             return;
-        } else if (this.card1 != null && this.canDeduct() == false) {
+        } else if (this.card != null && this.canDeduct() == false) {
             System.out.println("cannot deduct money. Either not enough in account card or too much withdrawn thats not ok!");
             return;
         } else { //card is null

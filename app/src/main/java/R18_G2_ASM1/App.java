@@ -21,7 +21,7 @@ public class App {
         return "Hello World!";
     }
 
-    public static void testPrintCard1(Card1 userA){
+    public static void testPrintCard(Card userA){
         userA.getCardDetails();
     }
 
@@ -75,43 +75,43 @@ public class App {
     public static void main(String[] args) {
         ATM1 atm1 = new ATM1();
 
-        List<Card1> cardsListA = new ArrayList<>();
-        List<Card1> cardsListB = new ArrayList<>();
-        List<Card1> cardsListC = new ArrayList<>();
+        List<Card> cardsListA = new ArrayList<>();
+        List<Card> cardsListB = new ArrayList<>();
+        List<Card> cardsListC = new ArrayList<>();
 
-        Card1 userA = new Card1("BOB", 111,1000, "15/08/2019", "20/08/2022");
-        cardsListA.add(userA);
-        Account userAAccount = new Account(userA.getID(), cardsListA);
+        // Card userA = new Card("BOB", 111,1000, "15/08/2019", "20/08/2022");
+        // cardsListA.add(userA);
+        // Account userAAccount = new Account(userA.getID(), cardsListA);
 
-        Card1 userB = new Card1("DYLAN", 121,1000, "25/08/2020", "15/10/2022");
-        cardsListB.add(userB);
-        Account userBAccount = new Account(userB.getID(), cardsListB);
+        // Card userB = new Card("DYLAN", 121,1000, "25/08/2020", "15/10/2022");
+        // cardsListB.add(userB);
+        // Account userBAccount = new Account(userB.getID(), cardsListB);
 
-        Card1 userC = new Card1("MILLY", 131,1000, "01/04/2020", "25/12/2021");
-        cardsListC.add(userC);
-        Account userCAccount = new Account(userC.getID(), cardsListC);
+        // Card userC = new Card("MILLY", 131,1000, "01/04/2020", "25/12/2021");
+        // cardsListC.add(userC);
+        // Account userCAccount = new Account(userC.getID(), cardsListC);
 
 
-        Date date = new Date();
-        double deductAmountAB = 59.50;
-        double deductAmountC = 120.00;
+        // Date date = new Date();
+        // double deductAmountAB = 59.50;
+        // double deductAmountC = 120.00;
 
-        //where transactionID = userID? 
-        Transaction withdrawalA = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userAAccount, deductAmountAB, date, userA.getID());
+        // //where transactionID = userID? 
+        // Transaction withdrawalA = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userAAccount, deductAmountAB, date, userA.getID());
 
-        Transaction withdrawalB = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userBAccount, deductAmountAB, date, userB.getID());
+        // Transaction withdrawalB = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userBAccount, deductAmountAB, date, userB.getID());
 
-        Transaction withdrawalC = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userCAccount, deductAmountC, date, userC.getID());
+        // Transaction withdrawalC = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userCAccount, deductAmountC, date, userC.getID());
 
-        // testCashRemainder(withdrawal);
-        // testDeductFromATM(withdrawal);
-        multipleTestDeductFromATM(withdrawalA, withdrawalB, withdrawalC);
-        testMoneyType();
+        // // testCashRemainder(withdrawal);
+        // // testDeductFromATM(withdrawal);
+        // multipleTestDeductFromATM(withdrawalA, withdrawalB, withdrawalC);
+        // testMoneyType();
 
-        System.out.println("\n\n");
-        testPrintCard1(userA);
+        // System.out.println("\n\n");
+        // testPrintCard(userA);
 
-        testPrintCard1(userB);
-        testPrintCard1(userC);
+        // testPrintCard(userB);
+        // testPrintCard(userC);
     }
 }
