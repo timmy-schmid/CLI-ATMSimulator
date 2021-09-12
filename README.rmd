@@ -17,7 +17,7 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 
 -> make sure indenting is 2 spaces, use CamelCase for variable naming!
 
--> Creating/merging Card, Account class
+-> add a user "Name" in card constructor??
 
 -> keep code consistent + nicely styled + minimise redundancy
 
