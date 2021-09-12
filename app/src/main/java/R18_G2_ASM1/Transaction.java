@@ -1,4 +1,4 @@
-// package R18_G2_ASM1;
+package R18_G2_ASM1;
 
 import java.util.Date;
 import java.lang.Math;
@@ -7,6 +7,8 @@ import java.util.HashMap;
 /*
 
 Transaction class is abstract (can be subclassed into 3 categories but NOT instantiated)
+
+NOTES: ATM has no restriction on amount withdrawn (NO MAX/MINAMOUNT??)
 
 - all these astract methods are to be implemented in child classes
 */
@@ -22,28 +24,31 @@ public abstract class Transaction { //ABSTRACT CLASS
 
     private int totalAmountStored;
 
-    private int MaxWithdrawalAmount;
-    private int MinWithdrawalAmount;
+    // private int MaxWithdrawalAmount; //NO LIMIT!
+    // private int MinWithdrawalAmount;
 
     protected HashMap<String, Integer> remainderStorageMap;
 
     protected TransactionType type;
     // protected TransactionStatusCode currentStatus;
     // protected Account account;
+    private ATM1 attachedATM;
+    protected Account account;
 
-    public Transaction(TransactionType type, Card1 card1, double deductAmount, int MaxWithdrawalAmount, int MinWithdrawalAmount){
+    public Transaction(ATM1 attachedATM, TransactionType type, Account account, double deductAmount, Date date, int transactionID){
         this.deductAmount = deductAmount; //how much user wants to extract from ATM! from here or from Card1.deductAmount()???
         this.type = type;
-        this.MaxWithdrawalAmount = MaxWithdrawalAmount;
-        this.MinWithdrawalAmount = MinWithdrawalAmount;
-        this.card1 = card1;
+        // this.card1 = card1;
         this.totalAmountStored = 100000;
-
+        this.attachedATM = attachedATM;
+        this.account = account;
         this.remainderStorageMap = new HashMap<>();
+        this.date = date;
+        this.transactionID = transactionID;
     }
 
-    public int getID(){ //requires input Card1 ID to check status after getting id
-        return this.card1.getID();
+    public int getID(){ // returns account ID
+        return this.account.getAccountID();
     }
 
     public HashMap<String, Integer> getRemainderStorageMap(){
@@ -229,7 +234,6 @@ public abstract class Transaction { //ABSTRACT CLASS
     }
 
     public void checkRunOut(){ //skip to next highest available amount and deduct from there
-
     }
 
 }

@@ -24,10 +24,14 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 -> WITHDRAWAL CLASS
   -> Consider what if the highest amount for MoneyType runs out (user wants to withdraw money), then use the next available highest amount to do calculations
 
+-> If user's card doesn't have enough money stored inside to withdraw, give option/cancel for user to switch to a different card
+
 -> How to handle user's deposit? 
   -> "prompt the user on how many of each denomination they want to deposit, calling from ATM class function ATM.askForMoneyStack()" - Tim
 
 -> Should we have a list to store a multiple cards of 1 user?
+
+-> CARD CLASS: store a list of diff types/in constructor add 'type'
 
 # GUI Design
 

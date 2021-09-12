@@ -1,4 +1,4 @@
-package R18_G2_ASM1;
+// package R18_G2_ASM1;
 
 public class ATM1{
     private int total_amount_stored;
