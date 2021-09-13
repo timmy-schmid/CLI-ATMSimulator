@@ -8,9 +8,6 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
-// import org.junit.jupiter.api.BeforeAll;
-// import org.junit.jupiter.api.AfterAll;
-
 class TransactionTest {
     Transaction withdrawalA;
     Transaction balanceCheckB;
