@@ -1,9 +1,9 @@
 ASSIGNMENT 1 WORKING IN PROGRESS!
 
-Check and edit the google doc for git commands if needed
+Check google doc for group meeting dates + any extra info
 
 # 1. FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
-git checkout master --> gut pull --> git checkout your_branch_name --> git merge master
+git checkout master --> git pull --> git checkout your_branch_name --> git merge master
  
 # 2. FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
 Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
@@ -32,6 +32,11 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 -> 1 card is linked with 1 account!
 
 -> CARD CLASS: store a list of diff types/in constructor add 'type' [for later to work on if there's time]
+
+# How to use JUNIT and examples of testing
+
+Check this out: https://junit.org/junit5/docs/current/user-guide/
+
 
 # GUI Design
 
