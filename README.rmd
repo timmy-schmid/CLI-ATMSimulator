@@ -1,6 +1,7 @@
 ASSIGNMENT 1 WORKING IN PROGRESS!
 
-Check google doc for group meeting dates + any extra info
+Check and modify Miro UML diagrams and add any notes if necessary.
+Check google doc for due date and schedules for next meeting
 
 # 1. FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
 git checkout master --> git pull --> git checkout your_branch_name --> git merge master
@@ -8,10 +9,13 @@ git checkout master --> git pull --> git checkout your_branch_name --> git merge
 # 2. FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
 Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
 
-# 3. FOLLOW THIS TO MERGE UR CHANGES  TO MASTER!!
--> git pull (do this first to prevent merge conflicts) 
+# 3. FOLLOW THIS TO MERGE UR CHANGES TO MASTER!! [ALWAYS pull before pushing!]
+-> git pull (this prevents merge conflicts) 
     THEN:
 -> git checkout master --> git merge branch_name --> git push
+
+# 4. WHAT IF I ACCIDENTALLY ADDED FILES BUT ADDED TO THE WRONG PLACE?
+  E.g. You accidentally added to master but wanted to add to your branch (haven't commited yet) --> UNDO action by using: reset <file>
 
 # TODO !!!!! [Add below any other notes to check out]
 
@@ -32,6 +36,11 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 -> 1 card is linked with 1 account!
 
 -> CARD CLASS: store a list of diff types/in constructor add 'type' [for later to work on if there's time]
+
+# Access to MIRO board for viewing/editing
+
+Check this out: https://miro.com/app/board/o9J_ly_Mywo=/
+
 
 # How to use JUNIT and examples of testing
 
