@@ -1,11 +1,5 @@
 package R18_G2_ASM1;
 
-/*
-    "if subclass overrides every abstract method that it inherits, then that subclass is not abstract.
-    If it inherits any abstract methods and DOESN'T override them, then the subclass also has abstract methods and must itself also be defined abstract"
-    - internet
-*/
-
 import java.util.Date;
 
 public class T_Withdrawal extends Transaction {

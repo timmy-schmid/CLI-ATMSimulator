@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 TransactionStatusCode: used to record the state of the transaction i.e. if user doesn't have enough money in their account when withdrawing --> transaction status should be set to FailDeposit Enum
 
+Transaction should call methods from ATM to access MoneyStack, amount required from user --> remove [amount] from constructor!!!
+
 */
 
 public abstract class Transaction { //ABSTRACT CLASS
@@ -78,8 +80,6 @@ public abstract class Transaction { //ABSTRACT CLASS
     public boolean canDeductFromCard(Card card){ //where this card is the card user picked out of all cards found in Account (cardsList)
         //first validate card, then deduct amount
         if (card != null && card.getTotalAmount() >= this.amount){
-            // card.totalAmount -= this.amount;
-            //withdraw from account or from card class?
             return true;
         } else {
             return false;
@@ -88,7 +88,6 @@ public abstract class Transaction { //ABSTRACT CLASS
 
     //finds remainder then stores the amount=deductAmount into a map and returns it
     public void findRemainder(){//double removeAmount){ //compare this against moneytypes
-        // System.out.printf("LINE132 TRANSACTION ----------------- initial deductAmount = [%.2f]\n", this.amount);
         double temp1 = amount;
 
         int hundred = 0;
