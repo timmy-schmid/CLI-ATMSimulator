@@ -16,10 +16,9 @@ public class Session {
     public void run(int cardNum){
 
     }
-    public Session(ATM1 ATM, Card card, Transaction transaction){
+    public Session(ATM1 ATM, Card card){
         this.attachedATM = ATM;
         this.card = card;
-        this.transaction = transaction;
     }
 
     public SessionStatus getStatus(){
@@ -30,7 +29,7 @@ public class Session {
     }
 
     public SessionStatus validateSession(){
-        return null;
+        return SessionStatus.valueOf("CARD_EXPIRED");
     }
 
 
@@ -39,7 +38,7 @@ public class Session {
     }
 
     public void transact(Account a){
-
+        
     }
 
     public boolean checkPIN(){
