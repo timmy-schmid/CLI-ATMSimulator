@@ -4,23 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
+/**
+ * The ATM class represents the central shell of an XYZ Bank ATM. 
+ * An ATM is made up of objects that represent the physical components that make up the ATM.
+ * These components include: CardDispensor, CashDispensor, Keypad and Display.
+ * The ATM class is used to interact with these various components which can be influenced by an ATM users actions.
+ * @author Tim Schmid
+ * @version 1.0
+ */
 public class ATM {
-  private static final int ADMIN_CARD_NUMBER = 99999;
-  private static int CountID = 0;
-  private int terminalID;
+
   private String terminalLocation;
   private MoneyStack balance;
-  private List<Session> sessionLog;
   private Session currentSession;
   private CashDispensor cashDispensor;
   private Keypad keypad;
   private CardDispensor cardDispensor;
   private Display display;
 
+/**
+ * Constructs and inialises a new ATM with a balance of AUD $0
+ * @param location A string representation of where the ATM is located
+ */
   public ATM(String location) {
     this.terminalLocation = location;
-    this.sessionLog = new ArrayList<>();
-    terminalID = ++CountID;
 
     //Construct ATM components
     this.cashDispensor = new CashDispensor();
@@ -29,11 +37,35 @@ public class ATM {
     this.display = new Display();
   }
 
+/**
+ * Constructs and inialises a new ATM with an initial balance represented by a MoneyStack object.
+ * @param location A string representation of where the ATM is located
+ * @param m the starting balance of the ATM
+ */
   public ATM(String location, MoneyStack m) {
     this(location);
     this.balance = m;
   }
   
+ /**
+ * Starts up the ATM to interact with a user.
+ * A user is promoted to insert their card. After insertion an ATM session commences.
+ * After completion of the ATM session, the ATM interacts with its internal components depending on the sessions status.
+ * 
+ * Possible session status' are:
+ * <ul>
+ *  <li>INVALID_CARD_NUMBER - The card number does not match a card from XYZ bank database</li>
+ *  <li>CARD_NOT_ACTIVE - The card entered is not active as it's start date is later than the current date.</li>
+ *  <li>CARD_EXPIRED - The current date is before the entered cards expiration date.</li>
+ *  <li>CARD_LOST - The card entered has been reported as lost/stolen.</li>
+ *  <li>CARD_BLOCKED - The card entered has been blocked due to too many PIN attempts.</li>
+ *  <li>ADMIN_MODE - The ATM is set to Admin Mode to perform admin tasks such as topping up money or changing the ATM's location.</li>
+ *  <li>CANCELLED - The session was cancelled by the user.</li>
+ *  <li>SUCCESS - The session was succesfully completed by the user.</li>
+ * </ul>
+ * 
+ * The ATM will shutdown after a session status has been resolved.
+ */
   public void run() {
     currentSession = new Session(this);
 
@@ -110,9 +142,15 @@ public class ATM {
     }
   }
 
+
+  /**
+   * used to query the ATM user on how many denominations of 1 (or more) Australian bank notes they would like to deposit.
+   * The user is given an option of $100, $50, $20, $10 and $5 notes to choose from using the keypad.
+   * A user can select cancel at any time in the process.
+   * The user can select finish at any time in the process to finalise the query.
+   * @return a MoneyStack representation of the total amount of notes the user has entered. If the user cancels during the process null is returned.
+   */
   public MoneyStack askForMoneyStackNotes() {
-
-
 
     MoneyStack m = new MoneyStack();
     StringBuilder s = new StringBuilder();
@@ -165,9 +203,15 @@ public class ATM {
     }
     return m;
   }
-
+  
+  /**
+   * used interally by the ATM to query an admin user on how many denominations of 1 (or more) Australian coins they would like to deposit.
+   * The user is given an option of $2, $1, 50c, 20c, 10c and 5c coins to choose from using the keypad.
+   * An admin user can select cancel at any time in the process.
+   * The admin user can select finish at any time in the process to finalise the query.
+   * @return a MoneyStack representation of the total amount of coins the admin user has entered. If the admin user cancels during the process null is returned.
+   */
   private MoneyStack askForMoneyStackCoins() {
-
 
     MoneyStack m = new MoneyStack();
     StringBuilder s = new StringBuilder();
@@ -226,6 +270,13 @@ public class ATM {
     return m;
   }
 
+
+  /**
+   * used internally by the ATM to top-up the ATM via an admin user.
+   * The admin can select from notes or coins (or both) to deposit.
+   * The admin user can select cancel at any time in the process. In this instance the balance remains the same as before.
+   * The admin user can select finish at any time in the process to finalise the query. In this instance the amount is topped up by the specified amount
+   */
   private void addCash() {
 
     StringBuilder s = new StringBuilder();
@@ -262,14 +313,23 @@ public class ATM {
     }
   }
 
+  /**
+   * This class is used internally by the ATM via an admin user to change the location of the ATM
+   */
   private void changeLocation() {
     display.displayMessage("Please enter a new location"); 
     Scanner sc = new Scanner(System.in);
-    terminalLocation = sc.nextLine();
+    this.terminalLocation = sc.nextLine();
     sc.close();
   }
 
+/**
+   * Used to query the user for the personal identification number (PIN) for their card.
+   * Only 4 digit PIN's are allowed. If a user incorrectly enters their PIN they are prompted to try again.
+   * @return the PIN number entered by the user
+   */
   public int askForPIN() {
+
 
     display.displayMessage("Please enter your 4 digit PIN:"); 
 
@@ -285,7 +345,12 @@ public class ATM {
     return pin;
   }
 
-  public TranscationType askForTransType() {
+  /**
+   * Used to query the user for the type of transaction they would like to make from their account.
+   * They can select from the options: withdrawal, deposit or balance check.
+   * @return a TransactionType enum based on the user's selection
+   */
+  public TransactionType askForTransType() {
 
     KeypadButton.deactivateAll();
     KeypadButton.ONE.activate();
@@ -316,12 +381,22 @@ public class ATM {
     }
   }
 
+  /**
+   * Used to obtain the ATM's current balance.
+   * @return a MoneyStack representation of the ATM's current balance
+   */
   public MoneyStack getATMBalance() {
     return balance;
   }
   
+  /**
+   * Used to print a receipt (display to the screen) the details of a particular transaction.
+   * Only deposits and withdrawals can be printed to a receipt.
+   * The transaction number, transaction type and amount are printed on the receipt.
+   * @param t the Transaction object that all the the transaction metadata is pulled from.
+   * @param m the Moneystack representation of the withdrawal/deposit.
+   */  
   public void printReceipt(Transaction t, MoneyStack m) {
-    //transaction number, transaction type, amount withdrawn, account balance.
     StringBuilder s = new StringBuilder();
     s.append("A receipt has been printed:\n\n");
 
@@ -338,7 +413,7 @@ public class ATM {
     s.append(m.query(MoneyType.TEN_DOLLARS) + " x $10\n");
     s.append(m.query(MoneyType.FIVE_DOLLARS) + " x $5\n");
 
-    if (t.getType() == TranscationType.DEPOSIT) {
+    if (t.getType() == TranscationType.WITHDRAWL) {
       s.append(m.query(MoneyType.TWO_DOLLARS) + " x $2\n");
       s.append(m.query(MoneyType.ONE_DOLLAR) + " x $1\n");
       s.append(m.query(MoneyType.FIFTY_CENTS) + " x 50c\n");
@@ -351,6 +426,10 @@ public class ATM {
     display.displayMessage(s.toString());
   }
 
+  /**
+   * Used to interact with the ATM cash dispenser in order to dispense cash.
+   * @param m the Moneystack representation of how much cash is to be dispensed.
+   */  
   public void dispenseCash(MoneyStack m) {
     cashDispensor.ejectMoney(m, balance);
   }

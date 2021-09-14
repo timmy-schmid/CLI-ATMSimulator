@@ -8,5 +8,4 @@ public class CashDispensor extends ATMComponent {
   public void ejectMoney(MoneyStack m, MoneyStack balance) {
     balance.withdraw(m);
   }
-  
 }

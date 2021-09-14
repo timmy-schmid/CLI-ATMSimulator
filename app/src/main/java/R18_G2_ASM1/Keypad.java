@@ -6,7 +6,8 @@ import java.util.Scanner;
 
 public class Keypad extends ATMComponent {
 
-  Map<Integer, KeypadButton> buttonMap = new HashMap<>();
+  private Map<Integer, KeypadButton> buttonMap = new HashMap<>();
+
   public Keypad() {
     for (KeypadButton k : KeypadButton.values()) {
       buttonMap.put(k.getCode(), k);

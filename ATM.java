@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ATM {
-  private static final int ADMIN_CARD_NUMBER = 99999;
-  private static int CountID = 0;
+
+  //ATM attributes
+  private static final int ADMIN_CARD_NUMBER = 99999; // add this to session?
+  private static int countID = 0;
   private int terminalID;
   private String terminalLocation;
   private MoneyStack balance;
-  private List<Session> sessionLog;
+  private List<Session> sessionLog; // make this static?/get rid of it
   private Session currentSession;
+
+  //ATM Components
   private CashDispensor cashDispensor;
   private Keypad keypad;
   private CardDispensor cardDispensor;

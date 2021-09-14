@@ -9,8 +9,8 @@ public enum KeypadButton {
   SEVEN(7,false),
   EIGHT(8,false),
   NINE(9,false),
-  CANCEL(10,false),
-  ENTER(11,false);
+  CANCEL(10,false), //currently not used
+  ENTER(11,false); //currently not used
 
   private final int code;
   private boolean active;
