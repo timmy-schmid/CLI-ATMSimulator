@@ -1,33 +1,30 @@
 package R18_G2_ASM1;
 
-/*
-    all extensions from abstract class Transaction should have overriding methods???!!
+import java.util.Date;
 
-    "if subclass overrides every abstract method that it inherits, then that subclass is not abstract.
-    If it inherits any abstract methods and DOESN'T override them, then the subclass also has abstract methods and must itself also be defined abstract"
-    - internet
-*/
 public class T_Withdrawal extends Transaction {
-    protected Card1 card;
-
-    private int MaxWithdrawalAmount;
-    private int MinWithdrawalAmount;
-    protected double deductAmount;
-
-    public TransactionType name;
-
-    //where name = enumType, deductAmount = userInputAmount
-    public T_Withdrawal(TransactionType name, Card1 card, double deductAmount, int MaxWithdrawalAmount, int MinWithdrawalAmount){ //after selecting button to withdrawal (amount = deduct_amount?)
-        super(name, card, deductAmount, MaxWithdrawalAmount, MinWithdrawalAmount); 
-    }
     
-    public void check_withdrawal_limit(Card1 card){
-        ;
-        //error message if reached max withdrawal amount/min withdrawal amount (prompt to input again)
+    protected double deductAmount;
+    protected TransactionType type;
+    protected Account account;
+
+    protected int transactionID;
+    protected Date date;
+    
+    private ATM1 attachedATM;
+    
+    // deductAmount = userInputAmount
+    public T_Withdrawal(ATM1 attachedATM, TransactionType type, Account account, double deductAmount, Date date, int transactionID){
+        super(attachedATM, type, account,  deductAmount, date, transactionID);
     }
 
-    //algorithm to determine what cash to withdrawal (first consider cash, then coins)
-
-    // option 1: let user on screen decide ether larger cash note or smaller cash note 
-    // option 2: user can only pick larger amount on screen to withdrawal, if they dont want to, then 'cancel' and select a smaller amount   
+    //overrides abstract class method
+    public void modify(Account account){
+        if (account != null) {
+            account.deposit(super.amount); //or just modify that 1 card's totalAmount
+            System.out.println(TransactionStatus.SUCCESS_DEPOSIT.toString()); 
+        } else {
+            System.out.println(TransactionStatus.FAIL_DEPOSIT.toString()); 
+        }
+    }
 }

@@ -1,26 +1,35 @@
 package R18_G2_ASM1;
 
+import java.util.Date;
+
 public class T_Balance extends Transaction {
-    private Card1 card;
     private int totalAmountStored;
-    private int MaxWithdrawalAmount;
-    private int MinWithdrawalAmount;
-    protected double deductAmount;
+    private ATM1 attachedATM;
 
-    public TransactionType name;
+    protected double amount;
+    protected TransactionType type;
+    protected Account account;
 
-    public T_Balance(TransactionType name, Card1 card, double deductAmount, int MaxWithdrawalAmount, int MinWithdrawalAmount){
-        super(name, card, deductAmount, MaxWithdrawalAmount, MinWithdrawalAmount);
+    protected int transactionID;
+    protected Date date;
+
+    public T_Balance(ATM1 attachedATM, TransactionType type, Account account, double amount, Date date, int transactionID){
+        super(attachedATM, type, account, amount, date, transactionID);
     }
 
-    //prints card details
-    public void getBalance(Card1 card){
-
-        //validate card first --> call card.validation() function? 
-        if (card != null) {
-            System.out.println("Total amount stored in this card is " + card.totalAmount);
+    //prints ALL card details ???
+    public void getBalance(Account account){
+        if (account != null){
+            if (account.getCards() != null){
+                //loop through account cards list, printing details for them all
+                account.printAllCardBalance();
+                System.out.println(TransactionStatus.SUCCESS_BALANCE.toString()); //prints status info in the end
+            } else {
+                System.out.println("No available cards found on account. Cannot find balance.");
+                return;
+            }
         } else {
-            System.out.println("Cannot determine card balance due to error validating card. Sorry!");
+            System.out.println("No valid account found, please create one.");
         }
     }
 }

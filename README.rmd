@@ -1,33 +1,51 @@
 ASSIGNMENT 1 WORKING IN PROGRESS!
 
-Check and edit the google doc for git commands if needed
+Check and modify Miro UML diagrams and add any notes if necessary.
+Check google doc for due date and schedules for next meeting
 
-# FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
-git checkout master --> gut pull --> git checkout your_branch_name --> git merge master
+# 1. FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
+git checkout master --> git pull --> git checkout your_branch_name --> git merge master
  
-# FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
+# 2. FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!! 
 Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
 
-# FOLLOW THIS TO MERGE UR CHANGES  TO MASTER!!
--> git pull (do this first to prevent merge conflicts) 
+# 3. FOLLOW THIS TO MERGE UR CHANGES TO MASTER!! [ALWAYS pull before pushing!]
+-> git pull (this prevents merge conflicts) 
     THEN:
 -> git checkout master --> git merge branch_name --> git push
+
+# 4. WHAT IF I ACCIDENTALLY ADDED FILES BUT ADDED TO THE WRONG PLACE?
+  E.g. You accidentally added to master but wanted to add to your branch (haven't commited yet) --> UNDO action by using: reset <file>
 
 # TODO !!!!! [Add below any other notes to check out]
 
 -> make sure indenting is 2 spaces, use CamelCase for variable naming!
 
--> Creating/merging Card, Account class
+-> how to distinguish between which card is currently being used for transaction? [user input picks a card from their list of cards available??]
 
 -> keep code consistent + nicely styled + minimise redundancy
 
 -> WITHDRAWAL CLASS
   -> Consider what if the highest amount for MoneyType runs out (user wants to withdraw money), then use the next available highest amount to do calculations
 
+-> If user's card doesn't have enough money stored inside to withdraw, give option/cancel for user to switch to a different card
+
 -> How to handle user's deposit? 
   -> "prompt the user on how many of each denomination they want to deposit, calling from ATM class function ATM.askForMoneyStack()" - Tim
 
--> Should we have a list to store a multiple cards of 1 user?
+-> 1 card is linked with 1 account!
+
+-> CARD CLASS: store a list of diff types/in constructor add 'type' [for later to work on if there's time]
+
+# Access to MIRO board for viewing/editing
+
+Check this out: https://miro.com/app/board/o9J_ly_Mywo=/
+
+
+# How to use JUNIT and examples of testing
+
+Check this out: https://junit.org/junit5/docs/current/user-guide/
+
 
 # GUI Design
 
