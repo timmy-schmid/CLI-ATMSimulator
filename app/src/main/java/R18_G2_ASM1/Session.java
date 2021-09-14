@@ -62,10 +62,7 @@ public class Session {
     public void run(int cardNum){
 
     }
-    public Session(ATM1 ATM, Card card){
-        this.attachedATM = ATM;
-        this.card = card;
-    }
+
 
    /**
      * Used to verify a card number against the card provided.
@@ -88,8 +85,7 @@ public class Session {
         return false;
     }
 
-    public SessionStatus validateSession(){
-        return SessionStatus.valueOf("CARD_EXPIRED");
+
     /**
      * Searches a .csv file for a card that matches the user's card number.
      * The first match in the file is then converted into a card object.
@@ -142,7 +138,7 @@ public class Session {
 
     }
 
-    public void transact(Account a){
+
         
     /**
      * Sets up a new Transaction object and runs it.
