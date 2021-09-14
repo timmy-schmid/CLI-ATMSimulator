@@ -198,6 +198,7 @@ public abstract class Transaction { //ABSTRACT CLASS
     public void checkRunOut(){ //skip to next highest available amount and deduct from there
     }
 
+<<<<<<< HEAD
     public void WITHDRAW_MONEY(Card card){
         this.findRemainder(); //store the amount into a map [notes/coins]
         this.compareReqWithMoneyTypeAmount(this.getSplitWithdrawalAmountMap());
@@ -213,3 +214,6 @@ public abstract class Transaction { //ABSTRACT CLASS
 
 
 }
+=======
+}
+>>>>>>> ATM
