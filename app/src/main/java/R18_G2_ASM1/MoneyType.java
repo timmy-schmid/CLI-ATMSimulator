@@ -1,4 +1,4 @@
-// package R18_G2_ASM1;
+package R18_G2_ASM1;
 
 public enum MoneyType {
   // HUNDRED_DOLLARS (100),

@@ -1,3 +1,4 @@
+package R18_G2_ASM1;
 import java.util.*;
 
 public class Account {
@@ -5,6 +6,8 @@ public class Account {
   private int accountID;
   private double balance;
   private ArrayList<Card> cards;
+
+  //how to distinguish between which card is currently being used for transaction? [user input picks a card from their list of cards available??]
 
   public Account(int accountID, double balance, ArrayList<Card> cards) { //is balance in constructor necessary?
     this.accountID = accountID;
@@ -36,22 +39,17 @@ public class Account {
     this.cards = cards;
   }
 
-  public ArrayList<Card> getCardsList() {
-    return this.cards;
-  }
-
-  public void withdraw(int amount) {
+  public void withdraw(double amount) {
     double b = getBalance();
     this.balance = b - amount;
   }
 
-  public void deposit(int amount) {
+  public void deposit(double amount) {  //also modify for card? --> this.card from this.getCardsList() --> add amount?
     double b = getBalance();
     this.balance = b + amount;
   }
 
   public void printAllCardBalance(){
     //loop through cardsLIST, printing balance stored
-
   }
 }

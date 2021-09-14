@@ -8,82 +8,129 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterAll;
-
 class TransactionTest {
-    T_Withdrawal withdrawal;
-    // Transaction withdrawal;
-    Transaction balanceCheck;
-    Transaction deposit;
-    public static final int MAX_AMOUNT = 500;
-    public static final int MIN_AMOUNT = 5;
+    Transaction withdrawalA;
+    Transaction balanceCheckB;
+    T_Deposit depositC;
+
     App app;
 
-    Card1 userA;
+    Card userA; // withdraw
+    Card userB; // deposit
+    Card userC; // balance check
 
-    @BeforeAll
+    Date date;
+
+    ArrayList<Card> cardsListA; 
+    ArrayList<Card> cardsListB;
+    ArrayList<Card> cardsListC;
+
+    Account userAAccount;
+    Account userBAccount;
+    Account userCAccount;
+
+    double amount;
+    double depositAmount;
+
+    ATM1 atm1;
+
+    @BeforeEach
     public void setUp(){
         app = new App();
+        date = new Date();
+        atm1 = new ATM1();
 
-        userA = new Card1("BOB", 10000, "15/08/2019", "20/08/2022");
-        withdrawal = new T_Withdrawal("Withdrawal", userA, 200, 500, 5);
-        // balanceCheck = new Transaction(userA);
-        // deposit = new T_Deposit(userA);
+        userA = new Card("BOB",1500, 33333, date, date, false, false, false, 333); //adjust start/end date
+        userB = new Card("DYLAN", 1000, 22222, date, date, false, false, false, 222);
+        userC = new Card("MILLY", 1000, 11111, date, date, false, false, false, 111);
+
+        amount = 300.00; //to withdraw
+        depositAmount = 150.50;
+
+        cardsListA = new ArrayList<>();
+        cardsListB = new ArrayList<>();
+        cardsListC = new ArrayList<>();
+        
+        cardsListA.add(userA);
+        cardsListB.add(userB);
+        cardsListC.add(userC);
+
+        userAAccount = new Account(userA.getCardNumber(), userA.getTotalAmount(), cardsListA);
+
+        userBAccount = new Account(userB.getCardNumber(), userB.getTotalAmount(), cardsListB);
+
+        userCAccount = new Account(userC.getCardNumber(), userC.getTotalAmount(), cardsListC);
+
+
+        withdrawalA = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userAAccount, amount, date, userA.getCardNumber());
+
+        balanceCheckB = new T_Balance(atm1, TransactionType.BALANCE, userBAccount, amount, date, userB.getCardNumber());
+
+        depositC = new T_Deposit(atm1, TransactionType.DEPOSIT, userCAccount, depositAmount, date, userC.getCardNumber());
+
+
     }
 
-    @AfterAll //@AfterEach
-    public void tearDown(){
+    @AfterEach
+    public void tearDown(){ //eject card from atm?
         userA = null;
-        withdrawal = null;
+        userB = null;
+        userC = null;
+
+        withdrawalA = null;
+        balanceCheckB = null;
+        depositC = null;
+
+        userAAccount = null;
+        userBAccount = null;
+        userCAccount = null;
+
+        cardsListA = null;  
+        cardsListB = null;  
+        cardsListC = null;  
     }
 
     @Test
-    public void testNotNullCard(){ //testing card obj not null
+    public void testNotNullCardAccount(){ //testing card obj not null
         assertNotNull(userA);
+        assertNotNull(userAAccount);
     }
     
     @Test
-    public void testcanDeductMoney(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
-        boolean result = withdrawal.canDeduct(userA);
-        assert (result ==true);
+    public void testcanDeductFromCard(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
+        boolean result = withdrawalA.canDeductFromCard(userA);
+        assert (result == true);
     }
 
-    // @Test
-    // public void testcanDeductExactAmount(){ //testing cash returned (whole num, note)
-    //     MoneyType total_hundred_amount = new EnumTest(HUNDRED_DOLLARS.10);
-    //     boolean result = withdrawal.exactWithdrawalAmountCheck(userA);
-    //     assert (result ==true);
-    // }
+    @Test
+    public void testcantDeductFromCard(){ //not enough stored in card to deduct
+        double temp = 250;
+        userA.setTotalAmount(temp); //set card amount from 1500 to 250, deduct = 300
+        boolean result = withdrawalA.canDeductFromCard(userA);
+        assert (result == false );
+        userA.setTotalAmount(withdrawalA.getAmount());
+    }
+
+    @Test
+    //prints output after splitting up deductAmount into different money/coin components 
+    public void testCashRemainder(){
+        withdrawalA.findRemainder(); //withdrawal.getDeductAmount());
+        assertNotNull(withdrawalA.getSplitWithdrawalAmountMap());
+    }
+
+    @Test
+    public void testCanDeposit(){
+        double expected = userC.getTotalAmount()+depositAmount;
+        depositC.proceedDepositTransaction(depositC.getAccount());
+        
+        double actual = userC.getTotalAmount();
+        //assert userC has extra amount
+        System.out.println("Expected = " + expected + " ;:::::: actual = " + actual);
+        assertEquals(actual, expected,
+                "Amount in card did not increase,proceedDepositTransaction function failed! ");
+        // userC.getCardDetails();
+    }
 }
-
-    // public static void testPrintCard1(Card1 userA){
-    //     userA.getCardDetails();
-    // }
-
-    // public static void testDeductMoneyFromCard(Transaction withdrawal){
-    //     withdrawal.deductFromCard();
-    // }
-
-    // //just printing out ALL enum vals
-    // public static void testMoneyType(){
-    //     for (MoneyType type: MoneyType.values()) {
-    //         System.out.println("type = "+type + ", value = " + type.getValue() +" , amount = " + type.getAmount());
-    //     }
-    // }
-
-    // // public static void testExactWithdrawalAmount(Transaction withdrawal){
-    // //     //first time withdrawing money from ATM (Full originally)
-    // //    boolean result =  withdrawal.exactWithdrawalAmountCheck();
-    // // //    assert(MoneyType.HUNDRED_DOLLARS.getAmount() == 49); //decreased by 1
-    // // }
-
-    // //prints output after splitting up deductAmount into different money/coin components 
-    // public static void testCashRemainder(Transaction withdrawal){
-    //     withdrawal.findRemainder(); //withdrawal.getDeductAmount());
-    //     withdrawal.printRemainderStorageMap();
-    // }
-
 
     // //1 user using ATM machine
     // public static void testDeductFromATM(Transaction withdrawal){
@@ -91,64 +138,15 @@ class TransactionTest {
     //     withdrawal.compareReqWithMoneyTypeAmount(withdrawal.getRemainderStorageMap());
     // }
 
-    
     // //3 users using ATM machine (A, B, C)
     // public static void multipleTestDeductFromATM(Transaction withdrawalA, Transaction withdrawalB, Transaction withdrawalC){
        
-    //     withdrawalA.findRemainder();
-    //     withdrawalA.compareReqWithMoneyTypeAmount(withdrawalA.getRemainderStorageMap()); //deduct from ATM
-    //     withdrawalA.deductFromCard();
-        
-    //     withdrawalB.findRemainder();
-    //     withdrawalB.compareReqWithMoneyTypeAmount(withdrawalB.getRemainderStorageMap());
-    //     withdrawalB.deductFromCard();
-
-    //     withdrawalC.findRemainder();
-    //     withdrawalC.compareReqWithMoneyTypeAmount(withdrawalC.getRemainderStorageMap()); //deduct from ATM
-    //     withdrawalC.deductFromCard();
-    // }
-
-
-    // public static void main(String[] args) {
-    //     ATM1 atm1 = new ATM1();
-
-    //     List<Card1> cardsListA = new ArrayList<>();
-    //     List<Card1> cardsListB = new ArrayList<>();
-    //     List<Card1> cardsListC = new ArrayList<>();
-
-    //     Card1 userA = new Card1("BOB", 111,1000, "15/08/2019", "20/08/2022");
-    //     cardsListA.add(userA);
-    //     Account userAAccount = new Account(userA.getID(), cardsListA);
-
-    //     Card1 userB = new Card1("DYLAN", 121,1000, "25/08/2020", "15/10/2022");
-    //     cardsListB.add(userB);
-    //     Account userBAccount = new Account(userB.getID(), cardsListB);
-
-    //     Card1 userC = new Card1("MILLY", 131,1000, "01/04/2020", "25/12/2021");
-    //     cardsListC.add(userC);
-    //     Account userCAccount = new Account(userC.getID(), cardsListC);
-
-
-    //     Date date = new Date();
-    //     double deductAmountAB = 59.50;
-    //     double deductAmountC = 120.00;
-
     //     //where transactionID = userID? 
-    //     Transaction withdrawalA = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userAAccount, deductAmountAB, date, userA.getID());
 
-    //     Transaction withdrawalB = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userBAccount, deductAmountAB, date, userB.getID());
-
-    //     Transaction withdrawalC = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userCAccount, deductAmountC, date, userC.getID());
-
-    //     // testCashRemainder(withdrawal);
-    //     // testDeductFromATM(withdrawal);
-    //     multipleTestDeductFromATM(withdrawalA, withdrawalB, withdrawalC);
-    //     testMoneyType();
-
-    //     System.out.println("\n\n");
-    //     testPrintCard1(userA);
-
-    //     testPrintCard1(userB);
-    //     testPrintCard1(userC);
+        // //just printing out ALL enum vals
+    // public static void testMoneyType(){
+    //     for (MoneyType type: MoneyType.values()) {
+    //         System.out.println("type = "+type + ", value = " + type.getValue() +" , amount = " + type.getAmount());
+    //     }
     // }
 // }
