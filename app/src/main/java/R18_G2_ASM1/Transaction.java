@@ -1,219 +1,316 @@
-package R18_G2_ASM1;
+// package R18_G2_ASM1;
 
 import java.util.Date;
 import java.lang.Math;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.io.IOException;
 
 /*
 
-TransactionStatusCode: used to record the state of the transaction i.e. if user doesn't have enough money in their account when withdrawing --> transaction status should be set to FailDeposit Enum
+The Transaction class processes the instructions a user makes based on their input selection to either deposit, withdraw or check their account's balance. 
 
-Transaction should call methods from ATM to access MoneyStack, amount required from user --> remove [amount] from constructor!!!
+This class interacts with Moneystack class and ATM to retrieve details and check whether extraction of money is available or not.
 
 */
 
-public abstract class Transaction { //ABSTRACT CLASS
-
-    //declaring fields + nonabstract methods
-    protected int transactionID;
+public class Transaction {
+    /**
+     * Date to log session/transaction times --> REMOVE LATER IF UNECESSARY?
+     */
     protected Date date;
-    protected double amount; 
-
-    private int totalAmountStored;
-    protected HashMap <String, Integer> splitWithdrawalAmountMap; // remainderStorageMap 
-
-    protected TransactionType type;
-    // protected TransactionStatusCode currentStatus;
-    private ATM1 attachedATM;
+    
+    protected double resetAmount; //delete later if not necessary
+    protected double originalAmount; //delete later if not necessary
+    protected double amount;  //represents total amount
+    
+    /**
+     * A user's account
+     */
     protected Account account;
+    
+    /**
+     * The type of transaction
+     */
+    protected TransactionType type;
 
-    //where amount represents deductAmount or addAmount
-    public Transaction(ATM1 attachedATM, TransactionType type, Account account, double amount, Date date, int transactionID){
+    private ATM attachedATM;
+    private MoneyStack balance;
+    protected int transactionID;
+
+
+    /**
+     * Amount to deposit (cash + coins), split into a map with each amount
+     * Loop through this map to call function MoneyStack.addmoney(key, * value)
+     */
+    protected HashMap <MoneyType, Integer> depositAmountMap;
+
+    // instead of having TransactionType type, use ATM's askForTransType();
+
+    /**
+     * Constructs a new Transaction object.
+     * @param attachedATM an ATM object
+     * @param type type of Transaction to proceed
+     * @param account A user's account
+     * @param transactionID A transaction's ID
+     */
+    public Transaction(ATM attachedATM, TransactionType type, Account account,  int transactionID){
         
-        this.amount = amount; //how much user wants to extract from ATM! from here or from Card.deductAmount()???
-        this.type = type;
-        this.totalAmountStored = 100000; //comes from ATM getTotalAmountStored()? 
+        this.amount = amount; //set initially as just cash amount
+        this.originalAmount = amount; //initial 
+        this.type = type; //attachedATM.askForTransType();
         this.attachedATM = attachedATM;
         this.account = account;
-        this.splitWithdrawalAmountMap = new HashMap<>();
-        this.date = date;
         this.transactionID = transactionID;
+        this.balance = attachedATM.getATMBalance();
+        this.depositAmountMap = new LinkedHashMap<MoneyType, Integer>(); // preserves order of key, value sequence!
     }
 
-    // returns account ID
+    public void initialSetUpMap(){ //notes only!
+        //initialise the values inside (amount = 0), key = MoneyType
+        this.depositAmountMap.put(MoneyType.HUNDRED_DOLLARS,0);
+        this.depositAmountMap.put(MoneyType.FIFTY_DOLLARS, 0);
+        this.depositAmountMap.put(MoneyType.TWENTY_DOLLARS, 0);
+        this.depositAmountMap.put(MoneyType.TEN_DOLLARS,  0);
+        this.depositAmountMap.put(MoneyType.FIVE_DOLLARS, 0);
+    }
+
+    public HashMap <MoneyType, Integer> getDepositAmountMap(){
+        return this.depositAmountMap;
+    }
+
+    public void resetDepositAmountMap(){
+        for (HashMap.Entry <MoneyType, Integer> entry: this.getDepositAmountMap().entrySet()){
+        this.depositAmountMap.replace(entry.getKey(), 0);
+        }
+    }
+
+    /**
+     * getID
+     * @return returns a user account's ID
+     */
     public int getID(){ 
         return this.account.getAccountID();
     }
     
-    // returns account ID
+    // returns ATM balance: MoneyStack
+
+    /**
+     * getMoneyStackBalance
+     * @return returns A MoneyStack object storing amount of coins and cash stored in ATM
+     * getBalance()
+     */
+    public MoneyStack getMoneyStackBalance(){ 
+        return this.balance;
+    }
+    
+    /**
+     * getAccount
+     * @return returns a user's account
+     */
     public Account getAccount(){
         return this.account;
     }
 
-    public HashMap<String, Integer> getSplitWithdrawalAmountMap(){
-        return this.splitWithdrawalAmountMap;
-    }
-
-    // retrieves which type it is from user input?
+    /**
+     * getType
+     * @return retrieves a user's preferred type of transaction
+     */
     public TransactionType getType(){
         return this.type;
     }
     
+    /**
+     * getAmount
+     * @return returns a user's total desired amount
+     */
     public double getAmount(){
         return this.amount;
     }
 
-    public void cancelOption(){
+    /**
+     * setAmount
+     * Sets user total amount to a different amount
+     * @param coin_amount extra amount to add if the transaction type is 'deposit'
+     * @return total amount
+     * if deposit: [cash only]
+     * if withdrawal: [cash + coins]
+     */
+    public void setAmount(double coin_amount){
+        this.amount += coin_amount;
     }
 
-    // public TransactionStatusCode getStatus(){ //create a transactionStatusCode class file?
-    //     return this.currentStatus;
+    // public void resetAmount(){
+    //     this.amount = this.resetAmount; //if user changes their mind - cancel?
     // }
 
-    public void modify(Account acc){
-        account.deposit(amount);
-    }
-
-    public void run(){ //call in App class (where each button associates with its subclass (transaction, deposit or balance check?))
-    }
-    
-    public boolean canDeductFromCard(Card card){ //where this card is the card user picked out of all cards found in Account (cardsList)
-        //first validate card, then deduct amount
-        if (card != null && card.getTotalAmount() >= this.amount){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    //finds remainder then stores the amount=deductAmount into a map and returns it
-    public void findRemainder(){//double removeAmount){ //compare this against moneytypes
-        double temp1 = amount;
-
-        int hundred = 0;
-        int fifty = 0;
-        int twenty = 0;
-        int ten = 0;
-        int five = 0;
-        int two = 0;
-        int one = 0;
-        int fifty_c = 0;
-
-        if (temp1 >= 100){
-            hundred = (int)(temp1/100);
-            temp1 = temp1 % 100;
-        }
-
-        if (temp1 >= 50){
-            fifty = (int)(temp1/50);
-            temp1 = temp1 % 50;
-
-        } if (temp1 >= 20){
-            twenty = (int)(temp1/20);
-            temp1 = temp1 % 20;
-
-        } if (temp1 >= 10){ // < 20
-            ten = (int)(temp1/10);
-            temp1 = temp1 % 10;
-
-        } if (temp1 >= 5){
-            five = (int)(temp1/5);
-            temp1 = temp1 % 5;
-
-        } if (temp1 >= 2){
-            two = (int)(temp1/2);
-            temp1 = temp1 % 2;
-
-        } if (temp1 >= 1){
-            one = (int)(temp1/1);
-            temp1 = temp1 % 1;
-
-        } else {
-            fifty_c = (int)(temp1/0.5);
-            temp1 = temp1 % 0.5;
-        }
-
-        //STORE THE RESULTS INTO THE HASHMAP!!!
-
-        this.splitWithdrawalAmountMap.put("hundred", hundred);
-        this.splitWithdrawalAmountMap.put("fifty", fifty);
-        this.splitWithdrawalAmountMap.put("twenty", twenty);
-        this.splitWithdrawalAmountMap.put("ten", ten);
-        this.splitWithdrawalAmountMap.put("five", five);
-        this.splitWithdrawalAmountMap.put("two", two);
-        this.splitWithdrawalAmountMap.put("one", one);
-        this.splitWithdrawalAmountMap.put("fifty_c", fifty_c);
-    }
-
-    public void printSplitWithdrawalAmountMap(){
-        for (HashMap.Entry<String, Integer> entry : this.getSplitWithdrawalAmountMap().entrySet()) {
+    /**
+     * printMoneyStack
+     * prints amount remaining on MoneyStack for debugging purposes
+     * Accesses moneyStack object's getMoney() method to get the hashmap<MoneyType, * Integer>!
+     */
+    public void printMoneyStack(){
+        for (HashMap.Entry <MoneyType, Integer> entry : this.getMoneyStackBalance().getMoney().entrySet()) {
             if (entry.getValue() > 0){ //print only those with amount != 0
                 System.out.printf("Money type: $%s ------ amount:[%d]\n", entry.getKey(), entry.getValue());
             }
         }
     }
 
-    //after finding out amount of each moneytype required to deduct, check each amount and compare with moneytype value to see if there is enough
-        //[n] vs MoneyType.HUNDRED_DOLLARS.getValue(100) , if n = 101 but value = 100, (use the 2nd option $50)
-
-    public void compareReqWithMoneyTypeAmount(HashMap<String, Integer> keyValMap){ //remainderStoragemap
-        //MoneyType type;
-
-        if (keyValMap.get("hundred") > 0 && MoneyType.HUNDRED_DOLLARS.getAmount() >= keyValMap.get("hundred")){ //gets value e.g. {$100: [value]}
-            MoneyType.HUNDRED_DOLLARS.amount -= keyValMap.get("hundred");
+    //debugging purposes --> prints deposit map amount split up
+    public void printDepositMap(){
+        for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {
+            if (entry.getValue() > 0){ //print only those with amount != 0
+                System.out.printf("Deposit Money type: $%s ------ amount:[%d]\n", entry.getKey(), entry.getValue());
+            }
         }
-
-        if (keyValMap.get("fifty") > 0 && MoneyType.FIFTY_DOLLARS.getAmount() >= keyValMap.get("fifty")){ 
-            MoneyType.FIFTY_DOLLARS.amount -= keyValMap.get("fifty");
-        }
-
-        if (keyValMap.get("twenty") > 0 && MoneyType.TWENTY_DOLLARS.getAmount() >= keyValMap.get("twenty")){
-            MoneyType.TWENTY_DOLLARS.amount -= keyValMap.get("twenty");
-        }
-
-        if (keyValMap.get("ten") > 0 && MoneyType.TEN_DOLLARS.getAmount() >= keyValMap.get("ten")){ 
-            MoneyType.TEN_DOLLARS.amount -= keyValMap.get("ten");
-        }
-
-        if (keyValMap.get("five") > 0 && MoneyType.FIVE_DOLLARS.getAmount() >= keyValMap.get("five")){ 
-            MoneyType.FIVE_DOLLARS.amount -= keyValMap.get("five");
-        }
-
-        if (keyValMap.get("two") > 0 && MoneyType.TWO_DOLLARS.getAmount() >= keyValMap.get("two")){ 
-            MoneyType.TWO_DOLLARS.amount -= keyValMap.get("two");
-        }
-
-        if (keyValMap.get("one") > 0 && MoneyType.ONE_DOLLAR.getAmount() >= keyValMap.get("one")){ 
-            MoneyType.ONE_DOLLAR.amount -= keyValMap.get("one");
-        }
-
-        if (keyValMap.get("fifty_c") > 0 && MoneyType.FIFTY_CENTS.getAmount() >= keyValMap.get("fifty_c")){ 
-            MoneyType.FIFTY_CENTS.amount -= keyValMap.get("fifty_c");
-        } else {
-            System.out.println("CANNOT DO THE THINGS ABOVE BC: lacking money in ATM :( !\n");
-        }
-        //incomplete for 20c, 10c, 5c  ...
     }
 
-    public void checkRunOut(){ //skip to next highest available amount and deduct from there
-    }
-
-<<<<<<< HEAD
-    public void WITHDRAW_MONEY(Card card){
-        this.findRemainder(); //store the amount into a map [notes/coins]
-        this.compareReqWithMoneyTypeAmount(this.getSplitWithdrawalAmountMap());
+    /**
+        add into a hashmap the amount of deposit to split into coins + cash
+        like findRemainder()/addMoney() function basically 
+        @param amount the amount required to deposit into ATM
         
-        if (this.canDeductFromCard(card) == true) {
-            card.totalAmount -= this.amount;
-            System.out.println(TransactionStatus.SUCCESS_WITHDRAWAL.toString());
-        } else {
-            System.out.println(TransactionStatus.FAIL_WITHDRAWAL.toString());
+        handle exception when amount not divisble by 5/10 (must be notes, no coins)
+        e.g. amount = 24.5 (not ok) vs 25 (ok)
+     */
+    public void splitDepositAmountUp(double amount) {
+        if (amount%5 != 0) {
+            System.out.println("Must be of notes format.");
+            throw new IllegalArgumentException("Error: amount should only be notes, no coins accepted.");
+        } else {    
+            double total = amount; //decreases
+            int toStoreAmount = 0; //key amount
+            
+            int temp = 0;
+            //entry = key, map value = amount
+            for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {    
+                // System.out.printf("total = [%.2f], entry.getKey().getValue() = [%.2f]\n", total, entry.getKey().getValue());
+                if (total >= entry.getKey().getValue()) {
+                    toStoreAmount = (int)(total/entry.getKey().getValue()); //where amount added is of type MoneyType
+                    total = total%entry.getKey().getValue();
+                    this.depositAmountMap.put(entry.getKey(), toStoreAmount);
+                }
+            }
         }
-        return;
+    }
+
+    /**
+     * modify
+     * Modifies a user's account if valid, adding money if type is 'Deposit'
+     * and deducts money if type is 'Withdraw'
+     * @param account a user's account
+     * @param type type of transaction
+     * prints amount remaining on MoneyStack for debugging purposes
+     */
+    public void modify(Account account, TransactionType type){
+        if (account != null) {
+            if (type == TransactionType.DEPOSIT) {
+                account.deposit(this.amount);
+                //modify card amount instead ??
+            }
+           
+            else if (type == TransactionType.WITHDRAWAL) {
+                //add coins amount to this.amout
+                // this.setAmount(this.attachedATM.askForDollarAmount());
+                account.withdraw(this.amount); // deduct money from acc
+            }
+        } else { //probs not necessary since you first validate card before doing this...
+            System.out.println("Sorry your account is unavailable. Please try again.");
+        }
+    }
+
+    /**
+     * run
+     * Runs transaction process depending on user's preferred type of transaction
+     * @param type type of transaction
+     */
+    public void run(TransactionType type){ //call in App class (where each button associates with its subclass (transaction, deposit or balance check?))
+        if (type == TransactionType.DEPOSIT){
+            this.proceedDepositTransaction(this.getAccount());
+       
+        } else if (type == TransactionType.WITHDRAWAL){
+            this.proceedWithdrawalTransaction(this.getAccount());
+       
+        } else if (type == TransactionType.BALANCE) {
+            this.getBalanceInfo(this.getAccount());
+        
+        } else {
+            System.out.println("Invalid transaction type!");
+        }
+    }
+
+    /**
+     * proceedDepositTransaction
+     * Add's money onto user's account and adds notes/coins to MoneyStack
+     * @param account a user's account
+     */
+    public void proceedDepositTransaction(Account account){
+        //adding amount you want to store into ur account... (increase cash/coin in moneyStack)
+        //where this.amount has to be converted into (MONEYTYPE) ??
+        
+        //now loop through depositAmountMap, 
+        try {
+            for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {    //where amount added is of type MoneyType = key, amount = map value
+                this.getMoneyStackBalance().addMoney(entry.getKey(), entry.getValue());
+            }
+        } catch (IOException e) {
+            System.out.println("Cannot add money into MoneyStack.");
+            return;
+        }
+
+        
+        // this.getBalance().addMoney(this.amount, this.amount);
+        this.modify(account, TransactionType.DEPOSIT);
+        //now print receipt
+        this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
     }
 
 
+    /**
+     * proceedWithdrawalTransaction
+     * Deducts money from user's account and removes cash/coins from MoneyStack
+     * Checks if user has enough money stored in account and
+     * if there's enough amount stored in moneystack
+     * @param account a user's account
+     */
+    public void proceedWithdrawalTransaction(Account account){
+        if (account != null) {
+            if (account.getBalance() >= this.amount && this.getMoneyStackBalance().getstatusOfMoney() == true){
+                this.getMoneyStackBalance().canWithdraw(this.getMoneyStackBalance());
+                this.getMoneyStackBalance().withdraw(this.getMoneyStackBalance()); //decrease amount in moneystack
+                this.modify(account, TransactionType.WITHDRAWAL);
+                //now print receipt
+                this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
+            
+             //frozen money!
+            } else if (this.getMoneyStackBalance().getstatusOfMoney() == false){
+                // System.out.println("Sorry not enough money stored in ATM, cannot withdraw desired amount.");
+                System.out.println("Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.");
+            }
+            
+            else {
+                System.out.println("Sorry you don't have enough money stored on your account. Cannot proceed to withdraw money");
+            } 
+
+        } else { //account = null
+            System.out.println("Sorry your account is unavailable. Please try again.");
+        }
+    }
+
+    /**
+     * getBalanceInfo
+     * Prints a user's account details
+     * @param account a user's account
+     */
+    public void getBalanceInfo(Account account){
+        if (account != null){
+            System.out.println("Account balance = " + account.getBalance());
+            System.out.println("The balance query was successful");
+            //now print receipt
+            this.attachedATM.printReceipt(this, this.balance);
+        } else {
+            System.out.println("Sorry your account is unavailable. Please try again.");
+        }
+    }  //consider having multiple cards/acc later..
 }
-=======
-}
->>>>>>> ATM
