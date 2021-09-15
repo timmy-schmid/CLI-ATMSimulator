@@ -3,7 +3,7 @@ package R18_G2_ASM1;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+import java.io.IOException;
 
 /**
  * The ATM class represents the central shell of an XYZ Bank ATM. 
@@ -179,27 +179,33 @@ public class ATM {
       display.displayMessage(s.toString());
       
       String howMany = "How many bills would you like to deposit: ";
-
-      if (keypad.pressButton() == KeypadButton.ONE) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.HUNDRED_DOLLARS,keypad.enterInt());
-      } else if (keypad.pressButton() == KeypadButton.TWO) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.FIFTY_DOLLARS,keypad.enterInt());
-      }  else if (keypad.pressButton() == KeypadButton.THREE) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.TWENTY_DOLLARS,keypad.enterInt());
-      } else if (keypad.pressButton() == KeypadButton.FOUR) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.TEN_DOLLARS,keypad.enterInt());  
-      } else if (keypad.pressButton() == KeypadButton.FIVE) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.FIVE_DOLLARS,keypad.enterInt());  
-      } else if (keypad.pressButton() == KeypadButton.SIX) {
-        break;  
-      } else if (keypad.pressButton() == KeypadButton.SEVEN) {
-        return null; // return NULL object if cancelled.      
+    
+      try { //exception handling!
+        if (keypad.pressButton() == KeypadButton.ONE) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.HUNDRED_DOLLARS,keypad.enterInt());
+        } else if (keypad.pressButton() == KeypadButton.TWO) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.FIFTY_DOLLARS,keypad.enterInt());
+        }  else if (keypad.pressButton() == KeypadButton.THREE) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.TWENTY_DOLLARS,keypad.enterInt());
+        } else if (keypad.pressButton() == KeypadButton.FOUR) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.TEN_DOLLARS,keypad.enterInt());  
+        } else if (keypad.pressButton() == KeypadButton.FIVE) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.FIVE_DOLLARS,keypad.enterInt());  
+        } else if (keypad.pressButton() == KeypadButton.SIX) {
+          break;  
+        } else if (keypad.pressButton() == KeypadButton.SEVEN) {
+          return null; // return NULL object if cancelled.      
+        }
+      } catch (IOException e){
+        System.out.println("Error: money type doesn't exist");
+        return null;
       }
+        
     }
     return m;
   }
@@ -242,29 +248,33 @@ public class ATM {
       display.displayMessage(s.toString());
       
       String howMany = "How many bills would you like to deposit: ";
-
-      if (keypad.pressButton() == KeypadButton.ONE) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.TWO_DOLLARS,keypad.enterInt());
-      } else if (keypad.pressButton() == KeypadButton.TWO) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.ONE_DOLLAR,keypad.enterInt());
-      }  else if (keypad.pressButton() == KeypadButton.THREE) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.FIFTY_CENTS,keypad.enterInt());
-      } else if (keypad.pressButton() == KeypadButton.FOUR) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.TWENTY_CENTS,keypad.enterInt());  
-      } else if (keypad.pressButton() == KeypadButton.FIVE) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.TEN_CENTS,keypad.enterInt());  
-      } else if (keypad.pressButton() == KeypadButton.SIX) {
-        display.displayMessage(howMany);
-        m.addMoney(MoneyType.FIVE_CENTS,keypad.enterInt()); 
-      } else if (keypad.pressButton() == KeypadButton.SEVEN) {
-        break;
-      } else if (keypad.pressButton() == KeypadButton.SEVEN) {
-        return null; // return NULL object if cancelled.      
+      try {
+        if (keypad.pressButton() == KeypadButton.ONE) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.TWO_DOLLARS,keypad.enterInt());
+        } else if (keypad.pressButton() == KeypadButton.TWO) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.ONE_DOLLAR,keypad.enterInt());
+        }  else if (keypad.pressButton() == KeypadButton.THREE) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.FIFTY_CENTS,keypad.enterInt());
+        } else if (keypad.pressButton() == KeypadButton.FOUR) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.TWENTY_CENTS,keypad.enterInt());  
+        } else if (keypad.pressButton() == KeypadButton.FIVE) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.TEN_CENTS,keypad.enterInt());  
+        } else if (keypad.pressButton() == KeypadButton.SIX) {
+          display.displayMessage(howMany);
+          m.addMoney(MoneyType.FIVE_CENTS,keypad.enterInt()); 
+        } else if (keypad.pressButton() == KeypadButton.SEVEN) {
+          break;
+        } else if (keypad.pressButton() == KeypadButton.SEVEN) {
+          return null; // return NULL object if cancelled.      
+        }
+      } catch (IOException e){
+        System.out.println("Error: money type doesn't exist");
+        return null;
       }
     }
     return m;
@@ -373,11 +383,11 @@ public class ATM {
 
 
     if (keypad.pressButton() == KeypadButton.ONE) {
-      return TranscationType.WIHTDRAWAL;
+      return TransactionType.WITHDRAWAL;
     } else if (keypad.pressButton() == KeypadButton.TWO) {
-      return TranscationType.DEPOSIT;
+      return TransactionType.DEPOSIT;
     }  else {
-      return TranscationType.BALANCE; 
+      return TransactionType.BALANCE; 
     }
   }
 
@@ -403,27 +413,32 @@ public class ATM {
     s.append("--------------------------\n");
     s.append("--- XYZ BANK RECEIPT------\n");
     s.append("--------------------------\n");
-    s.append("Trascation No: " + t.getID() + "\n");
-    s.append("Trascation Type: " + t.getType() + "\n");
+    s.append("Transaction No: " + t.getID() + "\n");
+    s.append("Transaction Type: " + t.getType() + "\n");
     s.append("Amount:\n");
     s.append("--------------------------\n");
-    s.append(m.query(MoneyType.HUNDRED_DOLLARS) + " x $100\n");
-    s.append(m.query(MoneyType.FIFTY_DOLLARS) + " x $50\n");
-    s.append(m.query(MoneyType.TWENTY_DOLLARS) + " x $20\n");
-    s.append(m.query(MoneyType.TEN_DOLLARS) + " x $10\n");
-    s.append(m.query(MoneyType.FIVE_DOLLARS) + " x $5\n");
 
-    if (t.getType() == TranscationType.WITHDRAWL) {
-      s.append(m.query(MoneyType.TWO_DOLLARS) + " x $2\n");
-      s.append(m.query(MoneyType.ONE_DOLLAR) + " x $1\n");
-      s.append(m.query(MoneyType.FIFTY_CENTS) + " x 50c\n");
-      s.append(m.query(MoneyType.TWENTY_CENTS) + " x 20c\n");
-      s.append(m.query(MoneyType.TEN_CENTS) + " x 10c\n");
-      s.append(m.query(MoneyType.FIVE_CENTS) + " x 5c\n");
+    try { //hand exception!
+      s.append(m.query(MoneyType.HUNDRED_DOLLARS) + " x $100\n");
+      s.append(m.query(MoneyType.FIFTY_DOLLARS) + " x $50\n");
+      s.append(m.query(MoneyType.TWENTY_DOLLARS) + " x $20\n");
+      s.append(m.query(MoneyType.TEN_DOLLARS) + " x $10\n");
+      s.append(m.query(MoneyType.FIVE_DOLLARS) + " x $5\n");
+
+      if (t.getType() == TransactionType.WITHDRAWAL) {
+        s.append(m.query(MoneyType.TWO_DOLLARS) + " x $2\n");
+        s.append(m.query(MoneyType.ONE_DOLLAR) + " x $1\n");
+        s.append(m.query(MoneyType.FIFTY_CENTS) + " x 50c\n");
+        s.append(m.query(MoneyType.TWENTY_CENTS) + " x 20c\n");
+        s.append(m.query(MoneyType.TEN_CENTS) + " x 10c\n");
+        s.append(m.query(MoneyType.FIVE_CENTS) + " x 5c\n");
+      }
+    
+      s.append("TOTAL: $" + m.totalMoney());
+      display.displayMessage(s.toString());
+    } catch (IOException e) {
+      System.out.println("Error: money type doesn't exist.");
     }
-  
-    s.append("TOTAL: $" + m.totalMoney());
-    display.displayMessage(s.toString());
   }
 
   /**
