@@ -111,12 +111,9 @@ public class Card_robin {
     return is_AfterStartDate;
   }
 
-  public void blockCard() {
-  }
-
   public void getCardDetails(){
     System.out.println("\nPrinting card details below!!!");
-    System.out.println("Card name " + cardNumber + ", amount stored  = " + getTotalAmount() + ", expires on: "  + this.expiration_date);
+    System.out.println("Card number " + cardNumber + ", amount stored  = " + getTotalAmount() + ", expires on: "  + this.expiration_date);
   }
 
 
