@@ -6,14 +6,15 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.io.IOException;
 
-/*
 
-The Transaction class processes the instructions a user makes based on their input selection to either deposit, withdraw or check their account's balance. 
+/** 
+* The Transaction class processes the instructions a user makes based on
+* their input selection to either deposit, withdraw or check their * account's balance. 
 
-This class interacts with Moneystack class and ATM to retrieve details and check whether extraction of money is available or not.
-
+* This class interacts with Moneystack class and ATM to retrieve detail and check whether extraction of money is available or not.
+* @author Anna Su
+* @version 1.0
 */
-
 public class Transaction {
     /**
      * Date to log session/transaction times --> REMOVE LATER IF UNECESSARY?
