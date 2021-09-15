@@ -3,8 +3,8 @@ package R18_G2_ASM1;
 import java.util.*;
 import java.text.*;
 
-public class Card { 
-  protected double totalAmount;
+public class Card {
+  protected double balance;
   private int cardNumber;
   private Date start_date;
   private Date expiration_date;
@@ -12,14 +12,10 @@ public class Card {
   private boolean is_blocked;
   private boolean is_expire;
   private int pin;
-  private Account account;
-  private String name;
 
-  public Card(String name, double totalAmount, int cardNumber, Date start_date, Date expiration_date,
-      boolean is_lost, boolean is_blocked, boolean is_expire, int pin) {//Account account){
-    
-    this.name = name;
-    this.totalAmount = totalAmount;
+  public Card(double balance, int cardNumber, Date start_date, Date expiration_date,
+      boolean is_lost, boolean is_blocked, boolean is_expire, int pin) {
+    this.balance = balance;
     this.cardNumber = cardNumber;
     this.start_date = start_date;
     this.expiration_date = expiration_date;
@@ -27,22 +23,13 @@ public class Card {
     this.is_blocked = false;
     this.is_expire = false;
     this.pin = pin;
-    this.account = null; //account;
   }
 
-  public Account getAccount() {
-    return account;
-  }
-
-  public boolean isIs_blocked() {
+  public boolean is_blocked() {
     return is_blocked;
   }
 
-  public String getName() {
-    return this.name;
-  }
-
-  public boolean isIs_lost() {
+  public boolean is_lost() {
     return is_lost;
   }
 
@@ -62,8 +49,12 @@ public class Card {
     return pin;
   }
 
-  public void setAccount(Account account) {
-    this.account = account;
+  public double getbalance() {
+    return balance;
+  }
+
+  public void setBalance(double balance) {
+    this.balance = balance;
   }
 
   public void setCardNumber(int cardNumber) {
@@ -86,22 +77,18 @@ public class Card {
     this.pin = pin;
   }
 
-  public void setTotalAmount(double totalAmount) {
-    this.totalAmount = totalAmount;
-  }
-
   public void setStart_date(Date start_date) {
     this.start_date = start_date;
   }
 
   public boolean isExpired() {
-//    SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
     Date now_date = new Date();
-//    ft.format(now_date)
-//    boolean is_expire = false
+    ft.format(now_date);
+    boolean is_expire = false;
     int signal = now_date.compareTo(expiration_date);
     if(signal >= 0) {
-      boolean is_expire = true;
+      is_expire = true;
     }
     return is_expire;
   }
@@ -116,15 +103,23 @@ public class Card {
     return is_AfterStartDate;
   }
 
-  public void blockCard() {
+  public boolean check_pin(int pin) {
+    if(this.pin - pin < 0.1) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
-  public double getTotalAmount(){
-    return this.totalAmount;
+  public void block_card() {
+    this.is_blocked = true;
   }
 
   public void getCardDetails(){
     System.out.println("\nPrinting card details below!!!");
-    System.out.println("Card name " + this.name + ", amount stored  = " + this.getTotalAmount() + ", expires on: "  + this.expiration_date);
+    System.out.println("Card number " + cardNumber + ", amount stored  = " + getbalance() + ", expires on: "  + this.expiration_date);
   }
+
+
 }
