@@ -1,8 +1,8 @@
-// package R18_G2_ASM1;
+package R18_G2_ASM1;
+
 import java.util.Date;
 
 public class T_Deposit extends Transaction {
-    private int totalAmountStored;
     protected double amount;
 
     protected TransactionType type;
@@ -22,12 +22,15 @@ public class T_Deposit extends Transaction {
     //overrides transaction's modify function
     public void modify(Account account){
         if (account != null) {
-            account.deposit(amount); //or just modify that 1 card's totalAmount
+            account.deposit(super.amount); //or just modify that 1 card's totalAmount
+
+            //account.getCardsList().get(0) --> user's 1st card --> deduct amount? --> or add to account class
+            account.getCards().get(0).totalAmount += super.amount;
             System.out.println(TransactionStatus.SUCCESS_DEPOSIT.toString()); 
+        
         } else {
             System.out.println(TransactionStatus.FAIL_DEPOSIT.toString()); 
         }
-        //account.getCardsList().get(0) --> user's 1st card --> deduct amount?
     }
     
     public void proceedDepositTransaction(Account account){
@@ -35,7 +38,7 @@ public class T_Deposit extends Transaction {
 
         //this function prompt the user to select on how many of each denomination they want to deposit
 
-        //then call deposit() (from Card class)
         this.modify(account);
+        // System.out.println("line 42 in T_DEPOSIT: account balance = " + account.getBalance());
     }  
 }

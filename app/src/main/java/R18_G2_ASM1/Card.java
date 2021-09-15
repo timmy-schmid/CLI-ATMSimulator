@@ -1,7 +1,9 @@
+package R18_G2_ASM1;
+
 import java.util.*;
 import java.text.*;
 
-public class Card { //CARD_ROBIN (RENAMED)
+public class Card { 
   protected double totalAmount;
   private int cardNumber;
   private Date start_date;

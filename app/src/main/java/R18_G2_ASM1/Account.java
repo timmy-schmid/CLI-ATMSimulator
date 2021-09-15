@@ -1,3 +1,4 @@
+package R18_G2_ASM1;
 import java.util.*;
 
 public class Account {
@@ -38,16 +39,12 @@ public class Account {
     this.cards = cards;
   }
 
-  public ArrayList<Card> getCardsList() {
-    return this.cards;
-  }
-
   public void withdraw(double amount) {
     double b = getBalance();
     this.balance = b - amount;
   }
 
-  public void deposit(double amount) {
+  public void deposit(double amount) {  //also modify for card? --> this.card from this.getCardsList() --> add amount?
     double b = getBalance();
     this.balance = b + amount;
   }
@@ -56,7 +53,3 @@ public class Account {
     //loop through cardsLIST, printing balance stored
   }
 }
-
-//savings, check, offset --> homeloan, homeloan
-// 1 user has multiple accounts (), 1 acc = 1 card
-// 1 card stores a few accounts 
