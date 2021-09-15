@@ -1,8 +1,9 @@
 package R18_G2_ASM1;
-<<<<<<< HEAD
 
-=======
->>>>>>> ATM
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -22,6 +23,7 @@ public class Session {
     private Transaction transaction;
     private Card card;
     private int pinAttemptNum;
+    private File csvCard;
 
     /**
      * Constructs and inialises a new session.
@@ -30,6 +32,7 @@ public class Session {
     public Session(ATM ATM){
         this.attachedATM = ATM;
         this.sessionID = 0;
+        csvCard = new File("././datasets/card.csv");
     }
 
     /**
@@ -66,6 +69,8 @@ public class Session {
 
     }
 
+
+
    /**
      * Used to verify a card number against the card provided.
      * Asks the user to enter their PIN (only 3 attempts).
@@ -80,11 +85,33 @@ public class Session {
      * </ul>
      * 
      * @param cardNum the cardNumber proided by the user
-     * @param c a card from XYZ database
-     * @return true if the session was validated. False if it was not.
+     * @param c a card from XYZ database //do not need this 
+     * @return true if the session was validated. False if it was not. 
+ * @throws InvalidTypeException
      */
-    private boolean validateSession(int cardNum, Card c){
-        return false;
+    private Boolean validateSession(int cardNum) throws InvalidTypeException{
+        card = retrieveCardFromFile(cardNum, csvCard);
+        if (card == null){
+            currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+            return false;
+        }
+        else if (card.getStart_date().after(card.getExpiration_date())){
+            currentStatus = SessionStatus.CARD_NOT_ACTIVE;
+            return false;
+        }
+        else if (card.isExpired()){
+            currentStatus = SessionStatus.CARD_EXPIRED;
+            return false;
+        }
+        else if (card.isIs_lost()){
+            currentStatus = SessionStatus.CARD_LOST;
+            return false;
+        }
+        else if (card.isIs_blocked()) {
+            currentStatus = SessionStatus.CARD_BLOCKED;
+            return false;
+        }
+        return true;    
     }
 
     /**
@@ -100,16 +127,108 @@ public class Session {
      *  <li> lost - T or F</li>
      *  <li> blocked - T or F</li>
      *  <li> pin - 4 digits </li>
-     *  <li> accountNo - 6 digits</li>
-     *  <li> balance - double
+     *  <li> accountNo - 6 digits</li> // ignore it for now
+     *  <li> balance - double </li>
      *  <li> userType - either customer or admin</li>
      * </ul>
      * 
      * @param cardNum the users card number to check against the file
-     * @param filePath the relative path of the card .csv file
+     * @param filePath the card .csv file
      * @return a Card object that contains all the data of the 1st matching card in the file. Null if no card found.
+     * @throws InvalidTypeException
      */
-    private Card retrieveCardFromFile(int cardNum, String filePath) {
+    private Card retrieveCardFromFile(int cardNum, File csvCard) throws InvalidTypeException {
+        int cardNumber = -1;
+        Date startDate = null;
+        Date expirationDate = null;
+        Boolean lost;
+        Boolean blocked;
+        Boolean expired;
+        int pin = -1;
+        double balance = -1;
+        String userType = null;
+
+        try {
+            Scanner myReader = new Scanner(csvCard);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] infoArr = data.split(",");
+                
+                try{
+                    cardNumber = Integer.parseInt(infoArr[0]);
+                } catch(NumberFormatException e){
+                    System.out.println("Invalid int type, 4 digits");
+                }
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+                try {
+                    startDate = simpleDateFormat.parse(infoArr[1]);
+                    expirationDate = simpleDateFormat.parse(infoArr[2]);
+                } catch (ParseException e) {
+                    System.out.println("formatted as \"yyyy-MM-dd");
+                    e.printStackTrace();
+                }
+
+                Date dateNow = new Date();
+                expired = expirationDate.before(dateNow);
+
+                if (infoArr[3].equals("T")) {
+                    lost = true;
+                }
+                else if (infoArr[3].equals("F")) {
+                    lost = false;
+                } else {
+                    throw new InvalidTypeException("Invalid Boolean type, Expected: T or F ");
+                }
+
+                if (infoArr[4].equals("T")) {
+                    blocked = Boolean.valueOf("true");
+                }
+                else if (infoArr[4].equals("F")) {
+                    blocked = Boolean.valueOf("false");
+                } else {
+                    throw new InvalidTypeException("Invalid Boolean type, Expected: T or F ");
+                }
+
+                try {
+                    pin = Integer.parseInt(infoArr[5]);
+                } catch(NumberFormatException e){
+                    System.out.println("Invalid int type, 4 digits");
+                }
+
+
+                //ignore account for now
+
+
+                try {
+                    balance = Double.parseDouble(infoArr[6]);
+                } catch(NumberFormatException e){
+                    System.out.println("Invalid double type");
+                }
+
+
+                if (infoArr[7].equals("customer")) {
+                    userType = "customer";
+                }
+                else if (infoArr[7].equals("admin")) {
+                    userType = "admin";
+                } else {
+                    throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
+                }
+
+                if (cardNumber == cardNum){
+                    this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
+                    lost, blocked, expired, pin);
+                }
+
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
         return null;
     }
 
@@ -135,10 +254,12 @@ public class Session {
      * @param filePath the relative path of the card .csv file
      * @return weather writing was successful or not.
      */
-    private boolean writeCardToFile(Card c, String filePath) {
-
+    private boolean writeCardToFile(int cardNum, String filePath) {
+        return true;
     }
 
+
+        
     /**
      * Sets up a new Transaction object and runs it.
      * Updates the Status to Success.
@@ -146,7 +267,6 @@ public class Session {
     public void transact(Card c){
 
     }
-<<<<<<< HEAD
 
     // public boolean checkPIN(){
     //     if (card.getPin().equals(attachedATM.askForPIN)){
@@ -156,7 +276,6 @@ public class Session {
 
     // }
 
-=======
     /**
      * checks the PIN entered with the user against the matching card in the XYZ Bank card database
      * @return weather the PIN was valid or not.
@@ -174,5 +293,10 @@ public class Session {
     public SessionStatus getStatus() {
         return null;
     }
->>>>>>> ATM
+
+    public class InvalidTypeException extends Exception { 
+        public InvalidTypeException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 }
