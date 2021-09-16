@@ -17,8 +17,8 @@ class CardTest {
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(38762.99, 55673, start_date, expiration_date,
-        false, true, false, 888888);
-    assertTrue(c.is_blocked());
+        false, true, false, 888888); //change the is_los, blocked, expired in initialiser???
+    assertFalse(c.is_blocked());
   }
 
   @Test

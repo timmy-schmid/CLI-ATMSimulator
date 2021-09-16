@@ -8,10 +8,15 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
 class TransactionTest {
     Transaction withdrawalA;
     Transaction balanceCheckB;
-    T_Deposit depositC;
+    Transaction depositC;
 
     App app;
 
@@ -19,56 +24,44 @@ class TransactionTest {
     Card userB; // deposit
     Card userC; // balance check
 
-    Date date;
+    Date startDate;
+    Date expiraryDate;
+    DateFormat dateFormat;
 
-    ArrayList<Card> cardsListA; 
-    ArrayList<Card> cardsListB;
-    ArrayList<Card> cardsListC;
-
-    Account userAAccount;
-    Account userBAccount;
-    Account userCAccount;
+    // Account userAAccount;
+    // Account userBAccount;
+    // Account userCAccount;
 
     double amount;
-    double depositAmount;
-
-    ATM1 atm1;
+    ATM atm;
+    Date date;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() throws ParseException { //for date formatting
         app = new App();
         date = new Date();
-        atm1 = new ATM1();
+        ATM atm = new ATM("Canberra");
+       
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        startDate = dateFormat.parse("2018-06-01");
+        expiraryDate = dateFormat.parse("2023-05-31");
+    
 
-        userA = new Card("BOB",1500, 33333, date, date, false, false, false, 333); //adjust start/end date
-        userB = new Card("DYLAN", 1000, 22222, date, date, false, false, false, 222);
-        userC = new Card("MILLY", 1000, 11111, date, date, false, false, false, 111);
+        userA = new Card(38762.99, 55673, startDate, expiraryDate,
+        false, true, false, 888888);
+        userB = new Card(10000.00, 55674, startDate, expiraryDate,
+        false, true, true, 777777);
+        userC = new Card(10000.99, 55675, startDate, expiraryDate,
+        false, false, false, 666666);
 
-        amount = 300.00; //to withdraw
-        depositAmount = 150.50;
+        amount = 300.50; //to withdraw
+        double depositAmount = 150.00; // to deposit
 
-        cardsListA = new ArrayList<>();
-        cardsListB = new ArrayList<>();
-        cardsListC = new ArrayList<>();
-        
-        cardsListA.add(userA);
-        cardsListB.add(userB);
-        cardsListC.add(userC);
+        withdrawalA = new Transaction(atm, TransactionType.WITHDRAWAL, userA, 1);
 
-        userAAccount = new Account(userA.getCardNumber(), userA.getTotalAmount(), cardsListA);
+        balanceCheckB = new Transaction(atm, TransactionType.BALANCE, userB, 2);
 
-        userBAccount = new Account(userB.getCardNumber(), userB.getTotalAmount(), cardsListB);
-
-        userCAccount = new Account(userC.getCardNumber(), userC.getTotalAmount(), cardsListC);
-
-
-        withdrawalA = new T_Withdrawal(atm1, TransactionType.WITHDRAWAL, userAAccount, amount, date, userA.getCardNumber());
-
-        balanceCheckB = new T_Balance(atm1, TransactionType.BALANCE, userBAccount, amount, date, userB.getCardNumber());
-
-        depositC = new T_Deposit(atm1, TransactionType.DEPOSIT, userCAccount, depositAmount, date, userC.getCardNumber());
-
-
+        depositC = new Transaction(atm, TransactionType.DEPOSIT, userC, 3);
     }
 
     @AfterEach
@@ -80,56 +73,49 @@ class TransactionTest {
         withdrawalA = null;
         balanceCheckB = null;
         depositC = null;
-
-        userAAccount = null;
-        userBAccount = null;
-        userCAccount = null;
-
-        cardsListA = null;  
-        cardsListB = null;  
-        cardsListC = null;  
     }
 
     @Test
     public void testNotNullCardAccount(){ //testing card obj not null
         assertNotNull(userA);
-        assertNotNull(userAAccount);
+        assertNotNull(userB);
+        assertNotNull(userC);
     }
     
-    @Test
-    public void testcanDeductFromCard(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
-        boolean result = withdrawalA.canDeductFromCard(userA);
-        assert (result == true);
-    }
+    // @Test
+    // public void testcanDeductFromCard(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
+    //     boolean result = withdrawalA.canDeductFromCard(userA);
+    //     assert (result == true);
+    // }
 
-    @Test
-    public void testcantDeductFromCard(){ //not enough stored in card to deduct
-        double temp = 250;
-        userA.setTotalAmount(temp); //set card amount from 1500 to 250, deduct = 300
-        boolean result = withdrawalA.canDeductFromCard(userA);
-        assert (result == false );
-        userA.setTotalAmount(withdrawalA.getAmount());
-    }
+    // @Test
+    // public void testcantDeductFromCard(){ //not enough stored in card to deduct
+    //     double temp = 250;
+    //     userA.setTotalAmount(temp); //set card amount from 1500 to 250, deduct = 300
+    //     boolean result = withdrawalA.canDeductFromCard(userA);
+    //     assert (result == false );
+    //     userA.setTotalAmount(withdrawalA.getAmount());
+    // }
 
-    @Test
-    //prints output after splitting up deductAmount into different money/coin components 
-    public void testCashRemainder(){
-        withdrawalA.findRemainder(); //withdrawal.getDeductAmount());
-        assertNotNull(withdrawalA.getSplitWithdrawalAmountMap());
-    }
+    // @Test
+    // //prints output after splitting up deductAmount into different money/coin components 
+    // public void testCashRemainder(){
+    //     withdrawalA.findRemainder(); //withdrawal.getDeductAmount());
+    //     assertNotNull(withdrawalA.getSplitWithdrawalAmountMap());
+    // }
 
-    @Test
-    public void testCanDeposit(){
-        double expected = userC.getTotalAmount()+depositAmount;
-        depositC.proceedDepositTransaction(depositC.getAccount());
+    // @Test
+    // public void testCanDeposit(){
+    //     double expected = userC.getTotalAmount()+depositAmount;
+    //     depositC.proceedDepositTransaction(depositC.getAccount());
         
-        double actual = userC.getTotalAmount();
-        //assert userC has extra amount
-        System.out.println("Expected = " + expected + " ;:::::: actual = " + actual);
-        assertEquals(actual, expected,
-                "Amount in card did not increase,proceedDepositTransaction function failed! ");
-        // userC.getCardDetails();
-    }
+    //     double actual = userC.getTotalAmount();
+    //     //assert userC has extra amount
+    //     System.out.println("Expected = " + expected + " ;:::::: actual = " + actual);
+    //     assertEquals(actual, expected,
+    //             "Amount in card did not increase,proceedDepositTransaction function failed! ");
+    //     // userC.getCardDetails();
+    // }
 }
 
     // //1 user using ATM machine
