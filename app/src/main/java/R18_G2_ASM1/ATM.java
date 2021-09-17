@@ -14,7 +14,7 @@ import java.io.IOException;
  * @version 1.0
  */
 public class ATM {
-
+  private ATM_logger atmLogger; //NEWLY ADDED!!!!!
   private String terminalLocation;
   private MoneyStack balance;
   private Session currentSession;
@@ -35,6 +35,7 @@ public class ATM {
     this.keypad = new Keypad();
     this.cardDispensor = new CardDispensor();
     this.display = new Display();
+    this.atmLogger = new ATM_logger();
   }
 
 /**
@@ -46,7 +47,9 @@ public class ATM {
     this(location);
     this.balance = m;
   }
-  
+  public ATM_logger getATMLogger(){
+    return this.atmLogger;
+  }
  /**
  * Starts up the ATM to interact with a user.
  * A user is promoted to insert their card. After insertion an ATM session commences.
@@ -78,9 +81,17 @@ public class ATM {
 
     //insert card
     int cardNum;
+
+    // as soon as u start a new session, begin writing to file
+    
+
     try {
       cardNum = cardDispensor.insertCard();
+      this.getATMLogger().createLogMessage("cardDispensor.insertCard", messageType.INFO, "Insert card passed");
+
     } catch (InvalidCardException e) {
+      this.getATMLogger().createLogMessage("cardDispensor.insertCard", messageType.ERROR, "Pin entered was not 5 digits");
+
       display.displayMessage("\n" + e.getMessage());
       cardDispensor.ejectCard();
       return;
@@ -88,6 +99,7 @@ public class ATM {
 
     //run session
     currentSession.run(cardNum);
+    this.atmLogger.run();
 
     if (currentSession.getStatus() == SessionStatus.ADMIN_MODE) {
 
@@ -413,7 +425,7 @@ public class ATM {
     s.append("--------------------------\n");
     s.append("--- XYZ BANK RECEIPT------\n");
     s.append("--------------------------\n");
-    s.append("Transaction No: " + t.getID() + "\n");
+    s.append("Transaction No: " + t.getTransactionID() + "\n");
     s.append("Transaction Type: " + t.getType() + "\n");
     s.append("Amount:\n");
     s.append("--------------------------\n");

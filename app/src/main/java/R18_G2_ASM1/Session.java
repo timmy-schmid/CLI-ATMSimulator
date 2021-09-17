@@ -32,7 +32,7 @@ public class Session {
     public Session(ATM ATM){
         this.attachedATM = ATM;
         this.sessionID = 0;
-        csvCard = new File("././datasets/card.csv");
+        csvCard = new File("./app/src/main/datasets/card.csv"); //"././app/src/main/datasets/card.csv"); //././datasets/card.csv
     }
 
     /**
@@ -66,10 +66,20 @@ public class Session {
      * @param cardNum the card number that the session should interact with
      */
     public void run(int cardNum){
+        //create a new transaction?
+        try {
+            this.validateSession(cardNum);
+            this.retrieveCardFromFile(cardNum, csvCard);
+            this.attachedATM.getATMLogger().createLogMessage("session.run", messageType.INFO, "validate session passed!!");
 
+        } catch (InvalidTypeException e) {
+            this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
+            e.printStackTrace();
+        }
+    
+        Transaction withdrawalA = new Transaction(this.attachedATM, TransactionType.WITHDRAWAL, this.card, 1);
+        withdrawalA.run(withdrawalA.getType());
     }
-
-
 
    /**
      * Used to verify a card number against the card provided.
@@ -103,11 +113,11 @@ public class Session {
             currentStatus = SessionStatus.CARD_EXPIRED;
             return false;
         }
-        else if (card.isIs_lost()){
+        else if (card.is_lost()){
             currentStatus = SessionStatus.CARD_LOST;
             return false;
         }
-        else if (card.isIs_blocked()) {
+        else if (card.is_blocked()) {
             currentStatus = SessionStatus.CARD_BLOCKED;
             return false;
         }
@@ -148,17 +158,20 @@ public class Session {
         double balance = -1;
         String userType = null;
 
+        System.out.println("LINE 161 filename =-------------------------->>>>>> " + csvCard);
         try {
             Scanner myReader = new Scanner(csvCard);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] infoArr = data.split(",");
-                
+                System.out.println("line 167-------->>>>>>> ");
                 try{
                     cardNumber = Integer.parseInt(infoArr[0]);
                 } catch(NumberFormatException e){
                     System.out.println("Invalid int type, 4 digits");
                 }
+                 System.out.printf("Card number = [%d], csv card num = [%d\n", cardNum, cardNumber);
+
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
@@ -199,7 +212,8 @@ public class Session {
 
 
                 //ignore account for now
-
+                // probably should remove the string names coz it doesnt exist in card anymore
+                // only distinguish by ID number?
 
                 try {
                     balance = Double.parseDouble(infoArr[6]);
@@ -218,14 +232,19 @@ public class Session {
                 }
 
                 if (cardNumber == cardNum){
-                    this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
+                    System.out.println("LINE 233----------------- went here!");
+                    // this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
+                    // lost, blocked, expired, pin);
+                    this.card = new Card(balance, cardNumber, startDate, expirationDate,
                     lost, blocked, expired, pin);
                 }
 
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            this.attachedATM.getATMLogger().createLogMessage("Session.retrieveCardFromFile", messageType.ERROR, "An error occurred.");
+
+            // System.out.println("An error occurred.");
             e.printStackTrace();
         }
 
@@ -294,9 +313,11 @@ public class Session {
         return null;
     }
 
-    public class InvalidTypeException extends Exception { 
-        public InvalidTypeException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
+    //can I move this out and create a new class just for it? :D
+
+    // public class InvalidTypeException extends Exception { 
+    //     public InvalidTypeException(String errorMessage) {
+    //         super(errorMessage);
+    //     }
+    // }
 }

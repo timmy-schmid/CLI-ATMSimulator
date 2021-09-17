@@ -10,11 +10,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
-
-enum messageType {
-  INFO, ERROR, WARNING
-}
-
 /** 
 log error message history - if session disappears records all dates times
 transaction log file (including error log - how we process (each steps))
@@ -40,10 +35,11 @@ declare
 
   references: https://stackoverflow.com/questions/15758685/how-to-write-logs-in-text-file-when-using-java-util-logging-logger/15758768
 
-   --> output, limits, count, patter and formatter 
+  http://www.java2s.com/Code/Java/Language-Basics/UseLoggerwithsimpleformatterandFileHandler.htm
+
+   --> output, limits, count, pattern and formatter 
 */
 public class ATM_logger{
-  // private ATM atm;
   private messageType type;
   private String message;
   private String classMethod;
@@ -52,12 +48,11 @@ public class ATM_logger{
   private final String path;
 
   public ATM_logger(){ //class name = LOGFILE ?
-    // this.atm = atm;
     this.type = messageType.INFO; //initially?
     this.message = null;
     this.classMethod = null;
-    this.date = new Date();
-    this.path = "/Users/annasu/Downloads/USYD2021/SEMESTER 2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/main/java/R18_G2_ASM1";///cwd --> CHANGE LATER!
+    this.path = "./app/src/main/java/R18_G2_ASM1"; //./
+    // this.path = "/Users/annasu/Downloads/USYD2021/SEMESTER 2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/main/java/R18_G2_ASM1/logs";
   }
 
   //write to a log file
@@ -71,93 +66,78 @@ public class ATM_logger{
    */
   
   //example format: create_log_message(“Card.withdraw”, “INFO”, “Start processing “)
-  public void createLogMessage(String classMethod, messageType type, String message){
-    //validate if keyword matches
-    if (type != messageType.INFO || type != messageType.ERROR || type != messageType.WARNING) {
-      throw new IllegalArgumentException("type is not a valid message type.");
-    }
+  public void createLogMessage(String classMethod, messageType type, String message) {
     //validate first they are of the right type
-    try {
       this.classMethod = classMethod;
-      // this.type = type;
+      this.type = type;
       this.message = message;
-    } catch (IllegalArgumentException e){
-      e.printStackTrace();
-    }
-    
-  }
-
-  public void constructStringMessage(){ //concatenate together?
-
+      // throw new InvalidTypeException("type is not a valid message type.");
   }
 
   //FH writes to a specific file/a rotating set of files
-  public boolean checkFileExists(){
+  public boolean checkFileExists(String path){
     boolean result = false;
     try {
       //open filehandler 
-      FileHandler fh = new FileHandler(this.path);
+      FileHandler fh = new FileHandler(path);
       result = true;
     } catch (IOException e){
-      System.out.println("FILE PATH DOES NOT EXIST! :(");
+      System.out.println("ERROR: FILE PATH DOES NOT EXIST! :(");
     }
 
-    if (result == true) {
-      System.out.println("File exists already, append v_message to the file! :))");
-    } else {
-      System.out.println("File doesn't exist, create a new file and add v_message to it! :p"); //failed to configure logging to file
-    }
+    // if (result == true) {
+    //   System.out.println("File exists already, append v_message to the file! :))");
+    // } else {
+    //   System.out.println("File doesn't exist, create a new file and add v_message to it! :p"); //failed to configure logging to file
+    // }
     return result;
   }
 
   public void writeToFile(String classMethod, messageType type, String message){
+    //if the paramaeters are not null, write to file otherwise don't do anything??
+    if (classMethod == null || type == null || message == null){
+      System.out.println("Not time to write to file yet!");
+    } else {
+      //if result == true, file exists so append
+      boolean result = this.checkFileExists(this.path);
+      Logger logger = Logger.getLogger("ATM_logger");
+      FileHandler fh = null;
+      // System.out.println("LINE 115: ATM_logger file class: method = " + classMethod + ", type = " + type + ", message: " + message);
+      // System.out.println("THIS>PATH ============ " + this.path);
+      try {
+        if (result == true) { //append to existing file 
+          fh = new FileHandler(this.path +"/logTEST1.log", true);
+        } else if (result == false){
+          fh = new FileHandler(this.path+"/logTEST1.log");
+        }
+        logger.addHandler(fh); //adds a log handler to receive logging msgs
 
-    //if result == true, file exists so append
-    // if result == false
-    boolean result = this.checkFileExists();
-    Logger logger = Logger.getLogger("ATM_loggger");
-    FileHandler fh = null;
+        //this provides output in human readable format to the log file!!
+        SimpleFormatter sFormatter = new SimpleFormatter();
+        fh.setFormatter(sFormatter);
 
-    try {
-      if (result == true) { //append to existing file 
-        fh = new FileHandler(this.path, true);
-      } else if (result == false){
-        fh = new FileHandler(this.path);
+        //now log msgs
+        
+        if (type == messageType.INFO){
+          logger.info(this.classMethod + " --> message: " + this.message);
+        } else if (type == messageType.ERROR){
+          logger.severe(this.classMethod + " --> message: " + this.message);
+        } else if (type == messageType.WARNING){
+          logger.warning(this.classMethod + " --> message: " + this.message);
+        }
+      } catch (SecurityException e){
+        e.printStackTrace();
+      } catch (IOException e){
+        e.printStackTrace();
       }
-      logger.addHandler(fh); //adds a log handler to receive logging msgs
-
-      //this provides output in human readable format to the log file!!
-      SimpleFormatter sFormatter = new SimpleFormatter();
-      fh.setFormatter(sFormatter);
-
-      //now log msgs
-      logger.info("My first log!");
-    } catch (SecurityException e){
-      e.printStackTrace();
-    } catch (IOException e){
-      e.printStackTrace();
+      // logger.info("WELCOME TO XYZ BANK!");
     }
-    logger.info("WELCOME TO XYZ BANK!");
   }
 
+  public void run(){
+    writeToFile(this.classMethod, this.type, this.message);
 
-  // public void convertDatetoString(Date date){
 
-  // }
-
-  public static void main(String[] args){
-    ATM atm = new ATM("Canberra");
-    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-    try {
-      Date start_date = dateFormat1.parse("2018-06-01");
-      Date expiration_date = dateFormat1.parse("2023-05-31");
-      Card c = new Card(38762.99, 55673, start_date, expiration_date,
-        false, true, false, 888888);
-      Transaction t = new Transaction(atm, TransactionType.WITHDRAWAL, c, 111);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-   
   }
 }
 
