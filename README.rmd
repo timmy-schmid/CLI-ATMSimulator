@@ -20,22 +20,15 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 # TODO !!!!! [Add below any other notes to check out]
 
 -> make sure indenting is 2 spaces, use CamelCase for variable naming!
-
--> how to distinguish between which card is currently being used for transaction? [user input picks a card from their list of cards available??]
+-> add in Javadoc comments + test cases
+-> Set up Jenkins and get it to integrate with GITHUB
+-> Starting working on report + allocate sections to write about
 
 -> keep code consistent + nicely styled + minimise redundancy
 
--> WITHDRAWAL CLASS
-  -> Consider what if the highest amount for MoneyType runs out (user wants to withdraw money), then use the next available highest amount to do calculations
-
 -> If user's card doesn't have enough money stored inside to withdraw, give option/cancel for user to switch to a different card
 
--> How to handle user's deposit? 
-  -> "prompt the user on how many of each denomination they want to deposit, calling from ATM class function ATM.askForMoneyStack()" - Tim
-
--> 1 card is linked with 1 account!
-
--> CARD CLASS: store a list of diff types/in constructor add 'type' [for later to work on if there's time]
+# Acess to google docs for git notes + PLAN FOR REPORT
 
 # Access to MIRO board for viewing/editing
 
@@ -51,3 +44,13 @@ Check this out: https://junit.org/junit5/docs/current/user-guide/
 
 Website for our design inspiration: https://www.commbank.com.au/content/dam/commbank/personal/apply-online/download-printed-forms/atm-guide-for-users-with-low-vision-accessible.pdf
 
+
+# Working with Jenkins 
+...for now
+
+# Working with Gradle
+
+gradle run --> builds + compiles all your files
+gradle clean --> cleans up any leftovers from previous builds + prevents getting side effects like causing build to fail
+gradle test --> compiles and runs your test files
+gradle test JacocoTestReport --> generates a report where you can see how much coverage you've done
