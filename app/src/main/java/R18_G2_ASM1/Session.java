@@ -265,16 +265,10 @@ public class Session {
      * Updates the Status to Success.
      */
     public void transact(Card c){
-
+        
     }
 
-    // public boolean checkPIN(){
-    //     if (card.getPin().equals(attachedATM.askForPIN)){
-    //         return true;
-    //     }
-    //     return false;
 
-    // }
 
     /**
      * checks the PIN entered with the user against the matching card in the XYZ Bank card database
@@ -291,7 +285,7 @@ public class Session {
      * @return a session status based on the SessionStatus enum.
      */
     public SessionStatus getStatus() {
-        return null;
+        return currentStatus;
     }
 
     public class InvalidTypeException extends Exception { 
