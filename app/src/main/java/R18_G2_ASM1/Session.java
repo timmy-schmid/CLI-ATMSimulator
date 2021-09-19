@@ -24,6 +24,7 @@ public class Session {
     private Card card;
     private int pinAttemptNum;
     private File csvCard;
+    private TransactionType transactionType;
 
     /**
      * Constructs and inialises a new session.
@@ -64,9 +65,15 @@ public class Session {
      *  The ATM will shutdown after a session status has been resolved.
      * 
      * @param cardNum the card number that the session should interact with
+     * @throws InvalidTypeException
      */
-    public void run(int cardNum){
+    public void run(int cardNum) throws InvalidTypeException{
+        //assume it is DEPOSITE and transaction id is 1
+        transactionType = TransactionType.DEPOSIT;
 
+        card  = this.retrieveCardFromFile(cardNum, csvCard);
+        this.transact(card, transactionType, 1);
+        
     }
 
 
@@ -103,11 +110,11 @@ public class Session {
             currentStatus = SessionStatus.CARD_EXPIRED;
             return false;
         }
-        else if (card.isIs_lost()){
+        else if (card.is_lost()){
             currentStatus = SessionStatus.CARD_LOST;
             return false;
         }
-        else if (card.isIs_blocked()) {
+        else if (card.is_blocked()) {
             currentStatus = SessionStatus.CARD_BLOCKED;
             return false;
         }
@@ -146,7 +153,7 @@ public class Session {
         Boolean expired = false;
         int pin = -1;
         double balance = -1;
-        String userType = null;
+        Card this_card;
 
         try {
             Scanner myReader = new Scanner(csvCard);
@@ -207,17 +214,6 @@ public class Session {
                     System.out.println("Invalid double type");
                 }
 
-
-                if (infoArr[7].equals("customer")) {
-                    userType = "customer";
-                }
-                else if (infoArr[7].equals("admin")) {
-                    userType = "admin";
-                } else {
-                    throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
-                }
-
-
             }
             myReader.close();
         } catch (FileNotFoundException e) {
@@ -225,9 +221,9 @@ public class Session {
             e.printStackTrace();
         }
         if (cardNumber == cardNum){
-            this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
+            this_card = new Card(balance, cardNumber, startDate, expirationDate,
             lost, blocked, expired, pin);
-            return card;
+            return this_card;
         }
         return null;
     }
@@ -264,8 +260,10 @@ public class Session {
      * Sets up a new Transaction object and runs it.
      * Updates the Status to Success.
      */
-    public void transact(Card c){
-        
+    public void transact(Card c, TransactionType transactionType, int transactionID){
+        Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
+        transaction.run(transactionType);
+        currentStatus = SessionStatus.SUCCESS;
     }
 
 
