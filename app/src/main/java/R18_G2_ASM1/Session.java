@@ -32,7 +32,7 @@ public class Session {
     public Session(ATM ATM){
         this.attachedATM = ATM;
         this.sessionID = 0;
-        csvCard = new File("././datasets/card.csv");
+        csvCard = new File("app/src/main/datasets/card.csv");
     }
 
     /**
@@ -137,13 +137,13 @@ public class Session {
      * @return a Card object that contains all the data of the 1st matching card in the file. Null if no card found.
      * @throws InvalidTypeException
      */
-    private Card retrieveCardFromFile(int cardNum, File csvCard) throws InvalidTypeException {
+    public Card retrieveCardFromFile(int cardNum, File csvCard) throws InvalidTypeException {
         int cardNumber = -1;
         Date startDate = null;
         Date expirationDate = null;
-        Boolean lost;
-        Boolean blocked;
-        Boolean expired;
+        Boolean lost = false;
+        Boolean blocked = false;
+        Boolean expired = false;
         int pin = -1;
         double balance = -1;
         String userType = null;
@@ -217,10 +217,6 @@ public class Session {
                     throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
                 }
 
-                if (cardNumber == cardNum){
-                    this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
-                    lost, blocked, expired, pin);
-                }
 
             }
             myReader.close();
@@ -228,7 +224,11 @@ public class Session {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-
+        if (cardNumber == cardNum){
+            this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
+            lost, blocked, expired, pin);
+            return card;
+        }
         return null;
     }
 
@@ -265,16 +265,10 @@ public class Session {
      * Updates the Status to Success.
      */
     public void transact(Card c){
-
+        
     }
 
-    // public boolean checkPIN(){
-    //     if (card.getPin().equals(attachedATM.askForPIN)){
-    //         return true;
-    //     }
-    //     return false;
 
-    // }
 
     /**
      * checks the PIN entered with the user against the matching card in the XYZ Bank card database
@@ -291,7 +285,7 @@ public class Session {
      * @return a session status based on the SessionStatus enum.
      */
     public SessionStatus getStatus() {
-        return null;
+        return currentStatus;
     }
 
     public class InvalidTypeException extends Exception { 
@@ -299,4 +293,5 @@ public class Session {
             super(errorMessage);
         }
     }
+
 }
