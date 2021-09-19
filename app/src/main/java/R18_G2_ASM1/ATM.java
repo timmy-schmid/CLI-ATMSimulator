@@ -24,7 +24,7 @@ public class ATM {
   private Display display;
 
 /**
- * Constructs and inialises a new ATM with a balance of AUD $0
+ * Constructs and initialises a new ATM with a balance of AUD $0
  * @param location A string representation of where the ATM is located
  */
   public ATM(String location) {
@@ -50,6 +50,7 @@ public class ATM {
   public ATM_logger getATMLogger(){
     return this.atmLogger;
   }
+
  /**
  * Starts up the ATM to interact with a user.
  * A user is promoted to insert their card. After insertion an ATM session commences.
@@ -81,10 +82,7 @@ public class ATM {
 
     //insert card
     int cardNum;
-
-    // as soon as u start a new session, begin writing to file
     
-
     try {
       cardNum = cardDispensor.insertCard();
       this.getATMLogger().createLogMessage("cardDispensor.insertCard", messageType.INFO, "Insert card passed");
@@ -99,7 +97,6 @@ public class ATM {
 
     //run session
     currentSession.run(cardNum);
-    this.atmLogger.run();
 
     if (currentSession.getStatus() == SessionStatus.ADMIN_MODE) {
 
@@ -128,32 +125,45 @@ public class ATM {
       display.displayMessage("The card you have entered has been reported as Lost or Stolen.\n");          
       display.displayMessage("Your card has been confiscated. Please contact XYZ Bank to issue a new card.\n");
       display.displayMessage("We apologise for any inconvienience.\n");
+
+      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "Card is lost or stolen!!");
+
     } else if (currentSession.getStatus() == SessionStatus.CARD_BLOCKED) {
       display.displayMessage("The card you have entered has been blocked due to too many PIN attempts.\n");          
       display.displayMessage("Please contact XYZ Bank to unblock your card.\n");
       display.displayMessage("We apologise for any inconvienience.\n");
       cardDispensor.ejectCard();
+
+      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "CARD BLOCKED");
+
     } else if (currentSession.getStatus() == SessionStatus.CARD_EXPIRED) {
       display.displayMessage("The card you have entered has expired.\n");          
       display.displayMessage("Please contact XYZ Bank to issue a new card.\n");
       display.displayMessage("We apologise for any inconvienience.\n");
       cardDispensor.ejectCard();
+
+      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "CARD EXPIRED");
+
     } else if (currentSession.getStatus() == SessionStatus.CARD_NOT_ACTIVE) {
       display.displayMessage("The card you have entered is only active from a later date.\n");   
       display.displayMessage("We apologise for any inconvienience.\n");
       cardDispensor.ejectCard();
+
     } else if (currentSession.getStatus() == SessionStatus.INVALID_CARD_NUMBER) {
       display.displayMessage("The card you have entered is not a card from our bank.\n");  
       display.displayMessage("This ATM only accepts bank cards from XYZ\n");  
       display.displayMessage("We apologise for any inconvienience.");
       cardDispensor.ejectCard();
+
     } else if (currentSession.getStatus() == SessionStatus.SUCCESS) {
       display.displayMessage("The Transaction was successfully completed.\n");        
       display.displayMessage("Thank-you for using XYZ Bank :)\n");   
-      cardDispensor.ejectCard();     
+      cardDispensor.ejectCard();
+      
+      this.getATMLogger().createLogMessage("ATM.run", messageType.INFO, "The Transaction was successfully completed");
+     
     }
   }
-
 
   /**
    * used to query the ATM user on how many denominations of 1 (or more) Australian bank notes they would like to deposit.

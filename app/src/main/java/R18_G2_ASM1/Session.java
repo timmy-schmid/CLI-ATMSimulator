@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.text.DateFormat;
 
 
 import java.util.List;
@@ -32,9 +33,14 @@ public class Session {
     public Session(ATM ATM){
         this.attachedATM = ATM;
         this.sessionID = 0;
-        csvCard = new File("./app/src/main/datasets/card.csv"); //"././app/src/main/datasets/card.csv"); //././datasets/card.csv
+        try {
+            // csvCard = new File("./app/src/main/datasets/card.csv");
+            csvCard = new File("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/main/datasets/card.csv");
+        } catch (Exception e){
+            System.out.println("----------------------------------lallalalllllalalallalalall -------------------------------->>>>\n");
+            e.printStackTrace();
+        }
     }
-
     /**
      * Starts a new session.
      * The session will:
@@ -67,18 +73,37 @@ public class Session {
      */
     public void run(int cardNum){
         //create a new transaction?
-        try {
-            this.validateSession(cardNum);
-            this.retrieveCardFromFile(cardNum, csvCard);
-            this.attachedATM.getATMLogger().createLogMessage("session.run", messageType.INFO, "validate session passed!!");
+        
+        // try {
+        //     this.validateSession(cardNum);
+        //     // this.retrieveCardFromFile(cardNum, csvCard);
+        //     this.attachedATM.getATMLogger().createLogMessage("session.run", messageType.INFO, "validate session passed!!");
+        
+        // } catch (InvalidTypeException e) {
+        //     this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
+        // }
 
-        } catch (InvalidTypeException e) {
-            this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
+        //testing here coz above functions dont work....? [retrievecardfromfile]
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date start_date = null;
+        Date expiration_date = null;
+        try {
+            start_date = dateFormat1.parse("2018-03-05");
+            expiration_date = dateFormat1.parse("2023-03-04");
+        } catch (ParseException e){
             e.printStackTrace();
         }
+
+        this.card = new Card(38431.29, 78503, start_date, expiration_date, false, false, false, 912012);
     
-        Transaction withdrawalA = new Transaction(this.attachedATM, TransactionType.WITHDRAWAL, this.card, 1);
-        withdrawalA.run(withdrawalA.getType());
+        // Transaction withdrawalA = new Transaction(this.attachedATM, TransactionType.WITHDRAWAL, this.card, 1);
+        // withdrawalA.setAmount(100.50); //amount to withdrawal
+        // withdrawalA.run(withdrawalA.getType());
+
+        Transaction depositC = new Transaction(this.attachedATM, TransactionType.DEPOSIT, this.card, 1);
+        depositC.setAmount(500.00); //amount to deposit --> check small amount first then super large
+        depositC.run(depositC.getType());
+        System.out.println("END OF 1st session ~~~~~~~~~~~~~~~~~~~~ line 106");
     }
 
    /**
@@ -97,7 +122,7 @@ public class Session {
      * @param cardNum the cardNumber proided by the user
      * @param c a card from XYZ database //do not need this 
      * @return true if the session was validated. False if it was not. 
- * @throws InvalidTypeException
+     * @throws InvalidTypeException
      */
     private Boolean validateSession(int cardNum) throws InvalidTypeException{
         card = retrieveCardFromFile(cardNum, csvCard);
@@ -158,19 +183,18 @@ public class Session {
         double balance = -1;
         String userType = null;
 
-        System.out.println("LINE 161 filename =-------------------------->>>>>> " + csvCard);
         try {
             Scanner myReader = new Scanner(csvCard);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] infoArr = data.split(",");
-                System.out.println("line 167-------->>>>>>> ");
                 try{
                     cardNumber = Integer.parseInt(infoArr[0]);
                 } catch(NumberFormatException e){
                     System.out.println("Invalid int type, 4 digits");
+                    return null;
                 }
-                 System.out.printf("Card number = [%d], csv card num = [%d\n", cardNum, cardNumber);
+                // System.out.printf("Card number = [%d], csv card num = [%d\n", cardNum, cardNumber);
 
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -212,6 +236,7 @@ public class Session {
 
 
                 //ignore account for now
+
                 // probably should remove the string names coz it doesnt exist in card anymore
                 // only distinguish by ID number?
 
@@ -232,7 +257,6 @@ public class Session {
                 }
 
                 if (cardNumber == cardNum){
-                    System.out.println("LINE 233----------------- went here!");
                     // this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
                     // lost, blocked, expired, pin);
                     this.card = new Card(balance, cardNumber, startDate, expirationDate,
@@ -242,9 +266,7 @@ public class Session {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            this.attachedATM.getATMLogger().createLogMessage("Session.retrieveCardFromFile", messageType.ERROR, "An error occurred.");
-
-            // System.out.println("An error occurred.");
+            this.attachedATM.getATMLogger().createLogMessage("Session.retrieveCardFromFile", messageType.ERROR, "CSV FILE DOES NOT EXIST.");
             e.printStackTrace();
         }
 
