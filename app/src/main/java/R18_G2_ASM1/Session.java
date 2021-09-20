@@ -223,6 +223,23 @@ public class Session {
                     System.out.println("Invalid double type");
                 }
 
+<<<<<<< HEAD
+=======
+
+                if (infoArr[7].equals("customer")) {
+                    userType = "customer";
+                }
+                else if (infoArr[7].equals("admin")) {
+                    userType = "admin";
+                } else {
+                    throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
+                }
+                if (cardNumber == cardNum){
+                    this.card = new Card(balance, cardNumber, startDate, expirationDate,
+                    lost, blocked, expired, pin);
+                }
+
+>>>>>>> d16f9f729213d93c64b21ce6acbc643abb10fd3f
             }
             myReader.close();
         } catch (FileNotFoundException e) {
