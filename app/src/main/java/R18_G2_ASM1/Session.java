@@ -27,7 +27,7 @@ public class Session {
     private TransactionType transactionType;
 
     /**
-     * Constructs and inialises a new session.
+     * Constructs and initialises a new session.
      * @param ATM the attatched ATM which the session is running on.
      */
     public Session(ATM ATM) {//, TransactionType transactionType,int sessionID){
@@ -35,7 +35,9 @@ public class Session {
         attachedATM = ATM;
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
-        csvCard = new File("app/src/main/datasets/card.csv");
+        // csvCard = new File("app/src/main/datasets/card.csv");
+        csvCard = new File("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/main/datasets/card.csv");
+
     }
 
     /**
@@ -70,10 +72,11 @@ public class Session {
      * @throws InvalidTypeException
      */
     public void run(int cardNum) throws InvalidTypeException{
-        //assume it is DEPOSITE and transaction id is 1
+        //assume it is DEPOSIT and transaction id is 1
         transactionType = TransactionType.DEPOSIT;
         card  = this.retrieveCardFromFile(cardNum, csvCard);
         if (validateSession(card)){
+            this.attachedATM.getATMLogger().createLogMessage("Session.run", messageType.INFO, "Insert card passed");
             this.transact(card, transactionType, 1);
         }
         
@@ -104,7 +107,7 @@ public class Session {
      * @param card the card proided by the user
      * @param c a card from XYZ database //do not need this 
      * @return true if the session was validated. False if it was not. 
- * @throws InvalidTypeException
+     * @throws InvalidTypeException
      */
     private Boolean validateSession(Card card) throws InvalidTypeException{
         if (card == null){
@@ -174,6 +177,7 @@ public class Session {
                     cardNumber = Integer.parseInt(infoArr[0]);
                 } catch(NumberFormatException e){
                     System.out.println("Invalid int type, 4 digits");
+                    return null;
                 }
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
