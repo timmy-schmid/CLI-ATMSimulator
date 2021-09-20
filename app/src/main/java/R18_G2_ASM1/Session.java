@@ -36,9 +36,7 @@ public class Session {
         attachedATM = ATM;
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
-        // csvCard = new File("app/src/main/datasets/card.csv");
-     
-        csvCard = new File("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/main/datasets/card.csv");
+        csvCard = new File("src/main/datasets/card.csv");
     }
 
     /**

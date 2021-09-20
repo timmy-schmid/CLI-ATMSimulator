@@ -61,8 +61,8 @@ class ATM_loggerTest{
   public void testcanWriteToNewFile(){
     //set a new log file name to write a random log message to it
     //assert the file exist and isnt empty (read the file?)
-    // logger.setPath("app/src/test/logTests");
-    logger.setPath("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/logTests");
+    logger.setPath("src/test/logTests");
+    // logger.setPath("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/logTests");
     logger.setLogFileName("/TestingLog1.log");
     logger.writeToFile("ATM_loggerTest.testcanWriteToNewFile", messageType.INFO, "Successfully wrote to new log file!", logger.getFileName());
 
@@ -73,7 +73,7 @@ class ATM_loggerTest{
 
   @Test
   public void testFileEmpty(){ //when message or method is null, don't write to file
-    logger.setPath("app/src/test/logTests");
+    logger.setPath("src/test/logTests"); //app/src...
     // logger.setPath("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/logTests");
     logger.setLogFileName("/TestingLog2.log");
     logger.writeToFile(null, messageType.INFO, null, logger.getFileName());
