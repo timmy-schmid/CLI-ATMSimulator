@@ -30,8 +30,8 @@ public class MoneyStack{
         money.put(MoneyType.FIVE_CENTS, 100);
     }
 
-    public int totalMoney() { //or double return type??
-        int totalMoney = 0;
+    public double totalMoney() { //or double return type??
+        double totalMoney = 0;
         for(MoneyType T: money.keySet()){
             totalMoney += T.getValue()*money.get(T);
         }
@@ -56,8 +56,8 @@ public class MoneyStack{
         } else{
             for(MoneyType key: this.money.keySet()){
                 int quotient = (int)(needWithdraw/key.getValue()); //casting??
-                int remainder  = (int)(needWithdraw%key.getValue());
-                if(quotient > money.get(key)){
+                double remainder  = needWithdraw%key.getValue();
+                if(quotient >= money.get(key)){
                     needWithdraw -= money.get(key)*key.getValue();
                     money.replace(key,0);
                 }else{
@@ -80,13 +80,13 @@ public class MoneyStack{
     }
 
     public boolean canWithdraw(MoneyStack c){
-        int needWithdraw = c.totalMoney();
+        double needWithdraw = c.totalMoney();
         if (needWithdraw > this.totalMoney()){ //change this.money --> this?
             return false;
         } else{
             for(MoneyType key: this.money.keySet()){
                 int quotient =  (int)(needWithdraw/key.getValue()); 
-                int remainder = (int)(needWithdraw%key.getValue()); //typecast required, lossy conversion?
+                double remainder = (needWithdraw%key.getValue()); //typecast required, lossy conversion?
                 if(quotient > money.get(key)){
                     needWithdraw -= money.get(key)*key.getValue();
                 }else{
