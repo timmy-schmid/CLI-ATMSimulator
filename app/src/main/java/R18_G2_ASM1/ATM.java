@@ -3,6 +3,9 @@ package R18_G2_ASM1;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import R18_G2_ASM1.Session.InvalidTypeException;
+
 import java.io.IOException;
 
 /**
@@ -65,8 +68,9 @@ public class ATM {
  * </ul>
  * 
  * The ATM will shutdown after a session status has been resolved.
+ * @throws InvalidTypeException
  */
-  public void run() {
+  public void run() throws InvalidTypeException {
     currentSession = new Session(this);
 
     //Welcome Menu:

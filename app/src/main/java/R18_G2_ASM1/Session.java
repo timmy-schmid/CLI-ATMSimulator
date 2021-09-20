@@ -30,9 +30,11 @@ public class Session {
      * Constructs and inialises a new session.
      * @param ATM the attatched ATM which the session is running on.
      */
-    public Session(ATM ATM){
-        this.attachedATM = ATM;
-        this.sessionID = 0;
+    public Session(ATM ATM, TransactionType transactionType, int sessionID){
+        pinAttemptNum = 0;
+        attachedATM = ATM;
+        this.sessionID = sessionID;
+        this.transactionType = transactionType;
         csvCard = new File("app/src/main/datasets/card.csv");
     }
 
@@ -70,14 +72,22 @@ public class Session {
     public void run(int cardNum) throws InvalidTypeException{
         //assume it is DEPOSITE and transaction id is 1
         transactionType = TransactionType.DEPOSIT;
-
         card  = this.retrieveCardFromFile(cardNum, csvCard);
-        this.transact(card, transactionType, 1);
+        if (validateSession(card)){
+            this.transact(card, transactionType, 1);
+        }
+        
         
     }
 
 
+    public int getAttemptNum(){
+        return pinAttemptNum;
+    }
 
+    public void ifWrongPin(){
+        pinAttemptNum++;
+    }
    /**
      * Used to verify a card number against the card provided.
      * Asks the user to enter their PIN (only 3 attempts).
@@ -91,13 +101,12 @@ public class Session {
      *  <li> CARD_BLOCKED - The card entered has been blocked due to too many PIN attempts.</li>
      * </ul>
      * 
-     * @param cardNum the cardNumber proided by the user
+     * @param card the card proided by the user
      * @param c a card from XYZ database //do not need this 
      * @return true if the session was validated. False if it was not. 
  * @throws InvalidTypeException
      */
-    private Boolean validateSession(int cardNum) throws InvalidTypeException{
-        card = retrieveCardFromFile(cardNum, csvCard);
+    private Boolean validateSession(Card card) throws InvalidTypeException{
         if (card == null){
             currentStatus = SessionStatus.INVALID_CARD_NUMBER;
             return false;
