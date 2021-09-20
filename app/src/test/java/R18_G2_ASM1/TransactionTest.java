@@ -28,25 +28,24 @@ class TransactionTest {
     Date expiraryDate;
     DateFormat dateFormat;
 
-    // Account userAAccount;
-    // Account userBAccount;
-    // Account userCAccount;
-
     double amount;
+    double depositAmount;
+
     ATM atm;
+    MoneyStack moneyStack;
     Date date;
 
     @BeforeEach
     public void setUp() throws ParseException { //for date formatting
         app = new App();
         date = new Date();
-        ATM atm = new ATM("Canberra");
+        moneyStack = new MoneyStack();
+        ATM atm = new ATM("Canberra", moneyStack);
        
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         startDate = dateFormat.parse("2018-06-01");
         expiraryDate = dateFormat.parse("2023-05-31");
     
-
         userA = new Card(38762.99, 55673, startDate, expiraryDate,
         false, true, false, 888888);
         userB = new Card(10000.00, 55674, startDate, expiraryDate,
@@ -55,13 +54,14 @@ class TransactionTest {
         false, false, false, 666666);
 
         amount = 300.50; //to withdraw
-        double depositAmount = 150.00; // to deposit
+        depositAmount = 150.00; // to deposit
 
         withdrawalA = new Transaction(atm, TransactionType.WITHDRAWAL, userA, 1);
 
         balanceCheckB = new Transaction(atm, TransactionType.BALANCE, userB, 2);
 
         depositC = new Transaction(atm, TransactionType.DEPOSIT, userC, 3);
+        depositC.initialSetUpMap();
     }
 
     @AfterEach
@@ -81,58 +81,93 @@ class TransactionTest {
         assertNotNull(userB);
         assertNotNull(userC);
     }
+
+    @Test
+    public void testNotNullMoneyStack(){
+        assertNotNull(depositC.getMoneyStackBalance());
+    }
     
-    // @Test
-    // public void testcanDeductFromCard(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
-    //     boolean result = withdrawalA.canDeductFromCard(userA);
-    //     assert (result == true);
+    @Test
+    public void testSetUpMapWorks(){ //testing depositAmountApp is not null
+        assertNotNull(depositC.getDepositAmountMap());
+    }
+    
+    @Test
+    public void voidtestResetMapWorks(){ //ensures all notes remain 0 again
+        depositC.initialSetUpMap();
+        depositC.resetDepositAmountMap();
+        for (HashMap.Entry <MoneyType, Integer> entry: depositC.getDepositAmountMap().entrySet()){
+            assert(entry.getValue() == 0);
+        }
+    }
+    
+    @Test 
+    public void voidtestGetUserAmount(){ //positive test, number is divisble by 5
+        depositC.setAmount(depositAmount); //no coins
+        assertEquals(depositC.getAmount(), depositC.getAmount());
+    }
+
+    @Test 
+    public void voidtestcanDepositAmount(){ //positive test, deposit amount is divisble by 5
+        double cardBalance = userC.getbalance(); 
+        depositC.setAmount(depositAmount);
+        // depositC.modify(userC.getCard(), depositC.getType());
+        try {
+            depositC.proceedDepositTransaction(userC);
+        } catch (InvalidTypeException e) {
+            assertEquals(InvalidTypeException.class, e.getClass());
+        }
+        assertEquals(userC.getbalance(), cardBalance+depositAmount, "Amount in card did not increase,proceedDepositTransaction function failed! ");
+    }
+
+    @Test 
+    public void voidtestCantDepositAmount(){ //negative test, failure to deposit due to amount is NOT divisble by 5
+        double amount = 124.00;
+        depositC.setAmount(amount);
+        try {
+            depositC.proceedDepositTransaction(userC);
+        } catch (InvalidTypeException e) {
+            assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
+        }
+    }
+
+
+    @Test //testing deposit adds money to card
+    public void testCanModifyCardDeposit(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
+        double cardBalance = userC.getbalance(); //initial
+        double amount = 15.00;
+        //initialise amount in deposit
+        depositC.setAmount(amount);
+        depositC.modify(depositC.getCard(), depositC.getType()); //userC
+        assert(userC.getbalance() == (cardBalance + amount));
+    }
+
+
+    // @Test //testing withdrawal removes money from card
+    // public void testCanModifyCardWithdrawal(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
+    //     double cardBalance = userA.getbalance(); //initial
+
+    //     //initialise amount in withdrawal
+    //     withdrawalA.setAmount(amount);
+    //     withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType()); //userA
+    //     assert(userA.getbalance() == (cardBalance - amount));
     // }
+    @Test
+    public void testCanWithdrawalAmount(){ //testing when userA's balance is too low and can't withdraw money out
+        double amount = 15.95;
+        double cardBalance = userA.getbalance();
+        withdrawalA.setAmount(amount);
+        withdrawalA.proceedWithdrawalTransaction(userA);
+        assert(userA.getbalance() == cardBalance-amount);
+        //how to test for standard output??
+    }
 
-    // @Test
-    // public void testcantDeductFromCard(){ //not enough stored in card to deduct
-    //     double temp = 250;
-    //     userA.setTotalAmount(temp); //set card amount from 1500 to 250, deduct = 300
-    //     boolean result = withdrawalA.canDeductFromCard(userA);
-    //     assert (result == false );
-    //     userA.setTotalAmount(withdrawalA.getAmount());
-    // }
-
-    // @Test
-    // //prints output after splitting up deductAmount into different money/coin components 
-    // public void testCashRemainder(){
-    //     withdrawalA.findRemainder(); //withdrawal.getDeductAmount());
-    //     assertNotNull(withdrawalA.getSplitWithdrawalAmountMap());
-    // }
-
-    // @Test
-    // public void testCanDeposit(){
-    //     double expected = userC.getTotalAmount()+depositAmount;
-    //     depositC.proceedDepositTransaction(depositC.getAccount());
-        
-    //     double actual = userC.getTotalAmount();
-    //     //assert userC has extra amount
-    //     System.out.println("Expected = " + expected + " ;:::::: actual = " + actual);
-    //     assertEquals(actual, expected,
-    //             "Amount in card did not increase,proceedDepositTransaction function failed! ");
-    //     // userC.getCardDetails();
-    // }
-}
-
-    // //1 user using ATM machine
-    // public static void testDeductFromATM(Transaction withdrawal){
-    //     withdrawal.findRemainder();
-    //     withdrawal.compareReqWithMoneyTypeAmount(withdrawal.getRemainderStorageMap());
-    // }
-
-    // //3 users using ATM machine (A, B, C)
-    // public static void multipleTestDeductFromATM(Transaction withdrawalA, Transaction withdrawalB, Transaction withdrawalC){
-       
-    //     //where transactionID = userID? 
-
-        // //just printing out ALL enum vals
-    // public static void testMoneyType(){
-    //     for (MoneyType type: MoneyType.values()) {
-    //         System.out.println("type = "+type + ", value = " + type.getValue() +" , amount = " + type.getAmount());
+    // public void testRunWrongType() throws InvalidTypeException{ //invalid type to proceed transaction
+    //     try {
+    //         depositC.run("HELLO");
+    //     } catch (InvalidTypeException e) {
+    //         assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
     //     }
     // }
-// }
+
+}

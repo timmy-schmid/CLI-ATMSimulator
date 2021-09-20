@@ -2,6 +2,7 @@ package R18_G2_ASM1;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class MoneyStack{
     // constructor
     //seems we don't have parameters to pass
     public MoneyStack(){
-        this.money = new HashMap <MoneyType, Integer>();
+        this.money = new LinkedHashMap <MoneyType, Integer>(); //replace hashmap with linkedhashmap
         money.put(MoneyType.HUNDRED_DOLLARS,50);
         money.put(MoneyType.FIFTY_DOLLARS, 50);
         money.put(MoneyType.TWENTY_DOLLARS, 50);
@@ -48,7 +49,7 @@ public class MoneyStack{
        }
     }
 
-    public boolean withdraw(MoneyStack c){
+    public boolean withdraw(MoneyStack c){ //needs edit i think....
         int needWithdraw = c.totalMoney();
         if (this.canWithdraw(c) == false){
             return false;
@@ -63,6 +64,7 @@ public class MoneyStack{
                     int originalAmount = money.get(key);
                     needWithdraw = remainder;
                     money.replace(key,originalAmount-quotient);
+                    // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
                 }
             }
             return (needWithdraw == 0);
