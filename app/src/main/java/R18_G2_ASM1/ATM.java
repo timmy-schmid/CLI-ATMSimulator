@@ -413,7 +413,7 @@ public class ATM {
     s.append("--------------------------\n");
     s.append("--- XYZ BANK RECEIPT------\n");
     s.append("--------------------------\n");
-    s.append("Transaction No: " + t.getID() + "\n");
+    //s.append("Transaction No: " + t.getID() + "\n");
     s.append("Transaction Type: " + t.getType() + "\n");
     s.append("Amount:\n");
     s.append("--------------------------\n");

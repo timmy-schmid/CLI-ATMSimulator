@@ -103,11 +103,11 @@ public class Session {
             currentStatus = SessionStatus.CARD_EXPIRED;
             return false;
         }
-        else if (card.isIs_lost()){
+        else if (card.is_lost()){
             currentStatus = SessionStatus.CARD_LOST;
             return false;
         }
-        else if (card.isIs_blocked()) {
+        else if (card.is_blocked()) {
             currentStatus = SessionStatus.CARD_BLOCKED;
             return false;
         }
@@ -216,9 +216,8 @@ public class Session {
                 } else {
                     throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
                 }
-
                 if (cardNumber == cardNum){
-                    this.card = new Card(userType, balance, cardNumber, startDate, expirationDate,
+                    this.card = new Card(balance, cardNumber, startDate, expirationDate,
                     lost, blocked, expired, pin);
                 }
 
