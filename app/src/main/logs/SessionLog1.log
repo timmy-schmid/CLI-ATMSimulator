@@ -10,3 +10,7 @@ Sept 20, 2021 12:36:58 AM R18_G2_ASM1.ATM_logger writeToFile
 INFO: transaction.deposit --> MESSAGE: deposit was successful!
 Sept 20, 2021 12:36:58 AM R18_G2_ASM1.ATM_logger writeToFile
 INFO: transaction.withdrawal --> MESSAGE: withdrawal was successful!
+Sept 20, 2021 4:34:11 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.deposit --> MESSAGE: deposit was successful!
+Sept 20, 2021 4:34:11 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: withdrawal was successful!
