@@ -3,6 +3,7 @@ package R18_G2_ASM1;
 import java.util.*;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.Logger;
+import java.util.logging.Handler;
 import java.util.logging.FileHandler;
 import java.io.IOException;
 import java.text.ParseException;
@@ -34,8 +35,6 @@ import java.text.ParseException;
     <li> message - Description of the message type</li>
   </ul>
   Sept 20, 2021 12:01:33 AM R18_G2_ASM1.ATM_logger writeToFile
-  
-
 */
 public class ATM_logger{
   private messageType type;
@@ -43,6 +42,9 @@ public class ATM_logger{
   private String classMethod;
 
   private String path;
+  private String logFileName;
+
+  private static FileHandler fh;
 
   /**
    * Constructs a new ATM_logger object
@@ -53,6 +55,7 @@ public class ATM_logger{
     this.classMethod = null;
     // this.path = "./app/src/main/logs"; // double check later, using absolute path for now
     this.path = "/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/main/logs";
+    this.logFileName = "/SessionLog1.log";
   }
 
   public String getPath(){
@@ -61,6 +64,14 @@ public class ATM_logger{
 
   public void setPath(String path){ //for testing purposes or changing location of producing log file
     this.path = path;
+  }
+
+  public String getFileName(){
+    return this.logFileName;
+  }
+
+  public void setLogFileName(String newName){
+    this.logFileName = newName;
   }
 
   /**
@@ -76,7 +87,7 @@ public class ATM_logger{
     this.type = type;
     this.message = message;
 
-    writeToFile(this.classMethod, this.type, this.message);
+    writeToFile(this.classMethod, this.type, this.message, this.getFileName());
   }
 
   /**
@@ -86,7 +97,7 @@ public class ATM_logger{
    @param type type of message [string vs messageType]
    @param message description to write in log file
    */
-  public void writeToFile(String classMethod, messageType type, String message){
+  public void writeToFile(String classMethod, messageType type, String message, String logFileName){
     //if the parameters are not null, write to file otherwise keep waiting till info is provided
     if (classMethod == null || type == null || message == null) {
       System.out.println("Not time to write to file yet!!");
@@ -94,9 +105,16 @@ public class ATM_logger{
     } else {
 
       Logger logger = Logger.getLogger("ATM_logger");
-      FileHandler fh = null;
       try {
-        fh = new FileHandler(this.path +"/SessionLog1.log", true); //append to existing file 
+        fh = new FileHandler(this.path + logFileName, true); //append to existing file 
+
+        // this prevents output from showing onto console
+        Logger globalLogger = Logger.getLogger("");
+        Handler[] handlers = globalLogger.getHandlers();
+        for (Handler handler : handlers) {
+            globalLogger.removeHandler(handler);
+        }
+
         logger.addHandler(fh); //adds a log handler to receive logging msgs
 
         //this provides output in human readable format to the log file!!
@@ -111,19 +129,10 @@ public class ATM_logger{
         } else if (type == messageType.WARNING){
           logger.warning(this.classMethod + " --> MESSAGE: " + this.message);
         }
-      } catch (SecurityException e){ //e.g. if a security manager doesn't have but requires a logging permission, retrieved from https://docs.oracle.com/javase/7/docs/api/java/util/logging/FileHandler.html 
-        e.printStackTrace();
-
-      } catch (IOException e){ //in case there are IO problems with opening the file
-        e.printStackTrace();
+      } catch (IOException | SecurityException e){ 
+        //e.g. if a security manager doesn't have but requires a logging permission, retrieved from https://docs.oracle.com/javase/7/docs/api/java/util/logging/FileHandler.html 
+        //in case there are IO problems with opening the file
       }
     }
   }
 }
-
-/**
-  logger.info("")
-  logger.severe("error msg")
-  logger.fine("fine msg")
-  logger.warning("warning msg")
- */

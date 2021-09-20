@@ -1,0 +1,4 @@
+Sept 21, 2021 12:26:26 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
+Sept 21, 2021 12:42:42 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null

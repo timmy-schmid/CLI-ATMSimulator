@@ -51,13 +51,47 @@ class ATM_loggerTest{
     assertNull(logger.getPath());
   }
 
-  // //negative test
+  @Test
+  public void testInvalidLogFileName(){ 
+    logger.setLogFileName("");
+    assertEquals("", logger.getFileName(), "Assertion failed!");
+  }
+
+  @Test
+  public void testcanWriteToNewFile(){
+    //set a new log file name to write a random log message to it
+    //assert the file exist and isnt empty (read the file?)
+    logger.setPath("src/test/logTests");
+    // logger.setPath("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/logTests");
+    logger.setLogFileName("/TestingLog1.log");
+    logger.writeToFile("ATM_loggerTest.testcanWriteToNewFile", messageType.INFO, "Successfully wrote to new log file!", logger.getFileName());
+
+    File f = new File(logger.getPath() + logger.getFileName());
+    boolean exists = f.exists();
+    assertTrue(exists);
+  }
+
+  @Test
+  public void testFileEmpty(){ //when message or method is null, don't write to file
+    logger.setPath("src/test/logTests"); //app/src...
+    // logger.setPath("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/logTests");
+    logger.setLogFileName("/TestingLog2.log");
+    logger.writeToFile(null, messageType.INFO, null, logger.getFileName());
+
+    File file = new File(logger.getPath()+logger.getFileName());
+    assert(file.length() == 0);
+  }
+
+  //negative test
   // @Test
   // public void testFileDoesntExists(){ 
   //   logger.createLogMessage("class.method", messageType.INFO, "testing message");
-  //   String invalidPath = "./hello/lala";
-  //   boolean result = logger.checkFileExists(invalidPath);
-  //   assertFalse(result);
+  //   String invalidPath = "/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/helloo";
+
+  //   logger.setPath(invalidPath);
+  //   logger.setLogFileName("/TestingLog2.log");
+    
+  //   logger.writeToFile("ATM_loggerTest.testFileDoesntExists", messageType.ERROR, "Failed to find right path!", logger.getFileName());
   // }
   
   //positive test

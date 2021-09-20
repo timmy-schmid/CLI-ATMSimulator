@@ -56,3 +56,9 @@ TODO: fully set up Jenkins with Vultr and link with Github
 <u>gradle test</u> --> compiles and runs your test files
 <u>gradle test JacocoTestReport</u> --> generates a report where you can see how much coverage you've done
 <u>gradle javadoc</u> --> generates a set of HTML pages of API documentation
+
+# Testing Standard IN/OUT in Java
+
+check these websites out: https://www.danvega.dev/blog/2020/12/16/testing-standard-in-out-java/ 
+
+http://one-line-it.blogspot.com/2013/05/java-testing-with-stdin-and-stdout.html
