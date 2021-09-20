@@ -16,7 +16,7 @@ public class SessionTest {
         File csvCard;
         String s = this.getClass().getResource("/").getPath();
         System.out.println(s);
-        s = s.substring(0,s.length()-9);
+        s = s.substring(0,s.length()-13);
         System.out.println(s);
 
         csvCardTest = new File(s+"app/src/test/datasets/cardTest.csv");

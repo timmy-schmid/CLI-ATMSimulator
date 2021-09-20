@@ -449,7 +449,7 @@ public class ATM {
     s.append("Amount:\n");
     s.append("--------------------------\n");
 
-    try { //hand exception!
+    try { //handle exception!
       s.append(m.query(MoneyType.HUNDRED_DOLLARS) + " x $100\n");
       s.append(m.query(MoneyType.FIFTY_DOLLARS) + " x $50\n");
       s.append(m.query(MoneyType.TWENTY_DOLLARS) + " x $20\n");
