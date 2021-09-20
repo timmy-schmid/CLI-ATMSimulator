@@ -90,14 +90,14 @@ public class ATM {
     display.displayMessage(s.toString());
 
     //insert card
-    int cardNum;
+    int cardNum = -1;
     try {
       cardNum = cardDispensor.insertCard();
       
     } catch (InvalidCardException e) {
       display.displayMessage("\n" + e.getMessage());
       cardDispensor.ejectCard();
-      this.getATMLogger().createLogMessage("CardDispenser.insertCard", messageType.ERROR, "Invalid card inserted");
+      this.getATMLogger().createLogMessage("CardDispenser.insertCard", messageType.ERROR, "Invalid card [" + cardNum + "] inserted.");
       return;
     }
 

@@ -1,0 +1,14 @@
+Sept 20, 2021 9:36:49 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
+Sept 20, 2021 9:40:47 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
+Sept 20, 2021 9:44:22 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
+Sept 20, 2021 9:51:29 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
+Sept 20, 2021 10:01:29 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
+Sept 20, 2021 10:07:50 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
+Sept 20, 2021 11:02:25 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!

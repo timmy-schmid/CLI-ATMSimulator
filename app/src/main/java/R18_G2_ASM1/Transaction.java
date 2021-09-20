@@ -256,17 +256,16 @@ public class Transaction {
             System.out.println("Cannot add money into MoneyStack.");
             return;
         }
-        // System.out.printf("LINE 277: card amount before = [%.2f]\n", card.getbalance());
+        System.out.printf("LINE 259: card amount before deposit = [%.2f]\n", card.getbalance());
         this.modify(card, TransactionType.DEPOSIT);
-        // System.out.printf("LINE 279: card amount after = [%.2f]\n", card.getbalance());
+        System.out.printf("LINE 261: card amount after deposit = [%.2f]\n", card.getbalance());
 
         // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
         // System.out.println("-----> LINE 264 ABOVE = AFTER: prints moneystack ----------------------------------\n");
         //now print receipt
         this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
-        this.attachedATM.getATMLogger().createLogMessage("transaction.deposit", messageType.INFO, "deposit was successful!");
+        // this.attachedATM.getATMLogger().createLogMessage("transaction.deposit", messageType.INFO, "deposit was successful!");
     }
-
 
     /**
      * proceedWithdrawalTransaction
@@ -284,7 +283,10 @@ public class Transaction {
                 this.getMoneyStackBalance().withdraw(this.getMoneyStackBalance()); //decrease amount in moneystack
                 // System.out.println("AFTER: line 296 printing moneystack ----------------------------------\n");
                 // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
+
+                System.out.printf("LINE 287: card amount before withdrawal = [%.2f]\n", card.getbalance());
                 this.modify(card, TransactionType.WITHDRAWAL);
+                System.out.printf("LINE 289: card amount after withdrawal = [%.2f]\n", card.getbalance());
                 
                 //now print receipt
                 // this.attachedATM.printReceipt(this, this.getMoneyStackBalance()); //only prints for moneystackbalance currently??
