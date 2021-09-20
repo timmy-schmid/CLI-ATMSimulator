@@ -37,7 +37,7 @@ public class Session {
         //this.sessionID = sessionID;
         this.transactionType = attachedATM.askForTransType();
         // csvCard = new File("app/src/main/datasets/card.csv");
-        csvCard = new File("app/src/main/datasets/card.csv");
+        csvCard = new File("src/main/datasets/card.csv");
 
     }
 
@@ -303,6 +303,7 @@ public class Session {
         if (card.getPin() == attachedATM.askForPIN()) {
             return true;
         }
+        this.ifWrongPin();
         return false;
     }
     /**
