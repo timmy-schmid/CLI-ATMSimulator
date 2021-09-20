@@ -38,6 +38,13 @@ public class Session {
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
         csvCard = new File("src/main/datasets/card.csv");
+        this.transactionType = TransactionType.DEPOSIT; //attachedATM.askForTransType();
+        // csvCard = new File("src/main/datasets/card.csv");
+
+        // String absolutePath = this.getClass().getResource("/").getPath();
+        // absolutePath = absolutePath.substring(0,absolutePath.length()-13);
+        // csvCard = new File(absolutePath + "app/src/main/datasets/card.csv");
+        // this.transactionType = ATM.askForTransType();
     }
 
     /**
@@ -318,6 +325,7 @@ public class Session {
         if (card.getPin() == attachedATM.askForPIN()) {
             return true;
         }
+        this.ifWrongPin();
         return false;
     }
     /**

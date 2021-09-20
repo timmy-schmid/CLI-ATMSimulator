@@ -11,81 +11,203 @@ import java.text.ParseException;
 class CardTest {
 
   @Test
-  void isIs_blocked() throws ParseException {
+  void Is_blocked() throws ParseException {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(38762.99, 55673, start_date, expiration_date,
-        false, true, false, 888888); //change the is_los, blocked, expired in initialiser???
+        false, false, false, 888888);//change the is_los, blocked, expired in initialiser???
     assertFalse(c.is_blocked());
   }
 
   @Test
-  void is_lost() {
+  void Is_lost() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    assertFalse(c.is_lost());
+  }
+
+  // @Test
+  // void getExpiration_date() throws ParseException {
+  //   DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+  //   Date start_date = dateFormat1.parse("2018-06-01");
+  //   Date expiration_date = dateFormat1.parse("2023-05-31");
+  //   Card c = new Card(38762.99, 55673, start_date, expiration_date,
+  //       false, false, false, 888888);
+  //   DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+  //   Date test_date = fmt.parse("2023-05-31");
+  //   assertTrue(c.getExpiration_date() == test_date);
+  // }
+
+  // @Test //test failed???
+  // void getStart_date() throws ParseException {
+  //   DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+  //   Date start_date = dateFormat1.parse("2018-06-01");
+  //   Date expiration_date = dateFormat1.parse("2023-05-31");
+  //   Card c = new Card(38762.99, 55673, start_date, expiration_date,
+  //       false, false, false, 888888);
+  //   DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+  //   Date test_date = fmt.parse("2018-06-01");
+  //   assertTrue(c.getStart_date() == test_date);
+  // }
+
+  @Test
+  void getCardNumber() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    assertEquals(c.getCardNumber(), 55673);
   }
 
   @Test
-  void getExpiration_date() {
+  void getPin() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    assertEquals(c.getPin(), 888888);
   }
 
   @Test
-  void getStart_date() {
+  void getbalance() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    assertEquals(c.getbalance(), 38762.99);
   }
 
   @Test
-  void getCardNumber() {
+  void setBalance() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    c.setBalance(10000);
+    assertEquals(c.getbalance(), 10000);
   }
 
   @Test
-  void getPin() {
+  void setCardNumber() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    c.setCardNumber(23232);
+    assertEquals(c.getCardNumber(), 23232);
   }
 
   @Test
-  void getbalance() {
+  void setExpiration_date() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    Date test_date = fmt.parse("2028-06-01");
+    c.setExpiration_date(test_date);
+    assertEquals(c.getExpiration_date(), test_date);
   }
 
   @Test
-  void setBalance() {
+  void setIs_blocked() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    c.setIs_blocked(true);
+    assertTrue(c.is_blocked());
   }
 
   @Test
-  void setCardNumber() {
+  void setIs_lost() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    c.setIs_lost(true);
+    assertTrue(c.is_lost());
   }
 
   @Test
-  void setExpiration_date() {
+  void setPin() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    c.setPin(999999);
+    assertEquals(c.getPin(), 999999);
   }
 
   @Test
-  void setIs_blocked() {
+  void setStart_date() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    Date test_date = fmt.parse("2018-07-01");
+    c.setStart_date(test_date);
+    assertEquals(c.getStart_date(), test_date);
   }
 
   @Test
-  void setIs_lost() {
+  void isExpired() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    assertFalse(c.isExpired());
   }
 
   @Test
-  void setPin() {
+  void isAfterStartDate() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    assertTrue(c.isAfterStartDate());
   }
 
   @Test
-  void setStart_date() {
+  void check_pin() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    assertTrue(c.check_pin(888888));
+    assertFalse(c.check_pin(123123));
+    c.setPin(999999);
+    assertFalse(c.check_pin(888888));
+    assertTrue(c.check_pin(999999));
   }
 
   @Test
-  void isExpired() {
-  }
-
-  @Test
-  void isAfterStartDate() {
-  }
-
-  @Test
-  void check_pin() {
-  }
-
-  @Test
-  void block_card() {
+  void block_card() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    c.block_card();
+    assertTrue(c.is_blocked());
   }
 
   @Test

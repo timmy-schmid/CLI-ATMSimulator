@@ -14,8 +14,21 @@ public class SessionTest {
 
         File csvCardTest;
         File csvCard;
-        csvCardTest = new File("app/src/test/datasets/cardTest.csv");
-        csvCard = new File("app/src/main/datasets/card.csv");
+        String s = this.getClass().getResource("/").getPath();
+        System.out.println(s);
+        s = s.substring(0,s.length()-13);
+        System.out.println(s);
+
+        csvCardTest = new File(s+"app/src/test/datasets/cardTest.csv");
+        csvCard = new File(s+"app/src/main/datasets/card.csv");
+
+
+
+
+        File directory = new File("");//参数为空 
+        String courseFile = directory.getCanonicalPath() ; 
+        System.out.println(courseFile); 
+
         System.out.println(csvCardTest.exists());
 
         Session sec = new Session(new ATM("loc"));
