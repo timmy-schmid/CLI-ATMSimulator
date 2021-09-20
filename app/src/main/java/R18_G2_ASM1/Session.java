@@ -25,17 +25,20 @@ public class Session {
     private int pinAttemptNum;
     private File csvCard;
     private TransactionType transactionType;
+    private String userType;
 
     /**
-     * Constructs and inialises a new session.
+     * Constructs and initialises a new session.
      * @param ATM the attatched ATM which the session is running on.
      */
-    public Session(ATM ATM, TransactionType transactionType, int sessionID){
+    public Session(ATM ATM) {//, TransactionType transactionType,int sessionID){
         pinAttemptNum = 0;
         attachedATM = ATM;
-        this.sessionID = sessionID;
-        this.transactionType = transactionType;
+        //this.sessionID = sessionID;
+        this.transactionType = attachedATM.askForTransType();
+        // csvCard = new File("app/src/main/datasets/card.csv");
         csvCard = new File("app/src/main/datasets/card.csv");
+
     }
 
     /**
@@ -70,10 +73,11 @@ public class Session {
      * @throws InvalidTypeException
      */
     public void run(int cardNum) throws InvalidTypeException{
-        //assume it is DEPOSITE and transaction id is 1
+        //assume it is DEPOSIT and transaction id is 1
         transactionType = TransactionType.DEPOSIT;
         card  = this.retrieveCardFromFile(cardNum, csvCard);
         if (validateSession(card)){
+            this.attachedATM.getATMLogger().createLogMessage("Session.run", messageType.INFO, "Insert card passed");
             this.transact(card, transactionType, 1);
         }
         
@@ -87,6 +91,10 @@ public class Session {
 
     public void ifWrongPin(){
         pinAttemptNum++;
+    }
+
+    public String getUserType(){
+        return userType;
     }
    /**
      * Used to verify a card number against the card provided.
@@ -104,7 +112,7 @@ public class Session {
      * @param card the card proided by the user
      * @param c a card from XYZ database //do not need this 
      * @return true if the session was validated. False if it was not. 
- * @throws InvalidTypeException
+     * @throws InvalidTypeException
      */
     private Boolean validateSession(Card card) throws InvalidTypeException{
         if (card == null){
@@ -162,7 +170,7 @@ public class Session {
         Boolean expired = false;
         int pin = -1;
         double balance = -1;
-        Card this_card;
+        Card thisCard;
 
         try {
             Scanner myReader = new Scanner(csvCard);
@@ -174,6 +182,7 @@ public class Session {
                     cardNumber = Integer.parseInt(infoArr[0]);
                 } catch(NumberFormatException e){
                     System.out.println("Invalid int type, 4 digits");
+                    return null;
                 }
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -223,17 +232,26 @@ public class Session {
                     System.out.println("Invalid double type");
                 }
 
+                if (infoArr[7].equals("customer")) {
+                    userType = "customer";
+                }
+                else if (infoArr[7].equals("admin")) {
+                    userType = "admin";
+                } else {
+                    throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
+                }
+                if (cardNumber == cardNum){
+                    thisCard = new Card(balance, cardNumber, startDate, expirationDate,
+                    lost, blocked, expired, pin);
+                    return thisCard;
+                }
             }
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        if (cardNumber == cardNum){
-            this_card = new Card(balance, cardNumber, startDate, expirationDate,
-            lost, blocked, expired, pin);
-            return this_card;
-        }
+
         return null;
     }
 

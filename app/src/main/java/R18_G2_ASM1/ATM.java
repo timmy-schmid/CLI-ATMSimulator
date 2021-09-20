@@ -25,9 +25,10 @@ public class ATM {
   private Keypad keypad;
   private CardDispensor cardDispensor;
   private Display display;
+  private ATM_logger atmLogger; //newly added!
 
 /**
- * Constructs and inialises a new ATM with a balance of AUD $0
+ * Constructs and initialises a new ATM with a balance of AUD $0
  * @param location A string representation of where the ATM is located
  */
   public ATM(String location) {
@@ -38,6 +39,7 @@ public class ATM {
     this.keypad = new Keypad();
     this.cardDispensor = new CardDispensor();
     this.display = new Display();
+    this.atmLogger = new ATM_logger();
   }
 
 /**
@@ -48,6 +50,13 @@ public class ATM {
   public ATM(String location, MoneyStack m) {
     this(location);
     this.balance = m;
+  }
+
+/**
+ * @return an ATM logger object
+ */
+  public ATM_logger getATMLogger() { //newly added
+    return this.atmLogger;
   }
   
  /**
@@ -70,7 +79,7 @@ public class ATM {
  * The ATM will shutdown after a session status has been resolved.
  * @throws InvalidTypeException
  */
-  public void run() throws InvalidTypeException {
+  public void run() {
     currentSession = new Session(this);
 
     //Welcome Menu:
@@ -84,14 +93,18 @@ public class ATM {
     int cardNum;
     try {
       cardNum = cardDispensor.insertCard();
+      
     } catch (InvalidCardException e) {
       display.displayMessage("\n" + e.getMessage());
       cardDispensor.ejectCard();
+      this.getATMLogger().createLogMessage("CardDispenser.insertCard", messageType.ERROR, "Invalid card inserted");
       return;
     }
 
     //run session
-    currentSession.run(cardNum);
+    try { // this needs to be handled properly.
+      currentSession.run(cardNum);
+
 
     if (currentSession.getStatus() == SessionStatus.ADMIN_MODE) {
 
@@ -120,30 +133,44 @@ public class ATM {
       display.displayMessage("The card you have entered has been reported as Lost or Stolen.\n");          
       display.displayMessage("Your card has been confiscated. Please contact XYZ Bank to issue a new card.\n");
       display.displayMessage("We apologise for any inconvienience.\n");
+      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "Report: Card is lost or stolen!");
+      cardDispensor.ejectCard(); //maybe add this too here?
+
     } else if (currentSession.getStatus() == SessionStatus.CARD_BLOCKED) {
       display.displayMessage("The card you have entered has been blocked due to too many PIN attempts.\n");          
       display.displayMessage("Please contact XYZ Bank to unblock your card.\n");
       display.displayMessage("We apologise for any inconvienience.\n");
       cardDispensor.ejectCard();
+      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "Report: Card is blocked!");
+
     } else if (currentSession.getStatus() == SessionStatus.CARD_EXPIRED) {
       display.displayMessage("The card you have entered has expired.\n");          
       display.displayMessage("Please contact XYZ Bank to issue a new card.\n");
       display.displayMessage("We apologise for any inconvienience.\n");
       cardDispensor.ejectCard();
+      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "Report: Card has expired!");
+
     } else if (currentSession.getStatus() == SessionStatus.CARD_NOT_ACTIVE) {
       display.displayMessage("The card you have entered is only active from a later date.\n");   
       display.displayMessage("We apologise for any inconvienience.\n");
       cardDispensor.ejectCard();
+
     } else if (currentSession.getStatus() == SessionStatus.INVALID_CARD_NUMBER) {
       display.displayMessage("The card you have entered is not a card from our bank.\n");  
       display.displayMessage("This ATM only accepts bank cards from XYZ\n");  
       display.displayMessage("We apologise for any inconvienience.");
       cardDispensor.ejectCard();
+
     } else if (currentSession.getStatus() == SessionStatus.SUCCESS) {
       display.displayMessage("The Transaction was successfully completed.\n");        
       display.displayMessage("Thank-you for using XYZ Bank :)\n");   
       cardDispensor.ejectCard();     
+      this.getATMLogger().createLogMessage("ATM.run", messageType.INFO, "The Transaction was successfully completed.");
+
     }
+  } catch (InvalidTypeException e) {
+    System.out.print(e.getMessage());
+  }
   }
 
 
@@ -417,7 +444,7 @@ public class ATM {
     s.append("--------------------------\n");
     s.append("--- XYZ BANK RECEIPT------\n");
     s.append("--------------------------\n");
-    //s.append("Transaction No: " + t.getID() + "\n");
+    //s.append("Transaction No: " + t.getTransactionId() + "\n");
     s.append("Transaction Type: " + t.getType() + "\n");
     s.append("Amount:\n");
     s.append("--------------------------\n");

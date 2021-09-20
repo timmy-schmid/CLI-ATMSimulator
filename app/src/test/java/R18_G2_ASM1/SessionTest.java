@@ -3,24 +3,26 @@ import org.junit.jupiter.api.Test;
 
 import R18_G2_ASM1.Session.InvalidTypeException;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
-import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
+
 
 public class SessionTest {
     @BeforeEach
     public void setUp() throws InvalidTypeException, IOException{
 
         File csvCardTest;
+        File csvCard;
         csvCardTest = new File("app/src/test/datasets/cardTest.csv");
+        csvCard = new File("app/src/main/datasets/card.csv");
         System.out.println(csvCardTest.exists());
 
         Session sec = new Session(new ATM("loc"));
-        Card card = sec.retrieveCardFromFile(11111, csvCardTest);
+        Card card = sec.retrieveCardFromFile(12345, csvCard);
         System.out.println(card.getCardNumber());
+        System.out.println(card.getPin());
+        System.out.println(card.getbalance());
     }
 
     public static void main(String[] args) throws InvalidTypeException, IOException{
@@ -33,6 +35,10 @@ public class SessionTest {
         // Card card = sec.retrieveCardFromFile(11111, csvCard);
         // System.out.println(card);
         //System.out.println(card.getAccount());
+
+        
     }
+
+
     
 }

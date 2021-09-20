@@ -5,7 +5,8 @@
 package R18_G2_ASM1;
 public class App {
     public static void main(String[] args) {
-        ATM a = new ATM("Canberra");
+        MoneyStack m = new MoneyStack();
+        ATM a = new ATM("Canberra", m);
         a.run();
     }
 }
