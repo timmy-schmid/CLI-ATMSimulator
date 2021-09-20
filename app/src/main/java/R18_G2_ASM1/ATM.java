@@ -363,7 +363,7 @@ public class ATM {
     this.terminalLocation = sc.nextLine();
     sc.close();
   }
-
+//test
 /**
    * Used to query the user for the personal identification number (PIN) for their card.
    * Only 4 digit PIN's are allowed. If a user incorrectly enters their PIN they are prompted to try again.
