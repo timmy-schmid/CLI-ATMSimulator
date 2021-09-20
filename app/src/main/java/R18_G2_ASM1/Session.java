@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.*;
 
 
@@ -35,10 +36,8 @@ public class Session {
         pinAttemptNum = 0;
         attachedATM = ATM;
         //this.sessionID = sessionID;
-        this.transactionType = attachedATM.askForTransType();
-        // csvCard = new File("app/src/main/datasets/card.csv");
+        this.transactionType = ATM.askForTransType();
         csvCard = new File("app/src/main/datasets/card.csv");
-
     }
 
     /**
@@ -75,11 +74,28 @@ public class Session {
     public void run(int cardNum) throws InvalidTypeException{
         //assume it is DEPOSIT and transaction id is 1
         transactionType = TransactionType.DEPOSIT;
-        card  = this.retrieveCardFromFile(cardNum, csvCard);
-        if (validateSession(card)){
+        // card  = this.retrieveCardFromFile(cardNum, csvCard);
+       
+        //hardcoded below coz reading file doesn't fully work..
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date start_date = null;
+        Date expiration_date = null;
+
+        try {
+            // this.validateSession(card);
+             start_date = dateFormat1.parse("2018-03-05");
+            expiration_date = dateFormat1.parse("2023-03-04");
+            this.card = new Card(38431.29, 78503, start_date, expiration_date, false, false, false, 912012);
+            // this.attachedATM.getATMLogger().createLogMessage("session.run", messageType.INFO, "validate session passed!!");
+
+        } catch (ParseException e) {
+            // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
+        }
+
+        // if (validateSession(card)){
             this.attachedATM.getATMLogger().createLogMessage("Session.run", messageType.INFO, "Insert card passed");
             this.transact(card, transactionType, 1);
-        }
+        // }
         
         
     }
@@ -289,11 +305,10 @@ public class Session {
      */
     public void transact(Card c, TransactionType transactionType, int transactionID){
         Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
+        transaction.setAmount(580.00); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
         transaction.run(transactionType);
         currentStatus = SessionStatus.SUCCESS;
     }
-
-
 
     /**
      * checks the PIN entered with the user against the matching card in the XYZ Bank card database
