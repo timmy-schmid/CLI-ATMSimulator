@@ -1,7 +1,14 @@
-ASSIGNMENT 1 WORKING IN PROGRESS!
+<b>ASSIGNMENT 1 WORKING IN PROGRESS!</b>DUE 24th SEPTEMBER!
 
 Check and modify Miro UML diagrams and add any notes if necessary.
-Check google doc for due date and schedules for next meeting
+Check google doc for due date and schedules for next meeting!
+
+# TODO !!!!! [Add below any other notes to check out]
+
+-> make sure indenting is 2 spaces, use CamelCase for variable naming!
+-> add in Javadoc comments + test cases
+-> Starting working on report + allocate sections to write about
+-> keep code consistent + nicely styled + minimise redundancy
 
 # 1. FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
 git checkout master --> git pull --> git checkout your_branch_name --> git merge master
@@ -15,27 +22,13 @@ Git add . (adds all your changes) OR git add (file) --> git commit -m “message
 -> git checkout master --> git merge branch_name --> git push
 
 # 4. WHAT IF I ACCIDENTALLY ADDED FILES BUT ADDED TO THE WRONG PLACE?
-  E.g. You accidentally added to master but wanted to add to your branch (haven't commited yet) --> UNDO action by using: reset <file>
-
-# TODO !!!!! [Add below any other notes to check out]
-
--> make sure indenting is 2 spaces, use CamelCase for variable naming!
-
--> how to distinguish between which card is currently being used for transaction? [user input picks a card from their list of cards available??]
-
--> keep code consistent + nicely styled + minimise redundancy
-
--> WITHDRAWAL CLASS
-  -> Consider what if the highest amount for MoneyType runs out (user wants to withdraw money), then use the next available highest amount to do calculations
+  E.g. You accidentally added to master but wanted to add to your branch (haven't committed yet) --> UNDO action by using: reset <file>
 
 -> If user's card doesn't have enough money stored inside to withdraw, give option/cancel for user to switch to a different card
 
--> How to handle user's deposit? 
-  -> "prompt the user on how many of each denomination they want to deposit, calling from ATM class function ATM.askForMoneyStack()" - Tim
+# Acess to google docs for git notes + PLAN FOR REPORT
+https://docs.google.com/document/d/1yB_5BBh-Ltyny6yReWHthtCTx16b87SztbjzvzdXsEM/edit
 
--> 1 card is linked with 1 account!
-
--> CARD CLASS: store a list of diff types/in constructor add 'type' [for later to work on if there's time]
 
 # Access to MIRO board for viewing/editing
 
@@ -51,3 +44,15 @@ Check this out: https://junit.org/junit5/docs/current/user-guide/
 
 Website for our design inspiration: https://www.commbank.com.au/content/dam/commbank/personal/apply-online/download-printed-forms/atm-guide-for-users-with-low-vision-accessible.pdf
 
+
+# Working with Jenkins 
+
+TODO: fully set up Jenkins with Vultr and link with Github
+
+# Working with Gradle
+
+<u>gradle run</u>--> builds + compiles all your files
+<u>gradle clean </u>--> cleans up any leftovers from previous builds + prevents getting side effects like causing build to fail
+<u>gradle test</u> --> compiles and runs your test files
+<u>gradle test JacocoTestReport</u> --> generates a report where you can see how much coverage you've done
+<u>gradle javadoc</u> --> generates a set of HTML pages of API documentation

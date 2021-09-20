@@ -14,8 +14,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
-    }
+    // @Test void appHasAGreeting() {
+    //     App classUnderTest = new App();
+    //     assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+    // }
 }
