@@ -70,7 +70,7 @@ public class ATM {
  * The ATM will shutdown after a session status has been resolved.
  * @throws InvalidTypeException
  */
-  public void run() throws InvalidTypeException {
+  public void run() {
     currentSession = new Session(this);
 
     //Welcome Menu:
@@ -91,7 +91,9 @@ public class ATM {
     }
 
     //run session
-    currentSession.run(cardNum);
+    try { // this needs to be handled properly.
+      currentSession.run(cardNum);
+
 
     if (currentSession.getStatus() == SessionStatus.ADMIN_MODE) {
 
@@ -144,6 +146,9 @@ public class ATM {
       display.displayMessage("Thank-you for using XYZ Bank :)\n");   
       cardDispensor.ejectCard();     
     }
+  } catch (InvalidTypeException e) {
+    System.out.print(e.getMessage());
+  }
   }
 
 
