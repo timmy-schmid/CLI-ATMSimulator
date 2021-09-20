@@ -49,7 +49,7 @@ public class MoneyStack{
        }
     }
 
-    public boolean withdraw(MoneyStack c){
+    public boolean withdraw(MoneyStack c){ //needs edit i think....
         int needWithdraw = c.totalMoney();
         if (this.canWithdraw(c) == false){
             return false;
@@ -61,12 +61,10 @@ public class MoneyStack{
                     needWithdraw -= money.get(key)*key.getValue();
                     money.replace(key,0);
                 }else{
-                    System.out.println("WENT HERE line 64 ----?");
                     int originalAmount = money.get(key);
                     needWithdraw = remainder;
                     money.replace(key,originalAmount-quotient);
-                    System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
-
+                    // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
                 }
             }
             return (needWithdraw == 0);

@@ -45,27 +45,34 @@ class ATM_loggerTest{
     assertNull(message);
   }
 
-  //negative test
   @Test
-  public void testFileDoesntExists(){ 
-    logger.createLogMessage("class.method", messageType.INFO, "testing message");
-    String invalidPath = "./hello/lala";
-    boolean result = logger.checkFileExists(invalidPath);
-    assertFalse(result);
+  public void testNullPath(){ 
+    logger.setPath(null);
+    assertNull(logger.getPath());
   }
+
+  // //negative test
+  // @Test
+  // public void testFileDoesntExists(){ 
+  //   logger.createLogMessage("class.method", messageType.INFO, "testing message");
+  //   String invalidPath = "./hello/lala";
+  //   boolean result = logger.checkFileExists(invalidPath);
+  //   assertFalse(result);
+  // }
   
   //positive test
-  @Test
-  public void testFileExists(){ 
-    logger.createLogMessage("class.method", messageType.INFO, "testing message");
+  // @Test
+  // public void testFileExists(){ 
+  //   logger.createLogMessage("class.method", messageType.INFO, "testing message");
 
-    boolean result = logger.checkFileExists(path);
-    assertFalse(result); //>>>>???
-  }
+  //   boolean result = logger.checkFileExists(path);
+  //   assertFalse(result); //>>>>???
+  // }
 
   // @Test
   // public void testWriteToFile(){ //maybe read the file or assert (file isnt empty?)
   //   logger.createLogMessage("class.method", messageType.INFO, "testing message");
+  //   logger.setPath("./hello/lala"); //set to be an invalid path
   //   try {
   //     logger.writeToFile(classMethod, type, message);
   //   } catch (SecurityException e) {

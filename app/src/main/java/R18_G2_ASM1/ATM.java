@@ -47,7 +47,7 @@ public class ATM {
     this(location);
     this.balance = m;
   }
-  public ATM_logger getATMLogger(){
+  public ATM_logger getATMLogger(){ //added this as new
     return this.atmLogger;
   }
 
@@ -88,7 +88,7 @@ public class ATM {
       this.getATMLogger().createLogMessage("cardDispensor.insertCard", messageType.INFO, "Insert card passed");
 
     } catch (InvalidCardException e) {
-      this.getATMLogger().createLogMessage("cardDispensor.insertCard", messageType.ERROR, "Pin entered was not 5 digits");
+      this.getATMLogger().createLogMessage("cardDispensor.insertCard", messageType.ERROR, "Invalid card inserted");
 
       display.displayMessage("\n" + e.getMessage());
       cardDispensor.ejectCard();
