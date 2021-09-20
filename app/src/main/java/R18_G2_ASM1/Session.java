@@ -30,11 +30,11 @@ public class Session {
      * Constructs and inialises a new session.
      * @param ATM the attatched ATM which the session is running on.
      */
-    public Session(ATM ATM, TransactionType transactionType, int sessionID){
+    public Session(ATM ATM) {//, TransactionType transactionType,int sessionID){
         pinAttemptNum = 0;
         attachedATM = ATM;
-        this.sessionID = sessionID;
-        this.transactionType = transactionType;
+        //this.sessionID = sessionID;
+        //this.transactionType = transactionType;
         csvCard = new File("app/src/main/datasets/card.csv");
     }
 
@@ -223,8 +223,7 @@ public class Session {
                     System.out.println("Invalid double type");
                 }
 
-<<<<<<< HEAD
-=======
+/* //Tim - Commenting out as seemed to be a merge conflict that was not dealt with.
 
                 if (infoArr[7].equals("customer")) {
                     userType = "customer";
@@ -237,9 +236,7 @@ public class Session {
                 if (cardNumber == cardNum){
                     this.card = new Card(balance, cardNumber, startDate, expirationDate,
                     lost, blocked, expired, pin);
-                }
-
->>>>>>> d16f9f729213d93c64b21ce6acbc643abb10fd3f
+                }*/
             }
             myReader.close();
         } catch (FileNotFoundException e) {

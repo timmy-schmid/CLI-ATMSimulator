@@ -3,12 +3,10 @@ import org.junit.jupiter.api.Test;
 
 import R18_G2_ASM1.Session.InvalidTypeException;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
-import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
+
 
 public class SessionTest {
     @BeforeEach
