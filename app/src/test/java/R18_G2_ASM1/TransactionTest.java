@@ -13,6 +13,9 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
+import java.io.PrintStream;
+
+
 class TransactionTest {
     Transaction withdrawalA;
     Transaction balanceCheckB;
@@ -35,6 +38,12 @@ class TransactionTest {
     MoneyStack moneyStack;
     Date date;
 
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream(); //for testing printing statements
+    private final ByteArrayOutputStream errorContent = new ByteArrayOutputStream(); //writes common data into many files 
+    private final PrintStream originalOutput = System.out;
+    private final PrintStream originalError = System.err;
+    
+    
     @BeforeEach
     public void setUp() throws ParseException { //for date formatting
         app = new App();
@@ -62,6 +71,10 @@ class TransactionTest {
 
         depositC = new Transaction(atm, TransactionType.DEPOSIT, userC, 3);
         depositC.initialSetUpMap();
+
+        //setupStreams
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errorContent));
     }
 
     @AfterEach
@@ -73,6 +86,11 @@ class TransactionTest {
         withdrawalA = null;
         balanceCheckB = null;
         depositC = null;
+
+        //restoreStreams
+
+        System.setOut(originalOutput);
+        System.setErr(originalError);
     }
 
     @Test
@@ -142,6 +160,27 @@ class TransactionTest {
         assert(userC.getbalance() == (cardBalance + amount));
     }
 
+    // @Test //negative test for when balance is too low on card to withdraw
+    // public void testCantModifyCardWithdraw(){
+    //     double cardBalance = userA.getbalance(); //initial
+    //     userA.setBalance(100.50);
+    //     double withdrawAmount = 125.35;
+    //     //initialise amount in deposit
+    //     withdrawalA.setAmount(withdrawAmount);
+    //     withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType());
+    //     assertEquals(errorContent.toString(), "Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.");
+
+    // }
+    @Test //negative test for when balance is too low on card to withdraw
+    public void out(){
+        double cardBalance = userA.getbalance(); //initial
+        userA.setBalance(100.50);
+        double withdrawAmount = 125.35;
+        //initialise amount in deposit
+        withdrawalA.setAmount(withdrawAmount);
+        withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType());
+        assertEquals(outContent.toString(), "Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.\n");
+    }
 
     // @Test //testing withdrawal removes money from card
     // public void testCanModifyCardWithdrawal(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
@@ -159,7 +198,6 @@ class TransactionTest {
         withdrawalA.setAmount(amount);
         withdrawalA.proceedWithdrawalTransaction(userA);
         assert(userA.getbalance() == cardBalance-amount);
-        //how to test for standard output??
     }
 
     // public void testRunWrongType() throws InvalidTypeException{ //invalid type to proceed transaction

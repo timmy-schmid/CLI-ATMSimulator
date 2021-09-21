@@ -93,6 +93,7 @@ public class ATM {
     int cardNum = -1;
     try {
       cardNum = cardDispensor.insertCard();
+      System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LINE 96 OF ATM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       
     } catch (InvalidCardException e) {
       display.displayMessage("\n" + e.getMessage());
@@ -103,6 +104,8 @@ public class ATM {
 
     //run session
     try { // this needs to be handled properly.
+      //after card is validated, ask for transaction type?
+      
       currentSession.run(cardNum);
 
 
@@ -165,7 +168,6 @@ public class ATM {
       display.displayMessage("The Transaction was successfully completed.\n");        
       display.displayMessage("Thank-you for using XYZ Bank :)\n");   
       cardDispensor.ejectCard();     
-      this.getATMLogger().createLogMessage("ATM.run", messageType.INFO, "The Transaction was successfully completed.");
 
     }
   } catch (InvalidTypeException e) {
@@ -402,16 +404,11 @@ public class ATM {
     StringBuilder s = new StringBuilder();
 
     s = new StringBuilder();
-    s.append("Please select the type of transaction you would like to make:");
+    s.append("Please select the type of transaction you would like to make:\n");
     s.append("  1. WITHDRAWAL\n");
     s.append("  2. DEPOSIT\n");
     s.append("  3. BALANCE CHECK\n");
     display.displayMessage(s.toString()); 
-
-
-
-
-
 
     if (keypad.pressButton() == KeypadButton.ONE) {
       return TransactionType.WITHDRAWAL;
@@ -439,7 +436,7 @@ public class ATM {
    */  
   public void printReceipt(Transaction t, MoneyStack m) {
     StringBuilder s = new StringBuilder();
-    s.append("A receipt has been printed:\n\n");
+    s.append("\nA receipt has been printed:\n\n");
 
     s.append("--------------------------\n");
     s.append("--- XYZ BANK RECEIPT------\n");

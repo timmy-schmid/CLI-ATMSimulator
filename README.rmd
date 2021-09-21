@@ -1,4 +1,4 @@
-<b>ASSIGNMENT 1 WORKING IN PROGRESS!</b>DUE 24th SEPTEMBER!
+<b>ASSIGNMENT 1 WORKING IN PROGRESS!</b>DUE FRIDAY 24th SEPTEMBER!
 
 Check and modify Miro UML diagrams and add any notes if necessary.
 Check google doc for due date and schedules for next meeting!
@@ -9,6 +9,11 @@ Check google doc for due date and schedules for next meeting!
 -> add in Javadoc comments + test cases
 -> Starting working on report + allocate sections to write about
 -> keep code consistent + nicely styled + minimise redundancy
+
+# IMPORTANT!!! Working with Jenkins 
+
+Ensure that [gradle clean build test] works properly locally before you push any changes to the master branch as Jenkins will detect this and 
+cause a build failure. Each time a build fails, we should aim to resolve the problem as soon as possible!!!
 
 # 1. FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
 git checkout master --> git pull --> git checkout your_branch_name --> git merge master
@@ -45,13 +50,10 @@ Check this out: https://junit.org/junit5/docs/current/user-guide/
 Website for our design inspiration: https://www.commbank.com.au/content/dam/commbank/personal/apply-online/download-printed-forms/atm-guide-for-users-with-low-vision-accessible.pdf
 
 
-# Working with Jenkins 
-
-TODO: fully set up Jenkins with Vultr and link with Github
-
 # Working with Gradle
 
 <u>gradle run</u>--> builds + compiles all your files
+<u>gradle clean build</u> --> initialises directory for storing reports
 <u>gradle clean </u>--> cleans up any leftovers from previous builds + prevents getting side effects like causing build to fail
 <u>gradle test</u> --> compiles and runs your test files
 <u>gradle test JacocoTestReport</u> --> generates a report where you can see how much coverage you've done
@@ -62,3 +64,5 @@ TODO: fully set up Jenkins with Vultr and link with Github
 check these websites out: https://www.danvega.dev/blog/2020/12/16/testing-standard-in-out-java/ 
 
 http://one-line-it.blogspot.com/2013/05/java-testing-with-stdin-and-stdout.html
+
+Super helpful website!!! :) --> https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println

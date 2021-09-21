@@ -30,29 +30,32 @@ class CardTest {
     assertFalse(c.is_lost());
   }
 
-  // @Test
-  // void getExpiration_date() throws ParseException {
-  //   DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-  //   Date start_date = dateFormat1.parse("2018-06-01");
-  //   Date expiration_date = dateFormat1.parse("2023-05-31");
-  //   Card c = new Card(38762.99, 55673, start_date, expiration_date,
-  //       false, false, false, 888888);
-  //   DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-  //   Date test_date = fmt.parse("2023-05-31");
-  //   assertTrue(c.getExpiration_date() == test_date);
-  // }
+  @Test
+  void getExpiration_date() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    Date test_date = fmt.parse("2023-05-31");
+    // assertTrue(c.getExpiration_date() == test_date);
+    assertTrue(c.getExpiration_date().compareTo(test_date) == 0); // A - changed to this for date comparison!!!
 
-  // @Test //test failed???
-  // void getStart_date() throws ParseException {
-  //   DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-  //   Date start_date = dateFormat1.parse("2018-06-01");
-  //   Date expiration_date = dateFormat1.parse("2023-05-31");
-  //   Card c = new Card(38762.99, 55673, start_date, expiration_date,
-  //       false, false, false, 888888);
-  //   DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-  //   Date test_date = fmt.parse("2018-06-01");
-  //   assertTrue(c.getStart_date() == test_date);
-  // }
+  }
+
+  @Test //test failed???
+  void getStart_date() throws ParseException {
+    DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    Date start_date = dateFormat1.parse("2018-06-01");
+    Date expiration_date = dateFormat1.parse("2023-05-31");
+    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+        false, false, false, 888888);
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    Date test_date = fmt.parse("2018-06-01");
+    // assertTrue(c.getStart_date() == test_date);
+    assertTrue(c.getStart_date().compareTo(test_date) == 0); // A - changed to this for date comparison!!!
+  }
 
   @Test
   void getCardNumber() throws ParseException {

@@ -2,3 +2,27 @@ Sept 21, 2021 12:26:26 AM R18_G2_ASM1.ATM_logger writeToFile
 INFO: ATM_loggerTest.testcanWriteToNewFile --> MESSAGE: Successfully wrote to new log file!
 Sept 21, 2021 12:42:42 AM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
+Sept 21, 2021 1:00:43 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:31:50 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:35:10 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:36:52 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:41:38 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:55:41 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:56:05 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:56:35 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:58:17 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 6:58:36 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 7:00:40 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 21, 2021 7:01:39 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null

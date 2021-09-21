@@ -38,8 +38,7 @@ public class Session {
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
         csvCard = new File("src/main/datasets/card.csv");
-        this.transactionType = TransactionType.DEPOSIT; //attachedATM.askForTransType();
-        // csvCard = new File("src/main/datasets/card.csv");
+        // this.transactionType = TransactionType.DEPOSIT; //attachedATM.askForTransType();
 
         // String absolutePath = this.getClass().getResource("/").getPath();
         // absolutePath = absolutePath.substring(0,absolutePath.length()-13);
@@ -80,9 +79,8 @@ public class Session {
      */
     public void run(int cardNum) throws InvalidTypeException{
         //assume it is DEPOSIT and transaction id is 1
-        transactionType = TransactionType.DEPOSIT;
+        transactionType = TransactionType.WITHDRAWAL;
         card  = this.retrieveCardFromFile(cardNum, csvCard);
-       
         //hardcoded below coz reading file doesn't fully work..
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
         Date start_date = null;
@@ -92,7 +90,7 @@ public class Session {
             // this.validateSession(card);
             start_date = dateFormat1.parse("2018-03-05");
             expiration_date = dateFormat1.parse("2023-03-04");
-            this.card = new Card(38431.29, 78503, start_date, expiration_date, true, true, true, 912012);
+            this.card = new Card(50103.29, 78503, start_date, expiration_date, true, true, true, 912012);
 
         } catch (ParseException e) {
             // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
@@ -100,6 +98,7 @@ public class Session {
 
         if (validateSession(card)){
             this.attachedATM.getATMLogger().createLogMessage("Session.run", messageType.INFO, "Insert card no. " + this.card.getCardNumber() + " passed");
+            // transactionType = this.attachedATM.askForTransType();
             this.transact(card, transactionType, 1);
             
         }
@@ -310,9 +309,9 @@ public class Session {
      */
     public void transact(Card c, TransactionType transactionType, int transactionID){
         Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
-        transaction.setAmount(580.00); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
+        transaction.setAmount(50100.55); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
         transaction.run(transactionType);
-        transaction.getBalanceInfo(c);
+        // transaction.getBalanceInfo(c);
         //perhaps move print reciept here instead of inside transaction?? (else prints twice for deposit then check balanace)
         currentStatus = SessionStatus.SUCCESS;
     }

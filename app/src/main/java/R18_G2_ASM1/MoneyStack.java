@@ -38,7 +38,7 @@ public class MoneyStack{
         return totalMoney;
     }
 
-    //remove static?
+    //remove static? Change to invalidtype exception? or just leave as IOexception?
     public void addMoney(MoneyType m, int amount) throws IOException{
        if(this.getMoney().containsKey(m) == false){
            System.out.println("Error: money type doesn't exist");
@@ -54,20 +54,32 @@ public class MoneyStack{
         if (this.canWithdraw(c) == false){
             return false;
         } else{
-            for(MoneyType key: this.getMoney().keySet()){
-                int quotient = (int)(needWithdraw/key.getValue()); //casting??
-                int remainder  = (int)(needWithdraw%key.getValue());
-                if(quotient > money.get(key)){
-                    needWithdraw -= money.get(key)*key.getValue();
-                    money.replace(key,0);
-                }else{
-                    int originalAmount = money.get(key);
-                    needWithdraw = remainder;
-                    money.replace(key,originalAmount-quotient);
-                    // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
+            // for(MoneyType key: this.getMoney().keySet()){
+            //     int quotient = (int)(needWithdraw/key.getValue()); //casting??
+            //     int remainder  = (int)(needWithdraw%key.getValue());
+            //     if(quotient > money.get(key)){
+            //         needWithdraw -= money.get(key)*key.getValue();
+            //         money.replace(key,0);
+            //     }else{
+            //         int originalAmount = money.get(key);
+            //         needWithdraw = remainder;
+            //         money.replace(key,originalAmount-quotient);
+            //         // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
+            //     }
+            // }
+            // System.out.println("************ LINE 71 OF MONEYSTACK!!!!!!!! *************************");
+            double total = 1000; //amount to withdraw
+            int toStoreAmount = 0;
+
+            for(MoneyType T: money.keySet()){
+                if (total >= T.getValue()) {
+                    toStoreAmount = (int)(total/T.getValue()); //where amount added is of type MoneyType
+                    total = total%T.getValue();
+                    this.money.replace(T, (int)(T.getValue()-toStoreAmount));
                 }
             }
-            return (needWithdraw == 0);
+            return true;
+            // return (needWithdraw == 0);
         }
     }
 
