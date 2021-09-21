@@ -49,37 +49,52 @@ public class MoneyStack{
        }
     }
 
+    //consider what happens if you deduct over the original amount stored per note.. [amount becomes negative unless you set restrictions...]
+
     public boolean withdraw(MoneyStack c){ //needs edit i think....
         int needWithdraw = c.totalMoney();
         if (this.canWithdraw(c) == false){
             return false;
         } else{
-            // for(MoneyType key: this.getMoney().keySet()){
-            //     int quotient = (int)(needWithdraw/key.getValue()); //casting??
-            //     int remainder  = (int)(needWithdraw%key.getValue());
-            //     if(quotient > money.get(key)){
-            //         needWithdraw -= money.get(key)*key.getValue();
-            //         money.replace(key,0);
-            //     }else{
-            //         int originalAmount = money.get(key);
-            //         needWithdraw = remainder;
-            //         money.replace(key,originalAmount-quotient);
-            //         // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
-            //     }
-            // }
-            // System.out.println("************ LINE 71 OF MONEYSTACK!!!!!!!! *************************");
-            double total = 1000; //amount to withdraw
+            for(MoneyType key: this.getMoney().keySet()){
+                int quotient = (int)(needWithdraw/key.getValue()); //casting??
+                int remainder  = (int)(needWithdraw%key.getValue());
+                if(quotient > money.get(key)){
+                    needWithdraw -= money.get(key)*key.getValue();
+                    money.replace(key,0);
+                }else{
+                    int originalAmount = money.get(key);
+                    needWithdraw = remainder;
+                    money.replace(key,originalAmount-quotient);
+                }
+            }            
+            return (needWithdraw == 0);
+        }
+    }
+
+    //problem with lines 90 onwards... DOUBLE CHECK LATER!!!!
+    public boolean withdraw1(MoneyStack c, double withdrawAmount) throws Exception { 
+        int needWithdraw = c.totalMoney();
+        if (this.canWithdraw(c) == false){
+            return false;
+        } else{
+            double total = withdrawAmount; //amount to withdraw
             int toStoreAmount = 0;
 
             for(MoneyType T: money.keySet()){
                 if (total >= T.getValue()) {
                     toStoreAmount = (int)(total/T.getValue()); //where amount added is of type MoneyType
                     total = total%T.getValue();
+                    
+                    //set restriction here!!
+                    if ((int)(T.getValue()-toStoreAmount) < 0){ //T.getValue()){
+                        //move to next amount or force it to be 0 and give exception
+                        throw new Exception("Cannot withdraw from MoneyStack.");
+                    }
                     this.money.replace(T, (int)(T.getValue()-toStoreAmount));
                 }
             }
             return true;
-            // return (needWithdraw == 0);
         }
     }
 

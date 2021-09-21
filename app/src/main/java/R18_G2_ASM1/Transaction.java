@@ -145,16 +145,16 @@ public class Transaction {
         this.amount += coinAmount;
     }
 
-    /**
-     * printMoneyStack
-     * prints amount stored on map for debugging purposes
-     * @param map stores amount for each money type
-     */
-    public void printMoneyStack(HashMap <MoneyType, Integer> map){
-        for (HashMap.Entry <MoneyType, Integer> entry : map.entrySet()) {
-            System.out.printf("Money type: $%s ------ amount:[%d]\n", entry.getKey(), entry.getValue());
-        }
-    }
+    // /**
+    //  * printMoneyStack
+    //  * prints amount stored on map for debugging purposes
+    //  * @param map stores amount for each money type
+    //  */
+    // public void printMoneyStack(HashMap <MoneyType, Integer> map){
+    //     for (HashMap.Entry <MoneyType, Integer> entry : map.entrySet()) {
+    //         System.out.printf("Money type: $%s ------ amount:[%d]\n", entry.getKey(), entry.getValue());
+    //     }
+    // }
 
     /**
         add into a hashmap the amount of deposit to split into coins + cash
@@ -164,10 +164,10 @@ public class Transaction {
         handle exception when amount not divisble by 5/10 (must be notes, no coins)
         e.g. amount = 24.5 (not ok) vs 25 (ok)
      */
-    public void splitDepositAmountUp(double amount) { //doesn't consider max limit tho...
+    public void splitDepositAmountUp(double amount) throws InvalidTypeException{ //doesn't consider max limit tho...
         if (amount%5 != 0) {
             // System.out.println("Must be of notes format.");
-            throw new IllegalArgumentException("Error: amount should only be notes, no coins accepted.");
+            throw new InvalidTypeException("Error: amount should only be notes, no coins accepted.");
         } else {    
             double total = amount; //decreases
             int toStoreAmount = 0; //key amount
@@ -279,27 +279,24 @@ public class Transaction {
      */
     public void proceedWithdrawalTransaction(Card card){
         // if (card != null) {
-
             // if (card.getbalance() >= this.amount){
-            boolean result = this.getMoneyStackBalance().withdraw(this.getMoneyStackBalance()); //decrease amount in moneystack
+            // boolean result = this.getMoneyStackBalance().withdraw(this.getMoneyStackBalance()); //decrease amount in moneystack
+        boolean result = false;
+        try {
+            result = this.getMoneyStackBalance().withdraw1(this.getMoneyStackBalance(), this.amount);
+            // System.out.println("LINE 287!!!!!!!! ~~~~~~~~~~~");
+        } catch (Exception e){ //frozen money?
+            System.out.println("Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.");  
 
-            if (result == true && this.getMoneyStackBalance().getstatusOfMoney() == true){
-                this.printMoneyStack(this.getMoneyStackBalance().getMoney());
-                this.modify(card, TransactionType.WITHDRAWAL);
-                
-                // this.attachedATM.printReceipt(this, this.getMoneyStackBalance()); //only prints for moneystackbalance currently??
-                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.INFO, "withdrawal was successful!");
+            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
+        }
+        if (result == true && this.getMoneyStackBalance().getstatusOfMoney() == true){
+            // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
+            this.modify(card, TransactionType.WITHDRAWAL);
             
-            } else { //frozen money!
-                System.out.println("Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.");  
-
-                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
-            }
-            
-        // } else { //card = null
-        //     System.out.println("Sorry your card is unavailable. Please try again.");
-        //     this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "card is not unavailable, can't withdraw");
-        // }
+            // this.attachedATM.printReceipt(this, this.getMoneyStackBalance()); //only prints for moneystackbalance currently??
+            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.INFO, "withdrawal was successful!");
+        }
     }
 
     /**
@@ -310,7 +307,7 @@ public class Transaction {
     public void getBalanceInfo(Card card){
         if (card != null){
             card.getCardDetails();
-            System.out.println("The balance query was successful");
+            System.out.println("The balance query was successful.");
             //now print receipt
             this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
             this.attachedATM.getATMLogger().createLogMessage("transaction.getBalanceInfo", messageType.INFO, "check balance was successful!");

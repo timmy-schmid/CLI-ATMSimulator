@@ -12,14 +12,11 @@ import java.text.ParseException;
 
 * TO DO: consider having a delay in time each time a function calls this method
 
-* Logs that display onto screen/Standard ouput when a session runs.
+* Logs that display onto screen/Standard Output when a session runs.
 * It records error messages, history and transaction processes.
 
 * @author Anna Su
 * @version 1.0
-
-* 1. validate each parameter, only accept INFO/ERROR/WARNING keyword?
-*
 *
 * The .log file has the following format:
 * <ul> 
@@ -37,7 +34,9 @@ import java.text.ParseException;
   Sept 20, 2021 12:01:33 AM R18_G2_ASM1.ATM_logger writeToFile
 */
 public class ATM_logger{
+
   private messageType type;
+  
   private String message;
   private String classMethod;
 
@@ -53,8 +52,7 @@ public class ATM_logger{
     this.type = messageType.INFO; //initially?
     this.message = null;
     this.classMethod = null;
-    // this.path = "./app/src/main/logs"; // double check later, using absolute path for now
-    this.path = "/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/main/logs";
+    this.path = "src/main/logs"; // double check later, using absolute path for now
     this.logFileName = "/SessionLog1.log";
   }
 
@@ -101,6 +99,7 @@ public class ATM_logger{
     //if the parameters are not null, write to file otherwise keep waiting till info is provided
     if (classMethod == null || type == null || message == null) {
       System.out.println("Not time to write to file yet!!");
+      return;
 
     } else {
 
@@ -131,7 +130,7 @@ public class ATM_logger{
         }
       } catch (IOException | SecurityException e){ 
         //e.g. if a security manager doesn't have but requires a logging permission, retrieved from https://docs.oracle.com/javase/7/docs/api/java/util/logging/FileHandler.html 
-        //in case there are IO problems with opening the file
+        System.out.println("Error with handling/opening the file.");
       }
     }
   }
