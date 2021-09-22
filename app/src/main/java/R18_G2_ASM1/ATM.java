@@ -97,9 +97,10 @@ public class ATM {
  * </ul>
  * 
  * The ATM will shutdown after a session status has been resolved.
+ * @throws IOException
  * @throws InvalidTypeException
  */
-  public void run(Session session) {
+  public void run(Session session) throws IOException {
 
     //Welcome Menu
     StringBuilder s = new StringBuilder();

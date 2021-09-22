@@ -2,6 +2,8 @@ package R18_G2_ASM1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
@@ -29,6 +31,7 @@ public class Session {
     private String userType;
     private boolean writeSuccess;
     private boolean canContinue;
+    private int row;
 
     /**
      * Constructs and initialises a new session.
@@ -38,6 +41,7 @@ public class Session {
         canContinue = true;
         pinAttemptNum = 0;
         attachedATM = ATM;
+        row = 0;
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
         csvCard = new File("src/main/datasets/card.csv");
@@ -62,14 +66,15 @@ public class Session {
      * 
      * @param cardNum the card number that the session should interact with
      * @throws InvalidTypeException
+     * @throws IOException
      */
-    public void run(int cardNum) throws InvalidTypeException{
+    public void run(int cardNum) throws InvalidTypeException, IOException{
         //assume it is DEPOSIT and transaction id is 1
         //transactionType = TransactionType.WITHDRAWAL;
 
         
         card  = this.retrieveCardFromFile(cardNum, csvCard);
-        // System.out.println(card.balance+" "+card.getPin());
+        // System.out.println(card.balance+" "+card.getPin()+" "+card.is_blocked());
 
 
         if (card == null){
@@ -96,7 +101,7 @@ public class Session {
             System.out.println("Your PIN is not correct!"+" "+(3-pinAttemptNum)+" attempt(s) left.");
             if (pinAttemptNum == 3){
                 card.setIs_blocked(true);
-                writeSuccess = this.writeCardToFile(cardNum, csvCard);
+                this.writeCardToFile(cardNum, csvCard);
                 currentStatus = SessionStatus.CARD_BLOCKED;
                 return;
             }
@@ -228,6 +233,7 @@ public class Session {
         try {
             Scanner myReader = new Scanner(csvCard);
             while (myReader.hasNextLine()) {
+                row++;
                 String data = myReader.nextLine();
                 String[] infoArr = data.split(",");
                 
@@ -329,9 +335,34 @@ public class Session {
      * @param cardNum the users card number to check against the file
      * @param filePath the relative path of the card .csv file
      * @return weather writing was successful or not.
+     * @throws IOException
      */
-    private boolean writeCardToFile(int cardNum, File file) {
-        return true;
+    private void writeCardToFile(int cardNum, File file) throws IOException {
+        File tempFile = new File("src/main/datasets/cardTemp.csv");
+        try {
+            Scanner myReader = new Scanner(file);
+            FileWriter myWriter = new FileWriter(tempFile);
+            while (myReader.hasNextLine()) {
+                String str = myReader.nextLine();
+                if (str.split(",")[0].equals(Integer.toString(cardNum))){
+                    myWriter.write(str.substring(0,30)+'T'+str.substring(31,str.length())+"\n");
+                }
+                else {
+                    myWriter.write(str+"\n");
+                }
+            }
+            myReader.close();
+            myWriter.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        // if (tempFile.exists()) throw new java.io.IOException("file exists");
+
+        // Rename file (or directory)
+        boolean success = tempFile.renameTo(file);
+
     }
         
     /**
