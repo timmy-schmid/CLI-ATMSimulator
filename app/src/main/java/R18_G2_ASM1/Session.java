@@ -93,6 +93,7 @@ public class Session {
 
 
         while (!checkPIN()){
+            System.out.println("Your PIN is not correct!"+" "+(3-pinAttemptNum)+" attempt(s) left.");
             if (pinAttemptNum == 3){
                 card.setIs_blocked(true);
                 writeSuccess = this.writeCardToFile(cardNum, csvCard);
