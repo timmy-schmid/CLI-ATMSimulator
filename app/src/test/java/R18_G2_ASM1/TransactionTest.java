@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import java.io.PrintStream;
-
+import java.math.BigDecimal;
 
 class TransactionTest {
     Transaction withdrawalA;
@@ -31,8 +31,7 @@ class TransactionTest {
     Date expiraryDate;
     DateFormat dateFormat;
 
-    double amount;
-    double depositAmount;
+    BigDecimal depositAmount;
 
     ATM atm;
     MoneyStack moneyStack; //has money inside    
@@ -44,6 +43,7 @@ class TransactionTest {
     private final PrintStream originalOutput = System.out;
     private final PrintStream originalError = System.err;
     
+    private BigDecimal amount;
     
     @BeforeEach
     public void setUp() throws ParseException { //for date formatting
@@ -74,15 +74,15 @@ class TransactionTest {
         startDate = dateFormat.parse("2018-06-01");
         expiraryDate = dateFormat.parse("2023-05-31");
     
-        userA = new Card(38762.99, 55673, startDate, expiraryDate,
+        userA = new Card(new BigDecimal(38762.99), 55673, startDate, expiraryDate,
         false, true, false, 888888);
-        userB = new Card(10000.00, 55674, startDate, expiraryDate,
+        userB = new Card(new BigDecimal(10000.00), 55674, startDate, expiraryDate,
         false, true, true, 777777);
-        userC = new Card(10000.99, 55675, startDate, expiraryDate,
+        userC = new Card(new BigDecimal(10000.99), 55675, startDate, expiraryDate,
         false, false, false, 666666);
 
-        amount = 300.50; //to withdraw
-        depositAmount = 150.00; // to deposit
+        amount = new BigDecimal(300.50); //to withdraw
+        depositAmount = new BigDecimal(150.00); // to deposit
 
         withdrawalA = new Transaction(atm, TransactionType.WITHDRAWAL, userA, 1);
 
@@ -152,19 +152,19 @@ class TransactionTest {
 
     @Test 
     public void voidtestcanDepositAmount(){ //positive test, deposit amount is divisble by 5
-        double cardBalance = userC.getbalance(); 
+        BigDecimal cardBalance = userC.getbalance(); 
         depositC.setAmount(depositAmount);
         try {
             depositC.proceedDepositTransaction(userC);
         } catch (InvalidTypeException e) {
             assertEquals(InvalidTypeException.class, e.getClass());
         }
-        assertEquals(userC.getbalance(), cardBalance+depositAmount, "Amount in card did not increase,proceedDepositTransaction function failed! ");
+        assertEquals(userC.getbalance(), cardBalance.add(depositAmount), "Amount in card did not increase,proceedDepositTransaction function failed! ");
     }
 
     @Test 
     public void voidtestCantDepositAmount(){ //negative test, failure to deposit due to amount is NOT divisble by 5
-        double amount = 124.00;
+        BigDecimal amount = new BigDecimal(124.00);
         depositC.setAmount(amount);
         try {
             depositC.proceedDepositTransaction(userC);
@@ -175,18 +175,18 @@ class TransactionTest {
 
     @Test //testing deposit adds money to card
     public void testCanModifyCardDeposit(){ //testing deposit money to card is valid
-        double cardBalance = userC.getbalance(); //initial
-        double amount = 15.00;
+        BigDecimal cardBalance = userC.getbalance(); //initial
+        BigDecimal amount = new BigDecimal(15.00);
         //initialise amount in deposit
         depositC.setAmount(amount);
         depositC.modify(depositC.getCard(), depositC.getType()); //userC
-        assert(userC.getbalance() == (cardBalance + amount));
+        assertTrue(userC.getbalance().compareTo(cardBalance.add(amount)) == 0);
     }
 
      @Test //negative test: card is invalid
     public void testCantModifyCardNull(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
         Card failed = null;
-        double amount = 15.00;
+        BigDecimal amount = new BigDecimal(15.00);
         //initialise amount in deposit
         withdrawalA.setAmount(amount);
         withdrawalA.modify(failed, withdrawalA.getType()); //userC
@@ -195,7 +195,7 @@ class TransactionTest {
 
     @Test //amount is not of type note
     public void canSplitDepositAmountUp(){
-        double amount = 107.34;
+        BigDecimal amount = new BigDecimal(107.35);
         try {
             depositC.splitDepositAmountUp(amount);
         } catch (InvalidTypeException e){
@@ -203,11 +203,26 @@ class TransactionTest {
         }
     }
 
+    @Test 
+    public void testCorrectDepositSplitUp(){ //ensures the deposit amount code works
+        BigDecimal amount = new BigDecimal(120.00);
+        try {
+            depositC.splitDepositAmountUp(amount);
+        } catch (InvalidTypeException e){
+            assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
+        }
+
+        HashMap<MoneyType, Integer> depositMap = depositC.getDepositAmountMap();
+        assertEquals(depositMap.get(MoneyType.HUNDRED_DOLLARS), 1);
+        assertEquals(depositMap.get(MoneyType.FIFTY_DOLLARS), 0);
+        assertEquals(depositMap.get(MoneyType.TWENTY_DOLLARS), 1);
+    }
+
     @Test //negative test for when balance is too low on card to withdraw
     public void testCantModifyCardWithdrawal(){ //out
-        double cardBalance = userA.getbalance(); //initial
-        userA.setBalance(100.50);
-        double withdrawAmount = 125.35;
+        BigDecimal cardBalance = userA.getbalance(); //initial
+        userA.setBalance(new BigDecimal(100.50));
+        BigDecimal withdrawAmount = new BigDecimal(125.35);
         //initialise amount in deposit
         withdrawalA.setAmount(withdrawAmount);
         withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType());
@@ -220,21 +235,20 @@ class TransactionTest {
     //     withdrawalA.proceedWithdrawalTransaction(userA);
     //     assertEquals(outContent.toString(), "Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.\n");
     // }
-
     
     @Test //testing withdrawal removes money from card
     public void testCanModifyCardWithdrawal(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
-        double cardBalance = userA.getbalance(); //initial
-
+        BigDecimal cardBalance = userA.getbalance(); //initial
+        BigDecimal amount = new BigDecimal(124.35);
         //initialise amount in withdrawal
         withdrawalA.setAmount(amount);
         withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType()); //userA
-        assert(userA.getbalance() == (cardBalance - amount));
+        assertTrue(userA.getbalance().compareTo(cardBalance.subtract(amount)) == 0);
     }
     // @Test
     // public void testCanWithdrawalAmount(){ //testing when userA's balance is too low and can't withdraw money out
-    //     double amount = 15.95;
-    //     double cardBalance = userA.getbalance(); //38762
+    //     BigDecimal amount = 15.95;
+    //     BigDecimal cardBalance = userA.getbalance(); //38762
     //     withdrawalA.setAmount(amount);
     //     withdrawalA.proceedWithdrawalTransaction(userA); //withdraw1 fails????
     //     String lala = "userA's balance = " + userA.getbalance() + ", cardbalance = [" + cardBalance +"], amount = [" +amount+"]\n\n";

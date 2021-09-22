@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.*;
 
+import java.math.BigDecimal;
 
 import java.util.List;
     /**
@@ -227,7 +228,8 @@ public class Session {
         Boolean blocked = false;
         Boolean expired = false;
         int pin = -1;
-        double balance = -1;
+        // double balance = -1;
+        BigDecimal balance = new BigDecimal(-1);
         Card thisCard;
 
         try {
@@ -286,7 +288,8 @@ public class Session {
 
 
                 try {
-                    balance = Double.parseDouble(infoArr[6]);
+                    // balance = Double.parseDouble(infoArr[6]);
+                    balance = new BigDecimal(infoArr[6]);
                 } catch(NumberFormatException e){
                     System.out.println("Invalid double type");
                 }
