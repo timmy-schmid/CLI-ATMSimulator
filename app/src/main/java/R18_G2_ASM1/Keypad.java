@@ -30,7 +30,6 @@ public class Keypad extends ATMComponent {
       
       try {
         int userInput = Integer.parseInt(sc.nextLine());
-        sc.close();
         button = buttonMap.get(userInput);
         if (button.isActive() == false) {
           System.out.println("Invalid selection. Please try again.");
