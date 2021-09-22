@@ -32,10 +32,11 @@ public class MoneyStack{
         money.put(MoneyType.FIVE_CENTS, 0);
     }
 
-    public double totalMoney() { //or double return type?? //Tim - should return double.
-        double totalMoney = 0;
+    public BigDecimal totalMoney(){
+    // public double totalMoney() { //or double return type?? //Tim - should return double.
+        BigDecimal totalMoney = new BigDecimal(0);
         for(MoneyType T: money.keySet()){
-            totalMoney += T.getValue()*money.get(T);
+            totalMoney  = totalMoney.add(T.getValue().multiply(new BigDecimal(money.get(T))));
         }
         return totalMoney;
     }
@@ -58,16 +59,23 @@ public class MoneyStack{
     //consider what happens if you deduct over the original amount stored per note.. [amount becomes negative unless you set restrictions...]
 
     public boolean withdraw(MoneyStack c){ //needs edit i think....
-        double needWithdraw = c.totalMoney();
+        // double needWithdraw = c.totalMoney();
+        BigDecimal needWithdraw = c.totalMoney();
         if (this.canWithdraw(c) == false){
             // System.out.println("CANT WITHDRAW!!!!! LINE 63 :(((((");
             return false;
         } else{
+            BigDecimal[] dr;
+
             for(MoneyType key: this.getMoney().keySet()){
-                int quotient = (int)(needWithdraw/key.getValue()); //casting??
-                double remainder  = (needWithdraw -key.getValue()*quotient);
+                dr = needWithdraw.divideAndRemainder(key.getValue());
+                // int quotient = (int)(needWithdraw/key.getValue()); //casting??
+                int quotient = dr[0].intValue();
+                // double remainder  = (needWithdraw -key.getValue()*quotient);
+                BigDecimal remainder  = (needWithdraw.subtract(key.getValue().multiply(new BigDecimal(quotient))));
                 if(quotient >= money.get(key)){
-                    needWithdraw -= money.get(key)*key.getValue();
+                    // needWithdraw -= money.get(key)*key.getValue();
+                    needWithdraw = needWithdraw.subtract(new BigDecimal(money.get(key)).multiply(key.getValue()));
                     money.replace(key,0);
                 }else{
                     int originalAmount = money.get(key);
@@ -89,21 +97,32 @@ public class MoneyStack{
     }
 
     public boolean canWithdraw(MoneyStack c){
-        double needWithdraw = c.totalMoney(); //Tim - changed to double.
+        BigDecimal needWithdraw = c.totalMoney(); //Tim - changed to double.
         System.out.printf("TOTAL MONEY STORED IN ONEYSTACK LINE 93!!!!!!! [%.2f]\n", needWithdraw);
-        if (needWithdraw > this.totalMoney()){ //change this.money --> this?
+        if (needWithdraw.compareTo(this.totalMoney()) > 0){ //change this.money --> this?
             return false;
         } else{
+            BigDecimal[] dr;
             for(MoneyType key: this.getMoney().keySet()){
-                int quotient =  (int)(needWithdraw/key.getValue());
-                double remainder  = (needWithdraw -key.getValue()*quotient);//typecast required, lossy conversion?
+                dr = needWithdraw.divideAndRemainder(key.getValue());
+                int quotient =  dr[0].intValue(); //(int)(needWithdraw/key.getValue());
+                BigDecimal remainder  = (needWithdraw.subtract(key.getValue().multiply(new BigDecimal(quotient))));//typecast required, lossy conversion?
+                
+
                 if(quotient > money.get(key)){
-                    needWithdraw -= money.get(key)*key.getValue();
+                    // needWithdraw -= money.get(key)*key.getValue();
+                    
+                    needWithdraw = needWithdraw.subtract(new BigDecimal(money.get(key)).multiply(key.getValue()));
+
                 }else{
                     needWithdraw = remainder ;
                 }
             }
-            return (needWithdraw == 0);
+            // return (needWithdraw == 0);
+            if (needWithdraw.compareTo(BigDecimal.ZERO) == 0){
+                return true;
+            } else { return false; }
+            // return (needWithdraw.compareTo(BigDecimal.ZERO));
         }
     }
 

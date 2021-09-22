@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 import java.util.*;
+
 import java.math.BigDecimal;
 
 /**
@@ -18,10 +19,9 @@ import java.math.BigDecimal;
  * @version 1.0
  */
 public class Transaction {
-
-    // protected double originalAmount; //delete later if not necessary
-    protected double amount;  //represents total amount
-
+    protected BigDecimal amount;     
+    // protected double amount;  //represents total amount
+    
     /**
      * A user's card
      */
@@ -56,8 +56,8 @@ public class Transaction {
      * @param transactionID A transaction's ID
      */
     public Transaction(ATM attachedATM, TransactionType type, Card card,  int transactionID){
-
-        this.amount = 0; //set initially as just cash amount, requires ATM working first
+        
+        this.amount = new BigDecimal(0); //set initially as just cash amount, requires ATM working first
         this.type = type; //attachedATM.askForTransType();
         this.attachedATM = attachedATM;
         this.card = card;
@@ -82,18 +82,6 @@ public class Transaction {
         this.depositAmountMap.put(MoneyType.TWENTY_DOLLARS, 0);
         this.depositAmountMap.put(MoneyType.TEN_DOLLARS,  0);
         this.depositAmountMap.put(MoneyType.FIVE_DOLLARS, 0);
-
-        // this.newMoneyStack.put(MoneyType.HUNDRED_DOLLARS,0);
-        // this.newMoneyStack.put(MoneyType.FIFTY_DOLLARS, 0);
-        // this.newMoneyStack.put(MoneyType.TWENTY_DOLLARS, 0);
-        // this.newMoneyStack.put(MoneyType.TEN_DOLLARS,  0);
-        // this.newMoneyStack.put(MoneyType.FIVE_DOLLARS, 0);
-        // this.newMoneyStack.put(MoneyType.TWO_DOLLARS, 0);
-        // this.newMoneyStack.put(MoneyType.ONE_DOLLAR, 0);
-        // this.newMoneyStack.put(MoneyType.FIFTY_CENTS, 0);
-        // this.newMoneyStack.put(MoneyType.TWENTY_CENTS, 0);
-        // this.newMoneyStack.put(MoneyType.TEN_CENTS, 0);
-        // this.newMoneyStack.put(MoneyType.FIVE_CENTS, 0);
     }
 
     /**
@@ -160,7 +148,7 @@ public class Transaction {
      * getAmount
      * @return returns a user's total desired amount
      */
-    public double getAmount(){
+    public BigDecimal getAmount(){
         return this.amount;
     }
 
@@ -171,8 +159,8 @@ public class Transaction {
      * if deposit: [cash only]
      * if withdrawal: [cash + coins]
      */
-    public void setAmount(double coinAmount){
-        this.amount += coinAmount;
+    public void setAmount(BigDecimal coinAmount){
+        this.amount  = this.amount.add(coinAmount);
     }
 
     /**
@@ -194,20 +182,29 @@ public class Transaction {
      handle exception when amount not divisble by 5/10 (must be notes, no coins)
      e.g. amount = 24.5 (not ok) vs 25 (ok)
      */
-    public void splitDepositAmountUp(double amount) throws InvalidTypeException{ //doesn't consider max limit tho...
-        if (amount%5 != 0) {
-            // System.out.println("Must be of notes format.");
+    // public void splitDepositAmountUp(double amount) throws InvalidTypeException{ 
+    public void splitDepositAmountUp(BigDecimal amount) throws InvalidTypeException{ 
+        BigDecimal div = new BigDecimal("5");
+        BigDecimal[] dr = amount.divideAndRemainder(div);
+        // if (amount%5 != 0) { //NEEDS EDIT!!!! what if .50 or .35c?
+        if(dr[1].signum() != 0){
             throw new InvalidTypeException("Error: amount should only be notes, no coins accepted.");
-        } else {
-            double total = amount; //decreases
+        } else {    
+            // double total = amount; //decreases
+            BigDecimal total = amount; //decreases
             int toStoreAmount = 0; //key amount
+            // BigDecimal div = new BigDecimal(entry.getKey().getValue());
+            // BigDecimal[] dr = amount.divideAndRemainder(div);
 
             //entry = key, map value = amount
-            for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {
-                if (total >= entry.getKey().getValue()) {
-                    toStoreAmount = (int)(total/entry.getKey().getValue()); //where amount added is of type MoneyType
-                    total = total%entry.getKey().getValue();
-                    this.depositAmountMap.put(entry.getKey(), toStoreAmount);
+            for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {    
+                if (total.compareTo(entry.getKey().getValue()) >= 0) {
+                // if (total >= entry.getKey().getValue()) {
+                    dr = total.divideAndRemainder(entry.getKey().getValue());
+                    // toStoreAmount = (int)(total/entry.getKey().getValue()); //where amount added is of type MoneyType --> quotient
+                    // total = total%entry.getKey().getValue();
+                    total = dr[1];
+                    this.depositAmountMap.put(entry.getKey(), dr[0].intValue());
                 }
             }
         }
@@ -224,13 +221,12 @@ public class Transaction {
     public void modify(Card card, TransactionType type){
         if (card != null){
             if (type == TransactionType.DEPOSIT) {
-                card.balance += this.amount;
-
+                card.balance = card.balance.add(this.amount); // += this.amount;
+            
             } else if (type == TransactionType.WITHDRAWAL){
-                if (card.getbalance() >= this.amount) { //INCOMPLETE!!!!
-                    //add coins amount to this.amount
-                    // this.setAmount(this.attachedATM.askForDollarAmount());
-                    card.balance -= this.amount;
+                // if (card.getbalance() >= this.amount) {
+                if (card.getbalance().compareTo(this.amount) >= 0){
+                    card.balance = card.balance.subtract(this.amount);
                 } else {
                     System.out.println("Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.");
                     this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "card balance is too low, can't withdraw");
@@ -253,19 +249,19 @@ public class Transaction {
     //     }
     // }
 
-    public MoneyType findNextMoneyTypeAvailable(Double cashNote, int noteAmount){ //converted double to moneystack - findNextDoubleAvailable
-        MoneyType next = null;
-        Iterator iterator = this.getMoneyStackBalance().getMoney().keySet().iterator();
+    // public MoneyType findNextMoneyTypeAvailable(Double cashNote, int noteAmount){ //converted double to moneystack - findNextDoubleAvailable
+    //     MoneyType next = null;
+    //     Iterator iterator = this.getMoneyStackBalance().getMoney().keySet().iterator();
 
-        while (iterator.hasNext()){ //loop through keys (notes number)
-            MoneyType entry = (MoneyType) iterator.next();
-            if (Double.compare(entry.getValue(), cashNote) == 0){
-                next = (MoneyType)iterator.next();
-                break;
-            }
-        }
-        return next;
-    }
+    //     while (iterator.hasNext()){ //loop through keys (notes number)
+    //         MoneyType entry = (MoneyType) iterator.next(); 
+    //         if (Double.compare(entry.getValue(), cashNote) == 0){
+    //             next = (MoneyType)iterator.next();
+    //             break;
+    //         }
+    //     }
+    //     return next;
+    // }
 
     // public void withdrawNEW(double retrieveAmount){ 
     //     //calculateStorageAmount
@@ -337,7 +333,12 @@ public class Transaction {
      * @param card a user's card
      */
     public void proceedDepositTransaction(Card card) throws InvalidTypeException {
-        if (this.getAmount()%5 != 0){ //not of type note!
+        BigDecimal div = new BigDecimal("5");
+        BigDecimal[] dr = amount.divideAndRemainder(div); //n%5
+        // if (amount%5 != 0) { //NEEDS EDIT!!!! what if .50 or .35c?
+        if(dr[1].signum() != 0){
+
+        // if (this.getAmount()%5 != 0){ //not of type note!
             throw new InvalidTypeException("Cannot deposit coins, only notes.");
         }
         // retrieve amount for each note type to add to existing money stack
