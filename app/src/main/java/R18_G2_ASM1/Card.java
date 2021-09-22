@@ -2,9 +2,10 @@ package R18_G2_ASM1;
 
 import java.util.*;
 import java.text.*;
+import java.math.BigDecimal;
 
 public class Card {
-  protected double balance;
+  protected BigDecimal balance;
   private int cardNumber;
   private Date start_date;
   private Date expiration_date;
@@ -13,7 +14,7 @@ public class Card {
   private boolean is_expire;
   private int pin;
 
-  public Card(double balance, int cardNumber, Date start_date, Date expiration_date,
+  public Card(BigDecimal balance, int cardNumber, Date start_date, Date expiration_date,
       boolean is_lost, boolean is_blocked, boolean is_expire, int pin) {
     this.balance = balance;
     this.cardNumber = cardNumber;
@@ -49,11 +50,11 @@ public class Card {
     return pin;
   }
 
-  public double getbalance() {
+  public BigDecimal getbalance() {
     return balance;
   }
 
-  public void setBalance(double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 

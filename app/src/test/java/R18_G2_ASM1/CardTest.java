@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.math.BigDecimal;
 
 class CardTest {
 
@@ -15,8 +16,9 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
-        false, false, false, 888888);//change the is_los, blocked, expired in initialiser???
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
+        false, false, false, 888888);
     assertFalse(c.is_blocked());
   }
 
@@ -25,7 +27,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     assertFalse(c.is_lost());
   }
@@ -35,7 +38,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2023-05-31");
@@ -49,7 +53,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2018-06-01");
@@ -62,7 +67,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     assertEquals(c.getCardNumber(), 55673);
   }
@@ -72,7 +78,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     assertEquals(c.getPin(), 888888);
   }
@@ -82,7 +89,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     assertEquals(c.getbalance(), 38762.99);
   }
@@ -92,10 +100,12 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
-    c.setBalance(10000);
-    assertEquals(c.getbalance(), 10000);
+    BigDecimal new_balance = new BigDecimal("10000")
+    c.setBalance(new_balance);
+    assertEquals(c.getbalance(), new_balance);
   }
 
   @Test
@@ -103,7 +113,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     c.setCardNumber(23232);
     assertEquals(c.getCardNumber(), 23232);
@@ -114,7 +125,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2028-06-01");
@@ -127,7 +139,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     c.setIs_blocked(true);
     assertTrue(c.is_blocked());
@@ -138,7 +151,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     c.setIs_lost(true);
     assertTrue(c.is_lost());
@@ -149,7 +163,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     c.setPin(999999);
     assertEquals(c.getPin(), 999999);
@@ -160,7 +175,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2018-07-01");
@@ -173,7 +189,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     assertFalse(c.isExpired());
   }
@@ -183,7 +200,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     assertTrue(c.isAfterStartDate());
   }
@@ -193,7 +211,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     assertTrue(c.check_pin(888888));
     assertFalse(c.check_pin(123123));
@@ -207,7 +226,8 @@ class CardTest {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
-    Card c = new Card(38762.99, 55673, start_date, expiration_date,
+    BigDecimal balance = new BigDecimal("38762.99");
+    Card c = new Card(balance, 55673, start_date, expiration_date,
         false, false, false, 888888);
     c.block_card();
     assertTrue(c.is_blocked());
