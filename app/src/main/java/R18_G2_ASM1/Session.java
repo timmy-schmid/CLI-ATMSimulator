@@ -82,23 +82,25 @@ public class Session {
         //assume it is DEPOSIT and transaction id is 1
         transactionType = TransactionType.WITHDRAWAL;
         card  = this.retrieveCardFromFile(cardNum, csvCard);
+
         //hardcoded below coz reading file doesn't fully work..
-        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-        Date start_date = null;
-        Date expiration_date = null;
+        //DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        //Date start_date = null;
+        //Date expiration_date = null;
 
-        try {
-            // this.validateSession(card);
-            start_date = dateFormat1.parse("2018-03-05");
-            expiration_date = dateFormat1.parse("2023-03-04");
-            this.card = new Card(50103.29, 78503, start_date, expiration_date, true, true, true, 912012);
+        //try {
+            this.validateSession(card);
+            //start_date = dateFormat1.parse("2018-03-05");
+            //expiration_date = dateFormat1.parse("2023-03-04");
+            //this.card = new Card(50103.29, 78503, start_date, expiration_date, true, true, true, 912012);
 
-        } catch (ParseException e) {
+        //} catch (ParseException e) {
+            //System.out.println("I GOT HERE");
             // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
-        }
+        //}
 
         if (validateSession(card)){
-            // transactionType = this.attachedATM.askForTransType();
+            transactionType = this.attachedATM.askForTransType();
             this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
             this.transact(card, transactionType, 1);
             
@@ -310,7 +312,7 @@ public class Session {
      */
     public void transact(Card c, TransactionType transactionType, int transactionID){
         Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
-        transaction.setAmount(50100.55); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
+        //transaction.setAmount(50100.55); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
         transaction.run(transactionType);
         // transaction.getBalanceInfo(c);
         //perhaps move print reciept here instead of inside transaction?? (else prints twice for deposit then check balanace)
