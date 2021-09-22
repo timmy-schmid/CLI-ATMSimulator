@@ -13,7 +13,7 @@ public class MoneyStack{
     //true is for normal and false is for frozen
     private boolean statuOfMoney = true;
 
-    // constructor
+    /* constructor
     //seems we don't have parameters to pass
     public MoneyStack(){
         this.money = new LinkedHashMap <MoneyType, Integer>(); //replace hashmap with linkedhashmap
@@ -28,6 +28,23 @@ public class MoneyStack{
         money.put(MoneyType.TWENTY_CENTS, 100);
         money.put(MoneyType.TEN_CENTS, 100);
         money.put(MoneyType.FIVE_CENTS, 100);
+    }*/
+
+    // constructor
+    //should default to 0
+    public MoneyStack(){
+        this.money = new LinkedHashMap <MoneyType, Integer>(); //replace hashmap with linkedhashmap
+        money.put(MoneyType.HUNDRED_DOLLARS,0);
+        money.put(MoneyType.FIFTY_DOLLARS, 0);
+        money.put(MoneyType.TWENTY_DOLLARS, 0);
+        money.put(MoneyType.TEN_DOLLARS,  0);
+        money.put(MoneyType.FIVE_DOLLARS, 0);
+        money.put(MoneyType.TWO_DOLLARS, 0);
+        money.put(MoneyType.ONE_DOLLAR, 0);
+        money.put(MoneyType.FIFTY_CENTS,  0);
+        money.put(MoneyType.TWENTY_CENTS, 0);
+        money.put(MoneyType.TEN_CENTS, 0);
+        money.put(MoneyType.FIVE_CENTS, 0);
     }
 
     public double totalMoney() { //or double return type??
@@ -50,7 +67,7 @@ public class MoneyStack{
     }
 
     public boolean withdraw(MoneyStack c){ //needs edit i think....
-        int needWithdraw = c.totalMoney();
+        double needWithdraw = c.totalMoney();
         if (this.canWithdraw(c) == false){
             return false;
         } else{

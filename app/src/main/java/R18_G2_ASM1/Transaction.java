@@ -201,7 +201,7 @@ public class Transaction {
             }
         } else { //probs not necessary since you first validate card before doing this...
             System.out.println("Sorry your card is unavailable. Please try again.");
-            this.atmLogger.createLogMessage("Transaction.modify", messageType.ERROR, "Sorry your card is unavailable. Please try again.");
+            this.atmLogger.createLogMessage("Transaction.modify", StatusType.ERROR, "Sorry your card is unavailable. Please try again.");
         }
     }
 
@@ -264,7 +264,7 @@ public class Transaction {
         // System.out.println("-----> LINE 264 ABOVE = AFTER: prints moneystack ----------------------------------\n");
         //now print receipt
         this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
-        this.attachedATM.getATMLogger().createLogMessage("transaction.deposit", messageType.INFO, "deposit was successful!");
+        this.attachedATM.getATMLogger().createLogMessage("transaction.deposit", StatusType.INFO, "deposit was successful!");
     }
 
 
@@ -288,22 +288,22 @@ public class Transaction {
                 
                 //now print receipt
                 // this.attachedATM.printReceipt(this, this.getMoneyStackBalance()); //only prints for moneystackbalance currently??
-                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.INFO, "withdrawal was successful!");
+                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.INFO, "withdrawal was successful!");
 
              //frozen money!
             } else if (this.getMoneyStackBalance().getstatusOfMoney() == false){
                 // System.out.println("Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.");  
-                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
+                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
             }
             
             else {
                 // System.out.println("Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money");
-                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "card balance is too low, can't withdraw");
+                this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "card balance is too low, can't withdraw");
             } 
 
         } else { //card = null
             System.out.println("Sorry your card is unavailable. Please try again.");
-            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "card is not unavailable, can't withdraw");
+            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "card is not unavailable, can't withdraw");
         }
     }
 
@@ -318,7 +318,7 @@ public class Transaction {
             System.out.println("The balance query was successful");
             //now print receipt
             this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
-            this.attachedATM.getATMLogger().createLogMessage("transaction.getBalanceInfo", messageType.INFO, "check balance was successful!");
+            this.attachedATM.getATMLogger().createLogMessage("transaction.getBalanceInfo", StatusType.INFO, "check balance was successful!");
 
         } else {
             System.out.println("Sorry your card is unavailable. Please try again.");

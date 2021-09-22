@@ -2,6 +2,7 @@ package R18_G2_ASM1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.ObjectInputFilter.Status;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
@@ -36,7 +37,7 @@ public class Session {
         pinAttemptNum = 0;
         attachedATM = ATM;
         //this.sessionID = sessionID;
-        this.transactionType = ATM.askForTransType();
+        //this.transactionType = ATM.askForTransType(); //Tim - this shouldn't be asked on construction. It should only be asked after card validation
         csvCard = new File("app/src/main/datasets/card.csv");
     }
 
@@ -93,7 +94,7 @@ public class Session {
         }
 
         // if (validateSession(card)){
-            this.attachedATM.getATMLogger().createLogMessage("Session.run", messageType.INFO, "Insert card passed");
+            this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
             this.transact(card, transactionType, 1);
         // }
         

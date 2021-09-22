@@ -1,5 +1,9 @@
 package R18_G2_ASM1;
 
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -7,11 +11,15 @@ import java.util.Scanner;
 public class Keypad extends ATMComponent {
 
   private Map<Integer, KeypadButton> buttonMap = new HashMap<>();
+  private final Scanner sc;
+  private final PrintStream out;
 
-  public Keypad() {
+  public Keypad(InputStream in, PrintStream out) {
     for (KeypadButton k : KeypadButton.values()) {
       buttonMap.put(k.getCode(), k);
-    }  
+    } 
+    this.sc = new Scanner(in);
+    this.out = out;
   }
 
   public KeypadButton pressButton() {
@@ -39,36 +47,18 @@ public class Keypad extends ATMComponent {
   }
 
   public int enterInt() {
-    boolean validPress = false; 
-    int userInput = 0;
-    while (!validPress) {
-      Scanner sc = new Scanner(System.in);
-      try {
-        userInput = Integer.parseInt(sc.nextLine());
-        sc.close();
-      } catch (NumberFormatException e) {
-        System.out.println("Invalid selection. Please enter a number.");
-        continue;
-      }
-      validPress = true;
+    while (!sc.hasNextInt()) {
+        out.println("Invalid selection. Please enter a number.");
+        sc.nextLine();
     }
-    return userInput;
+    return sc.nextInt();
   }
 
-  public double enterCashAmount() {
-    boolean validPress = false; 
-    double userInput = 0;
-    while (!validPress) {
-      Scanner sc = new Scanner(System.in);
-      try {
-        userInput = Math.round(Double.parseDouble(sc.nextLine())*100.0/100.0); //rounds to 2dp.
-        sc.close();
-      } catch (NumberFormatException e) {
-        System.out.println("Invalid selection. Please enter a number.");
-        continue;
-      }
-      validPress = true;
+  public BigDecimal enterCashAmount() {
+    while (!sc.hasNextBigDecimal()) {
+      out.println("Invalid selection. Please enter dollar amount.");
+      sc.nextLine();
     }
-    return userInput;
+    return sc.nextBigDecimal().setScale(2,RoundingMode.HALF_UP); //rounds to 2dp.
   }
 }
