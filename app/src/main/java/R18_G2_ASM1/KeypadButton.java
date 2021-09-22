@@ -41,7 +41,6 @@ public enum KeypadButton {
     for (KeypadButton k: KeypadButton.values()) {
       k.active = false;
     }
-  } 
-
+  }
 }
 

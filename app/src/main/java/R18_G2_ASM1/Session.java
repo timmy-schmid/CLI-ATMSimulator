@@ -2,6 +2,7 @@ package R18_G2_ASM1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.ObjectInputFilter.Status;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
@@ -36,6 +37,7 @@ public class Session {
         pinAttemptNum = 0;
         attachedATM = ATM;
         //this.sessionID = sessionID;
+<<<<<<< HEAD
         //this.transactionType = transactionType;
         csvCard = new File("src/main/datasets/card.csv");
         // this.transactionType = TransactionType.DEPOSIT; //attachedATM.askForTransType();
@@ -44,6 +46,10 @@ public class Session {
         // absolutePath = absolutePath.substring(0,absolutePath.length()-13);
         // csvCard = new File(absolutePath + "app/src/main/datasets/card.csv");
         // this.transactionType = ATM.askForTransType();
+=======
+        //this.transactionType = ATM.askForTransType(); //Tim - this shouldn't be asked on construction. It should only be asked after card validation
+        csvCard = new File("app/src/main/datasets/card.csv");
+>>>>>>> ATMTesting
     }
 
     /**
@@ -96,9 +102,14 @@ public class Session {
             // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
         }
 
+<<<<<<< HEAD
         if (validateSession(card)){
             this.attachedATM.getATMLogger().createLogMessage("Session.run", messageType.INFO, "Insert card no. " + this.card.getCardNumber() + " passed");
             // transactionType = this.attachedATM.askForTransType();
+=======
+        // if (validateSession(card)){
+            this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
+>>>>>>> ATMTesting
             this.transact(card, transactionType, 1);
             
         }

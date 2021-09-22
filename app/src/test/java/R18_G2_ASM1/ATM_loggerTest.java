@@ -16,7 +16,7 @@ import java.io.IOException;
 
 class ATM_loggerTest{
 
-  private messageType type;
+  private StatusType type;
   private String message;
   private String classMethod;
   private Date date;
@@ -27,7 +27,7 @@ class ATM_loggerTest{
   @BeforeEach
   public void setUp() { 
     logger = new ATM_logger();
-    type = messageType.INFO;
+    type = StatusType.INFO;
     message = null;
     classMethod = null;
     path = "./app/src/main/java/R18_G2_ASM1";

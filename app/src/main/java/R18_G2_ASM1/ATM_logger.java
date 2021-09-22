@@ -37,7 +37,7 @@ import java.text.ParseException;
   Sept 20, 2021 12:01:33 AM R18_G2_ASM1.ATM_logger writeToFile
 */
 public class ATM_logger{
-  private messageType type;
+  private StatusType type;
   private String message;
   private String classMethod;
 
@@ -50,7 +50,7 @@ public class ATM_logger{
    * Constructs a new ATM_logger object
    */
   public ATM_logger(){ //class name = LOGFILE ?
-    this.type = messageType.INFO; //initially?
+    this.type = StatusType.INFO; //initially?
     this.message = null;
     this.classMethod = null;
     // this.path = "./app/src/main/logs"; // double check later, using absolute path for now
@@ -81,7 +81,7 @@ public class ATM_logger{
    @param messageType type of message [string vs messageType]
    @param message description to write in log file
    */
-  public void createLogMessage(String classMethod, messageType type, String message) {
+  public void createLogMessage(String classMethod, StatusType type, String message) {
     //validate first they are of the right type
     this.classMethod = classMethod;
     this.type = type;
@@ -97,7 +97,7 @@ public class ATM_logger{
    @param type type of message [string vs messageType]
    @param message description to write in log file
    */
-  public void writeToFile(String classMethod, messageType type, String message, String logFileName){
+  public void writeToFile(String classMethod, StatusType type, String message){
     //if the parameters are not null, write to file otherwise keep waiting till info is provided
     if (classMethod == null || type == null || message == null) {
       System.out.println("Not time to write to file yet!!");
@@ -122,11 +122,11 @@ public class ATM_logger{
         fh.setFormatter(sFormatter);
 
         //now log msgs
-        if (type == messageType.INFO){
+        if (type == StatusType.INFO){
           logger.info(this.classMethod + " --> MESSAGE: " + this.message);
-        } else if (type == messageType.ERROR){
+        } else if (type == StatusType.ERROR){
           logger.severe(this.classMethod + " --> MESSAGE: " + this.message);
-        } else if (type == messageType.WARNING){
+        } else if (type == StatusType.WARNING){
           logger.warning(this.classMethod + " --> MESSAGE: " + this.message);
         }
       } catch (IOException | SecurityException e){ 

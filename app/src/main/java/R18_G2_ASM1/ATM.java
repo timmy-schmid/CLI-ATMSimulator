@@ -20,36 +20,55 @@ public class ATM {
 
   private String terminalLocation;
   private MoneyStack balance;
-  private Session currentSession;
   private CashDispensor cashDispensor;
   private Keypad keypad;
   private CardDispensor cardDispensor;
   private Display display;
   private ATM_logger atmLogger; //newly added!
 
-/**
- * Constructs and initialises a new ATM with a balance of AUD $0
- * @param location A string representation of where the ATM is located
- */
+  /**
+   * Constructs and initialises a new ATM with a balance of AUD $0.
+   * Default components are used
+   * @param location A string representation of where the ATM is located
+   */
   public ATM(String location) {
+    //Construct ATM components
+    this(location, new CashDispensor(),new CardDispensor(System.in),
+         new Display(System.out), new Keypad(System.in, System.out), new MoneyStack(),
+         new ATM_logger());
+  }
+  /**
+   * Constructs and inialises a new ATM with an initial balance represented by a MoneyStack object.
+   * @param location A string representation of where the ATM is located
+   * @param moneystack the starting balance of the ATM
+   */
+  public ATM(String location, MoneyStack moneystack) {
+    this(location);
+    this.balance = moneystack;
+  }
+  /**
+   * Constructs and initialises a new ATM with an initial balance represented by a MoneyStack object.
+   * The ATM in constructed with its individual components.
+   * @param location A string representation of where the ATM is located
+   * @param cashDisp The cashDispensor component of the ATM
+   * @param cardDip The cardDispensor component of the ATM
+   * @param display The display component of the ATM
+   * @param keypad The keypad component of the ATM
+   * @param moneyStack the starting balance of the ATM
+   * 
+   */
+  public ATM(String location, CashDispensor cashDisp, CardDispensor cardDisp,
+             Display display, Keypad keypad, MoneyStack moneyStack, ATM_logger logger) {
+
     this.terminalLocation = location;
 
     //Construct ATM components
-    this.cashDispensor = new CashDispensor();
-    this.keypad = new Keypad();
-    this.cardDispensor = new CardDispensor();
-    this.display = new Display();
-    this.atmLogger = new ATM_logger();
-  }
-
-/**
- * Constructs and inialises a new ATM with an initial balance represented by a MoneyStack object.
- * @param location A string representation of where the ATM is located
- * @param m the starting balance of the ATM
- */
-  public ATM(String location, MoneyStack m) {
-    this(location);
-    this.balance = m;
+    this.cashDispensor = cashDisp;
+    this.keypad = keypad;
+    this.cardDispensor = cardDisp;
+    this.display = display;
+    this.balance = moneyStack;
+    this.atmLogger = logger;
   }
 
 /**
@@ -60,8 +79,8 @@ public class ATM {
   }
   
  /**
- * Starts up the ATM to interact with a user.
- * A user is promoted to insert their card. After insertion an ATM session commences.
+ * Starts up the ATM.
+ * A user is promoted to insert their card. After insertion the inputted session is executed.
  * After completion of the ATM session, the ATM interacts with its internal components depending on the sessions status.
  * 
  * Possible session status' are:
@@ -79,37 +98,45 @@ public class ATM {
  * The ATM will shutdown after a session status has been resolved.
  * @throws InvalidTypeException
  */
-  public void run() {
-    currentSession = new Session(this);
+  public void run(Session session) {
 
-    //Welcome Menu:
+    //Welcome Menu
     StringBuilder s = new StringBuilder();
     s.append("--------------------------\n");
     s.append("---WELCOME TO XYZ BANK ---\n");
     s.append("--------------------------\n");
-    display.displayMessage(s.toString());
+    display.displayMessage(s);
 
     //insert card
     int cardNum = -1;
     try {
-      cardNum = cardDispensor.insertCard();
-      System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LINE 96 OF ATM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      
+      display.displayMessageNoNewLine("Please insert your card (5 digits): ");
+      cardNum = cardDispensor.insertCard();   
     } catch (InvalidCardException e) {
       display.displayMessage("\n" + e.getMessage());
-      cardDispensor.ejectCard();
-      this.getATMLogger().createLogMessage("CardDispenser.insertCard", messageType.ERROR, "Invalid card [" + cardNum + "] inserted.");
+      cardDispensor.ejectCard(display);
+      this.getATMLogger().createLogMessage("CardDispenser.insertCard", StatusType.ERROR, "NON XYZ Bank card inserted");
       return;
     }
 
-    //run session
-    try { // this needs to be handled properly.
-      //after card is validated, ask for transaction type?
-      
-      currentSession.run(cardNum);
+    //runs the session
+    try {
+      session.run(cardNum);
+    } catch (InvalidTypeException e) {
+      display.displayMessage(e.getMessage());
+      this.getATMLogger().createLogMessage("Session", StatusType.ERROR, e.getMessage());
+      return;
+    }
 
-
-    if (currentSession.getStatus() == SessionStatus.ADMIN_MODE) {
+    SessionStatus status = session.getStatus();
+    display.displayMessageNoNewLine(status.toString());
+    this.atmLogger.createLogMessage("ATM.run",status.getType(), status.name());
+    //responds to the session
+    if (status == null) {
+      this.atmLogger.createLogMessage("Session", StatusType.ERROR, "Fatal Error: Invalid session state");    
+    } else if (status == SessionStatus.CARD_LOST) {
+      return; //Aborts early without ejection of card.
+    } else if (status == SessionStatus.ADMIN_MODE) {
 
       KeypadButton.deactivateAll();
       KeypadButton.ONE.activate();
@@ -117,62 +144,32 @@ public class ATM {
       KeypadButton.THREE.activate();
 
       s = new StringBuilder();
-      s.append("ADMIN MODE - Please select from the following options:\n");
+      s.append("Please select from the following:\n");
       s.append("  1. Deposit money into ATM\n");
       s.append("  2. Change Location of ATM\n");
       s.append("  3. Cancel\n");
 
-      display.displayMessage(s.toString());
+      display.displayMessage(s);
+      
+      KeypadButton pressed = keypad.pressButton();
 
-      if (keypad.pressButton() == KeypadButton.ONE) {
+      if (pressed == KeypadButton.ONE) {
         addCash();
-      } else if (keypad.pressButton() == KeypadButton.TWO) {
+      } else if (pressed == KeypadButton.TWO) {
         changeLocation();
       }
-      cardDispensor.ejectCard();
-
-    //Move this messaging to Enum?
-    } else if (currentSession.getStatus() == SessionStatus.CARD_LOST) {
-      display.displayMessage("The card you have entered has been reported as Lost or Stolen.\n");          
-      display.displayMessage("Your card has been confiscated. Please contact XYZ Bank to issue a new card.\n");
-      display.displayMessage("We apologise for any inconvienience.\n");
-      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "Report: Card is lost or stolen!");
-      cardDispensor.ejectCard(); //maybe add this too here?
-
-    } else if (currentSession.getStatus() == SessionStatus.CARD_BLOCKED) {
-      display.displayMessage("The card you have entered has been blocked due to too many PIN attempts.\n");          
-      display.displayMessage("Please contact XYZ Bank to unblock your card.\n");
-      display.displayMessage("We apologise for any inconvienience.\n");
-      cardDispensor.ejectCard();
-      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "Report: Card is blocked!");
-
-    } else if (currentSession.getStatus() == SessionStatus.CARD_EXPIRED) {
-      display.displayMessage("The card you have entered has expired.\n");          
-      display.displayMessage("Please contact XYZ Bank to issue a new card.\n");
-      display.displayMessage("We apologise for any inconvienience.\n");
-      cardDispensor.ejectCard();
-      this.getATMLogger().createLogMessage("ATM.run", messageType.ERROR, "Report: Card has expired!");
-
-    } else if (currentSession.getStatus() == SessionStatus.CARD_NOT_ACTIVE) {
-      display.displayMessage("The card you have entered is only active from a later date.\n");   
-      display.displayMessage("We apologise for any inconvienience.\n");
-      cardDispensor.ejectCard();
-
-    } else if (currentSession.getStatus() == SessionStatus.INVALID_CARD_NUMBER) {
-      display.displayMessage("The card you have entered is not a card from our bank.\n");  
-      display.displayMessage("This ATM only accepts bank cards from XYZ\n");  
-      display.displayMessage("We apologise for any inconvienience.");
-      cardDispensor.ejectCard();
-
-    } else if (currentSession.getStatus() == SessionStatus.SUCCESS) {
-      display.displayMessage("The Transaction was successfully completed.\n");        
-      display.displayMessage("Thank-you for using XYZ Bank :)\n");   
-      cardDispensor.ejectCard();     
-
     }
-  } catch (InvalidTypeException e) {
-    System.out.print(e.getMessage());
+
+    //eject card
+    cardDispensor.ejectCard(display);
   }
+
+/**
+  * Creates a new Session based off the ATM's current state.
+  * @return a new Session object.
+  */
+  public Session createNewATMSession() {
+    return new Session(this);
   }
 
 
@@ -208,30 +205,30 @@ public class ATM {
       s.append("  5. $5\n");
       s.append("  6. FINISH\n");
       s.append("  7. CANCEL\n");
-      s.append("  TOTAL TO DEPOSIT: $" + String.valueOf(m.totalMoney()) + "\n");
+      s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
-      
+      KeypadButton pressed = keypad.pressButton();
       String howMany = "How many bills would you like to deposit: ";
     
       try { //exception handling!
-        if (keypad.pressButton() == KeypadButton.ONE) {
+        if (pressed == KeypadButton.ONE) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.HUNDRED_DOLLARS,keypad.enterInt());
-        } else if (keypad.pressButton() == KeypadButton.TWO) {
+        } else if (pressed == KeypadButton.TWO) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.FIFTY_DOLLARS,keypad.enterInt());
-        }  else if (keypad.pressButton() == KeypadButton.THREE) {
+        }  else if (pressed == KeypadButton.THREE) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.TWENTY_DOLLARS,keypad.enterInt());
-        } else if (keypad.pressButton() == KeypadButton.FOUR) {
+        } else if (pressed == KeypadButton.FOUR) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.TEN_DOLLARS,keypad.enterInt());  
-        } else if (keypad.pressButton() == KeypadButton.FIVE) {
+        } else if (pressed == KeypadButton.FIVE) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.FIVE_DOLLARS,keypad.enterInt());  
-        } else if (keypad.pressButton() == KeypadButton.SIX) {
+        } else if (pressed == KeypadButton.SIX) {
           break;  
-        } else if (keypad.pressButton() == KeypadButton.SEVEN) {
+        } else if (pressed == KeypadButton.SEVEN) {
           return null; // return NULL object if cancelled.      
         }
       } catch (IOException e){
@@ -250,7 +247,7 @@ public class ATM {
    * The admin user can select finish at any time in the process to finalise the query.
    * @return a MoneyStack representation of the total amount of coins the admin user has entered. If the admin user cancels during the process null is returned.
    */
-  private MoneyStack askForMoneyStackCoins() {
+  public MoneyStack askForMoneyStackCoins() {
 
     MoneyStack m = new MoneyStack();
     StringBuilder s = new StringBuilder();
@@ -277,32 +274,34 @@ public class ATM {
       s.append("  6. 5c\n");
       s.append("  7. FINISH\n");
       s.append("  8. CANCEL\n");
-      s.append("  TOTAL TO DEPOSIT: $" + String.valueOf(m.totalMoney()) + "\n");
+      s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
-      
-      String howMany = "How many bills would you like to deposit: ";
+
+      String howMany = "How many coins would you like to deposit: ";
+      KeypadButton pressed = keypad.pressButton();
+
       try {
-        if (keypad.pressButton() == KeypadButton.ONE) {
+        if (pressed == KeypadButton.ONE) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.TWO_DOLLARS,keypad.enterInt());
-        } else if (keypad.pressButton() == KeypadButton.TWO) {
+        } else if (pressed == KeypadButton.TWO) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.ONE_DOLLAR,keypad.enterInt());
-        }  else if (keypad.pressButton() == KeypadButton.THREE) {
+        }  else if (pressed == KeypadButton.THREE) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.FIFTY_CENTS,keypad.enterInt());
-        } else if (keypad.pressButton() == KeypadButton.FOUR) {
+        } else if (pressed == KeypadButton.FOUR) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.TWENTY_CENTS,keypad.enterInt());  
-        } else if (keypad.pressButton() == KeypadButton.FIVE) {
+        } else if (pressed == KeypadButton.FIVE) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.TEN_CENTS,keypad.enterInt());  
-        } else if (keypad.pressButton() == KeypadButton.SIX) {
+        } else if (pressed == KeypadButton.SIX) {
           display.displayMessage(howMany);
           m.addMoney(MoneyType.FIVE_CENTS,keypad.enterInt()); 
-        } else if (keypad.pressButton() == KeypadButton.SEVEN) {
+        } else if (pressed == KeypadButton.SEVEN) {
           break;
-        } else if (keypad.pressButton() == KeypadButton.SEVEN) {
+        } else if (pressed == KeypadButton.EIGHT) {
           return null; // return NULL object if cancelled.      
         }
       } catch (IOException e){
@@ -337,19 +336,21 @@ public class ATM {
       s.append("ADMIN MODE - DEPOSIT MONEY - Choose From the Below:\n");
       s.append("  1. Deposit notes into ATM\n");
       s.append("  2. Deposit coins into ATM\n");
-      s.append("  3. Finish\n");
-      s.append("  4. Cancel\n");
-      s.append("  TOTAL TO DEPOSIT: $" + String.valueOf(m.totalMoney()) + "\n");
+      s.append("  3. FINISH\n");
+      s.append("  4. CANCEL\n");
+      s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
 
-      if (keypad.pressButton() == KeypadButton.ONE) {
+
+      KeypadButton pressed = keypad.pressButton();
+      if (pressed == KeypadButton.ONE) {
         m.addMoneyStack(askForMoneyStackNotes());
-      } else if (keypad.pressButton() == KeypadButton.TWO) {
+      } else if (pressed == KeypadButton.TWO) {
         m.addMoneyStack(askForMoneyStackCoins());
-      }  else if (keypad.pressButton() == KeypadButton.THREE) {
+      }  else if (pressed == KeypadButton.THREE) {
         cashDispensor.depositMoney(m,balance);
         break;
-      } else if (keypad.pressButton() == KeypadButton.FOUR) {
+      } else if (pressed == KeypadButton.FOUR) {
         display.displayMessage("Deposit has been cancelled!");
         break;
       } 
