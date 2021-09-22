@@ -7,6 +7,7 @@ import org.mockito.stubbing.Answer;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
@@ -51,7 +52,7 @@ public class ATMTest {
                       mockDisplay, mockKeypad, mockBalance, mockLogger);
   }
 
-  @Test void testADMINModeAddMoneyCoinsAndNotes() {
+  @Test void testADMINModeAddMoneyCoinsAndNotes() throws IOException {
 
     String adminInstructions = "Please select from the following:\n" +
                                "  1. Deposit money into ATM\n" +

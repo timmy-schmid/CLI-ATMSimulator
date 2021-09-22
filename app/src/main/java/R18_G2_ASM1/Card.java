@@ -19,9 +19,9 @@ public class Card {
     this.cardNumber = cardNumber;
     this.start_date = start_date;
     this.expiration_date = expiration_date;
-    this.is_lost = false;
-    this.is_blocked = false;
-    this.is_expire = false;
+    this.is_lost = is_lost;
+    this.is_blocked = is_blocked;
+    this.is_expire = is_expire;
     this.pin = pin;
   }
 
