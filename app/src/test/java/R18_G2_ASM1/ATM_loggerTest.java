@@ -64,7 +64,7 @@ class ATM_loggerTest{
     logger.setPath("src/test/logTests");
     // logger.setPath("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/logTests");
     logger.setLogFileName("/TestingLog1.log");
-    logger.writeToFile("ATM_loggerTest.testcanWriteToNewFile", messageType.INFO, "Successfully wrote to new log file!", logger.getFileName());
+    logger.writeToFile("ATM_loggerTest.testcanWriteToNewFile", StatusType.INFO, "Successfully wrote to new log file!", logger.getFileName());
 
     File f = new File(logger.getPath() + logger.getFileName());
     boolean exists = f.exists();
@@ -76,7 +76,7 @@ class ATM_loggerTest{
     logger.setPath("src/test/logTests"); //app/src...
     // logger.setPath("/Users/annasu/Downloads/USYD2021/SEMESTER_2/SOFT2412/ASSIGNMENT_1/R18_G2_ASM1/app/src/test/logTests");
     logger.setLogFileName("/TestingLog2.log");
-    logger.writeToFile(null, messageType.INFO, null, logger.getFileName());
+    logger.writeToFile(null, StatusType.INFO, null, logger.getFileName());
 
     File file = new File(logger.getPath()+logger.getFileName());
     assert(file.length() == 0);

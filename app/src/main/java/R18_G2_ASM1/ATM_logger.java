@@ -97,7 +97,7 @@ public class ATM_logger{
    @param type type of message [string vs messageType]
    @param message description to write in log file
    */
-  public void writeToFile(String classMethod, StatusType type, String message){
+  public void writeToFile(String classMethod, StatusType type, String message, String logFileName){
     //if the parameters are not null, write to file otherwise keep waiting till info is provided
     if (classMethod == null || type == null || message == null) {
       System.out.println("Not time to write to file yet!!");

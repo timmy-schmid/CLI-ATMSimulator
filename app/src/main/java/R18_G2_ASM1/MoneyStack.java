@@ -47,7 +47,7 @@ public class MoneyStack{
         money.put(MoneyType.FIVE_CENTS, 0);
     }
 
-    public int totalMoney() { //or double return type??
+    public double totalMoney() { //or double return type?? //Tim - should return double.
         int totalMoney = 0;
         for(MoneyType T: money.keySet()){
             totalMoney += T.getValue()*money.get(T);
@@ -109,7 +109,7 @@ public class MoneyStack{
     }
 
     public boolean canWithdraw(MoneyStack c){
-        int needWithdraw = c.totalMoney();
+        double needWithdraw = c.totalMoney(); //Tim - changed to double.
         if (needWithdraw > this.totalMoney()){ //change this.money --> this?
             return false;
         } else{
