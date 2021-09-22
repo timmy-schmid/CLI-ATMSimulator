@@ -7,6 +7,7 @@ import java.util.Scanner;
 import R18_G2_ASM1.Session.InvalidTypeException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * The ATM class represents the central shell of an XYZ Bank ATM. 
@@ -378,8 +379,9 @@ public class ATM {
     display.displayMessage("Please enter your 4 digit PIN:"); 
 
     boolean validLength = false;
-    int pin = keypad.enterInt();
+    int pin = 0;
     while (!validLength) {
+      pin = keypad.enterInt();
       if (String.valueOf(pin).length() != 4) {
         display.displayMessage("PIN is not 4 digits. Try again:");
         continue;
@@ -478,7 +480,14 @@ public class ATM {
   public void dispenseCash(MoneyStack m) {
     cashDispensor.ejectMoney(m, balance);
   }
-  
+
+    /**
+   * Used to ask the user to enter a dollar amount used for deposits.
+   * @return the amount the user has chosen rounded to 2dp.
+   */  
+  public BigDecimal askForDollarAmount() {
+    return keypad.enterCashAmount();    
+  }
 
 
 

@@ -59,23 +59,6 @@ public class Session {
      *   <li>Sets up a new transaction and runs it</li>
      *   <li>Terminates the session</li>
      * </ul>
-     * Begins an ATM  up the ATM to interact with a user.
-     * A user is promoted to insert their card. After insertion an ATM session commences.
-     * After completion of the ATM session, the ATM interacts with its internal components depending on the sessions status.
-     * 
-     * Possible session status' are:
-     * <ul>
-     *  <li>FAIL_WITHDRAWAL - The card number does not match a card from XYZ bank database</li>
-     *  <li>SUCCESS_WITHDRAWAL - The card entered is not active as it's start date is later than the current date.</li>
-     *  <li>FAIL_DEPOSIT - The current date is before the entered cards expiration date.</li>
-     *  <li>SUCCESS_DEPOSIT - The card entered has been reported as lost/stolen.</li>
-     *  <li>SUCCESS_BALANCE - The card entered has been blocked due to too many PIN attempts.</li>
-     *  <li>ADMIN_MODE - The ATM is set to Admin Mode to perform admin tasks such as topping up money or changing the ATM's location.</li>
-     *  <li>CANCELLED - The session was cancelled by the user.</li>
-     *  <li>SUCCESS - The session was succesfully completed by the user.</li>
-     * </ul>
-     * 
-     *  The ATM will shutdown after a session status has been resolved.
      * 
      * @param cardNum the card number that the session should interact with
      * @throws InvalidTypeException
