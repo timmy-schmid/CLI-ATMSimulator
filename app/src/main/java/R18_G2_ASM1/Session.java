@@ -79,20 +79,20 @@ public class Session {
         // System.out.println(card.balance+" "+card.getPin()+" "+card.is_blocked());
 
 
-        if (card == null){
-            currentStatus = SessionStatus.INVALID_CARD_NUMBER;
-            return;
-        }
+        // if (card == null){
+        //     currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+        //     return;
+        // }
 
-        if (card.is_blocked()){
-            currentStatus = SessionStatus.CARD_BLOCKED;
-            return;
-        }
+        // if (card.is_blocked()){
+        //     currentStatus = SessionStatus.CARD_BLOCKED;
+        //     return;
+        // }
 
-        if (card.is_lost()){
-            currentStatus = SessionStatus.CARD_LOST;
-            return;
-        }
+        // if (card.is_lost()){
+        //     currentStatus = SessionStatus.CARD_LOST;
+        //     return;
+        // }
 
         if (!validateSession(card)){
             return;
@@ -117,8 +117,6 @@ public class Session {
         transactionType = attachedATM.askForTransType();
 
         transact(card, transactionType, 1);
-
-        currentStatus = SessionStatus.SUCCESS;
 
         // //hardcoded below coz reading file doesn't fully work..
         // DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -383,7 +381,7 @@ public class Session {
      * checks the PIN entered with the user against the matching card in the XYZ Bank card database
      * @return weather the PIN was valid or not.
      */
-    private boolean checkPIN(){
+    public boolean checkPIN(){
         if (card.getPin() == attachedATM.askForPIN()) {
             return true;
         }

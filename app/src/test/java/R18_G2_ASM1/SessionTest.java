@@ -11,12 +11,16 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import org.junit.jupiter.api.BeforeEach;
 
 
 public class SessionTest {
     File csvCardTest;
+    File csvCardTestFinal;
+    File csvCardTest3;
     Session section;
     Card card;
     DateFormat dateFormat;
@@ -41,13 +45,28 @@ public class SessionTest {
         // System.out.println(csvCardTest.exists());
 
         csvCardTest = new File("src/test/datasets/cardTest.csv");
+        csvCardTestFinal = new File("src/test/datasets/cardTestFinal.csv");
+        csvCardTest3 = new File("src/test/datasets/cardTest3.csv");
         String pattern = "yyyy-MM-dd";
         simpleDateFormat = new SimpleDateFormat(pattern);
 
         section = new Session(new ATM("loc"));
-        card = section.retrieveCardFromFile(12345, csvCardTest);
+        card = section.retrieveCardFromFile(12345, csvCardTestFinal);
 
     }
+    public static int testUserInput(InputStream in,PrintStream out) {
+        Scanner keyboard = new Scanner(in);
+        out.println("Give a number between 1 and 10");
+        int input = keyboard.nextInt();
+    
+        while (input < 1 || input > 10) {
+            out.println("Wrong number, try again.");
+            input = keyboard.nextInt();
+        }
+    
+        return input;
+    }
+    
     @Test
     void retrieveCardFromFileTest() throws InvalidTypeException, IOException, ParseException{
         assertEquals(12345, card.getCardNumber(),"correctly read the card number");
@@ -63,6 +82,9 @@ public class SessionTest {
         assertEquals(true, card3.is_lost(),"correctly read the card information");
         assertEquals(true, card3.is_blocked(),"correctly read the card information");
 
+        Card card2 = section.retrieveCardFromFile(58858, csvCardTestFinal);
+        assertEquals(null, card2);
+
 
     }
     @Test
@@ -71,31 +93,182 @@ public class SessionTest {
         try {
             section.retrieveCardFromFile(0, csvCardTest);
             
-            Card card2 = section.retrieveCardFromFile(58858, csvCardTest);
-            assertEquals(null, card2);
+
         } catch (InvalidTypeException e) {
             thrown = true;
         }
+        assertTrue(thrown);
 
+        thrown = false;
+        try {
+            section.retrieveCardFromFile(11111, csvCardTest3);
+            
+
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+
+        thrown = false;
+        try {
+            section.retrieveCardFromFile(10011, csvCardTest3);
+            
+
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+        thrown = false;
+        try {
+            section.retrieveCardFromFile(12345, csvCardTest3);
+            
+
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+
+        thrown = false;
+        try {
+            section.retrieveCardFromFile(10000, csvCardTest3);
+            
+
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+        thrown = false;
+        try {
+            section.retrieveCardFromFile(13141, csvCardTest3);
+            
+
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+        thrown = false;
+        try {
+            section.retrieveCardFromFile(11999, csvCardTest3);
+            
+
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+        thrown = false;
+        try {
+            section.retrieveCardFromFile(19001, csvCardTest3);
+            
+
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
         assertTrue(thrown);
     }
 
-    // @Test
-    // void passwordIsNullThrowsException() throws InvalidTypeException {  
-    //     section.retrieveCardFromFile(0, csvCardTest);
-    // }  
+    @Test
+    public void fileNotFoundTest() throws FileNotFoundException, InvalidTypeException {
+        section.retrieveCardFromFile(11999, new File("notExist.csv"));
 
-    // public static void main(String[] args) throws InvalidTypeException, IOException{
+        assertTrue(true);
+    }
 
-    //     SessionTest st = new SessionTest();
-    //     st.setUp();
-    //     // Session sec = new Session(new ATM("loc"));
-    //     // Card card = sec.retrieveCardFromFile(11111, csvCard);
-    //     // System.out.println(card);
-    //     //System.out.println(card.getAccount());
+    @Test
+    void runTest() throws InvalidTypeException, IOException{
+        section.run(12347);
+        assertEquals(SessionStatus.INVALID_CARD_NUMBER, section.getStatus()); 
+        assertEquals(0, section.getAttemptNum());
+
+        section.ifWrongPin();
+        assertEquals(1, section.getAttemptNum());
+
+        boolean thrown = false;
 
         
-    // }
+        // section.run(51555);
+        // testUserInput(System.in, System.out);
+        // assertEquals(SessionStatus.ADMIN_MODE, section.getStatus()); 
+        
+            
+     
+
+
+    }
+    @Test
+    void runExceptionTest() throws IOException, NoSuchElementException, InvalidTypeException{
+        boolean thrown = false;
+        try {
+            section.run(11022);
+            assertEquals(SessionStatus.CARD_LOST, section.getStatus()); 
+            
+        } catch (NoSuchElementException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+        thrown = false;
+        try {
+            section.run(19001);
+            assertEquals(SessionStatus.CARD_BLOCKED, section.getStatus()); 
+            
+        } catch (NoSuchElementException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+        thrown = false;
+
+        try {
+            section.run(11111);
+            assertEquals(SessionStatus.CARD_EXPIRED, section.getStatus()); 
+            
+        } catch (NoSuchElementException e) {
+            thrown = true;
+        }
+        assertTrue(true);
+
+        thrown = false;
+
+        try {
+            section.run(11344);
+            assertEquals(SessionStatus.CARD_NOT_ACTIVE, section.getStatus()); 
+            
+        } catch (NoSuchElementException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+
+        thrown = false;
+
+
+        try {
+            section.transact(card, TransactionType.DEPOSIT, 1);
+            assertEquals(SessionStatus.SUCCESS, section.getStatus());
+        } catch (NoSuchElementException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+        thrown = false;
+
+        try {
+            section.checkPIN();
+        } catch (NoSuchElementException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+
+    }
+
+
 
 
     
