@@ -405,7 +405,6 @@ public class ATM {
 
     MoneyStack m = new MoneyStack();
     StringBuilder s = new StringBuilder();
-    KeypadButton pressed = keypad.pressButton();
 
     s = new StringBuilder();
     s.append("Please select the type of transaction you would like to make:\n");
@@ -414,9 +413,9 @@ public class ATM {
     s.append("  3. BALANCE CHECK\n");
     display.displayMessage(s.toString()); 
 
-    if (pressed == KeypadButton.ONE) {
+    if (keypad.pressButton() == KeypadButton.ONE) {
       return TransactionType.WITHDRAWAL;
-    } else if (pressed == KeypadButton.TWO) {
+    } else if (keypad.pressButton() == KeypadButton.TWO) {
       return TransactionType.DEPOSIT;
     }  else {
       return TransactionType.BALANCE; 

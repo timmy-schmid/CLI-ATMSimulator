@@ -70,10 +70,7 @@ public class Session {
         
         card  = this.retrieveCardFromFile(cardNum, csvCard);
         // System.out.println(card.balance+" "+card.getPin());
-        if (userType == "admin"){
-            currentStatus = SessionStatus.ADMIN_MODE;
-            return;
-        }
+
 
         if (card == null){
             currentStatus = SessionStatus.INVALID_CARD_NUMBER;
@@ -94,7 +91,7 @@ public class Session {
             return;
         }
 
-        
+
         while (!checkPIN()){
             if (pinAttemptNum == 3){
                 card.setIs_blocked(true);
@@ -104,7 +101,14 @@ public class Session {
             }
         }
 
+        if (userType == "admin"){
+            currentStatus = SessionStatus.ADMIN_MODE;
+            return;
+        }
+
         transactionType = attachedATM.askForTransType();
+
+        transact(card, transactionType, 1);
 
         currentStatus = SessionStatus.SUCCESS;
 
