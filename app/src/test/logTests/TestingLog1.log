@@ -26,11 +26,119 @@ Sept 21, 2021 7:00:40 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sept 21, 2021 7:01:39 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
+<<<<<<< HEAD
+Sept 22, 2021 1:20:00 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:23:15 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:29:35 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:30:20 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:30:59 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:31:47 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:36:43 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:40:43 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:45:17 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:45:59 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:46:26 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:55:44 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:57:57 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 1:59:26 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:01:30 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:02:53 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:04:29 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:09:33 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:11:39 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:13:16 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:14:53 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:17:54 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:18:17 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:22:00 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:22:30 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:23:09 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:25:07 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 2:35:22 AM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 6:30:00 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 6:35:22 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 6:37:49 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 6:40:08 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 6:42:19 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 6:46:17 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 8:41:33 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 8:43:25 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 8:51:09 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 8:52:41 PM R18_G2_ASM1.ATM_logger writeToFile
+=======
 Sep. 22, 2021 6:00:30 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sep. 22, 2021 6:04:56 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sep. 22, 2021 5:00:40 PM R18_G2_ASM1.ATM_logger writeToFile
+>>>>>>> master
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:07:50 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:09:39 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:18:58 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:20:05 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:21:48 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:23:21 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:24:19 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:24:53 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:25:22 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:26:21 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:52:50 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:53:43 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:54:58 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:55:30 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sept 22, 2021 11:56:13 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sep. 22, 2021 8:31:41 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null

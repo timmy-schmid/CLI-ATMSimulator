@@ -7,6 +7,7 @@ Check google doc for due date and schedules for next meeting!
 
 -> make sure indenting is 2 spaces, use CamelCase for variable naming!
 -> add in Javadoc comments + test cases
+-> ensure we all have the same format for writing test cases/files
 -> Starting working on report + allocate sections to write about
 -> keep code consistent + nicely styled + minimise redundancy
 

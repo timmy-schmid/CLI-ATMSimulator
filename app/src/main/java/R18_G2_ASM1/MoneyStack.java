@@ -6,29 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.io.IOException;
+import java.math.BigDecimal;
+
 
 public class MoneyStack{
     private HashMap<MoneyType, Integer> money; //A: double or integer??
     //according to the comments in miro, may add "status of money"? since some money might be frozen and cannot be withdrawn, or this can be added to the card status
     //true is for normal and false is for frozen
     private boolean statuOfMoney = true;
-
-    /* constructor
-    //seems we don't have parameters to pass
-    public MoneyStack(){
-        this.money = new LinkedHashMap <MoneyType, Integer>(); //replace hashmap with linkedhashmap
-        money.put(MoneyType.HUNDRED_DOLLARS,50);
-        money.put(MoneyType.FIFTY_DOLLARS, 50);
-        money.put(MoneyType.TWENTY_DOLLARS, 50);
-        money.put(MoneyType.TEN_DOLLARS,  50);
-        money.put(MoneyType.FIVE_DOLLARS, 100);
-        money.put(MoneyType.TWO_DOLLARS, 100);
-        money.put(MoneyType.ONE_DOLLAR, 100);
-        money.put(MoneyType.FIFTY_CENTS,  100);
-        money.put(MoneyType.TWENTY_CENTS, 100);
-        money.put(MoneyType.TEN_CENTS, 100);
-        money.put(MoneyType.FIVE_CENTS, 100);
-    }*/
 
     // constructor
     //should default to 0
@@ -55,6 +40,10 @@ public class MoneyStack{
         return totalMoney;
     }
 
+    public HashMap <MoneyType, Integer> getMoney(){
+        return this.money;
+    }
+
     //remove static? Change to invalidtype exception? or just leave as IOexception?
     public void addMoney(MoneyType m, int amount) throws IOException{
        if(this.getMoney().containsKey(m) == false){
@@ -66,9 +55,12 @@ public class MoneyStack{
        }
     }
 
+    //consider what happens if you deduct over the original amount stored per note.. [amount becomes negative unless you set restrictions...]
+
     public boolean withdraw(MoneyStack c){ //needs edit i think....
         double needWithdraw = c.totalMoney();
         if (this.canWithdraw(c) == false){
+            // System.out.println("CANT WITHDRAW!!!!! LINE 63 :(((((");
             return false;
         } else{
             for(MoneyType key: this.getMoney().keySet()){
@@ -81,43 +73,12 @@ public class MoneyStack{
                     int originalAmount = money.get(key);
                     needWithdraw = remainder;
                     money.replace(key,(int)originalAmount-quotient);
+                    // System.out.printf("REPLACEMENT LINE 74: MONEYSTACK [%.2f]---------- [%d]\n",  key.getValue(), (int)originalAmount-quotient);
                 }
             }
         }
         return true;
     }
-
-//        if (this.canWithdraw(c) == false){
-//            return false;
-//        } else{
-
-            // for(MoneyType key: this.getMoney().keySet()){
-            //     int quotient = (int)(needWithdraw/key.getValue()); //casting??
-            //     int remainder  = (int)(needWithdraw%key.getValue());
-            //     if(quotient > money.get(key)){
-            //         needWithdraw -= money.get(key)*key.getValue();
-            //         money.replace(key,0);
-            //     }else{
-            //         int originalAmount = money.get(key);
-            //         needWithdraw = remainder;
-            //         money.replace(key,originalAmount-quotient);
-            //         // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
-            //     }
-            // }
-            // System.out.println("************ LINE 71 OF MONEYSTACK!!!!!!!! *************************");
-//            double total = 1000; //amount to withdraw
-//            int toStoreAmount = 0;
-//
-//            for(MoneyType T: money.keySet()){
-//                if (total >= T.getValue()) {
-//                    toStoreAmount = (int)(total/T.getValue()); //where amount added is of type MoneyType
-//                    total = total%T.getValue();
-//                    this.money.replace(T, (int)(T.getValue()-toStoreAmount));
-//                }
-//            }
-//            return true;
-            // return (needWithdraw == 0);
-//        }
 
     public int query(MoneyType c) throws IOException{
         if (money.containsKey(c) == false){
@@ -129,6 +90,7 @@ public class MoneyStack{
 
     public boolean canWithdraw(MoneyStack c){
         double needWithdraw = c.totalMoney(); //Tim - changed to double.
+        System.out.printf("TOTAL MONEY STORED IN ONEYSTACK LINE 93!!!!!!! [%.2f]\n", needWithdraw);
         if (needWithdraw > this.totalMoney()){ //change this.money --> this?
             return false;
         } else{
@@ -157,18 +119,16 @@ public class MoneyStack{
         return this.statuOfMoney;
     }
 
-    //newly added functions below xdddd
-
-    public HashMap <MoneyType, Integer> getMoney(){
-        return this.money;
-    }
-
     //probably need to create new functions for this (ATM cash dispenser)??
     /*
         addMoneyStack(MoneyStack m) --> add to current moneystack
         balance.withdraw(MoneyStack m) --> for ejectMoney
     */
     public void addMoneyStack(MoneyStack m){
+        if (m == null){
+            // Anna - I.e. if when running addCash() in ATM, the admin presses 'Cancel', then this moneystack will be null!!
+            return;
+        }
         for(Map.Entry<MoneyType, Integer> ATMEntry: this.getMoney().entrySet()){
             for(Map.Entry<MoneyType, Integer> Addentry: m.getMoney().entrySet()){
                 if(ATMEntry.getKey().equals(Addentry.getKey())){

@@ -373,10 +373,7 @@ public class Session {
      */
     public void transact(Card c, TransactionType transactionType, int transactionID){
         Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
-        //transaction.setAmount(50100.55); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
         transaction.run(transactionType);
-        // transaction.getBalanceInfo(c);
-        //perhaps move print reciept here instead of inside transaction?? (else prints twice for deposit then check balanace)
         currentStatus = SessionStatus.SUCCESS;
     }
 

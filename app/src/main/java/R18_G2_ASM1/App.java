@@ -5,12 +5,36 @@
 package R18_G2_ASM1;
 
 import java.io.IOException;
+import java.util.*;
 
 public class App {
-    public static void main(String[] args) throws IOException {
-        MoneyStack m = new MoneyStack();
-        ATM atm = new ATM("Canberra", m);
-        Session session = new Session(atm);
-        atm.run(session);
+    public static void main(String[] args) {
+        MoneyStack stack = new MoneyStack();
+
+        try {
+            stack.addMoney(MoneyType.HUNDRED_DOLLARS, 50);
+            stack.addMoney(MoneyType.FIFTY_DOLLARS, 50);
+            stack.addMoney(MoneyType.TWENTY_DOLLARS, 50);
+            stack.addMoney(MoneyType.TEN_DOLLARS,  50);
+            stack.addMoney(MoneyType.FIVE_DOLLARS, 100);
+            stack.addMoney(MoneyType.TWO_DOLLARS, 100);
+            stack.addMoney(MoneyType.ONE_DOLLAR, 100);
+            stack.addMoney(MoneyType.FIFTY_CENTS,  100);
+            stack.addMoney(MoneyType.TWENTY_CENTS, 100);
+            stack.addMoney(MoneyType.TEN_CENTS, 100);
+            stack.addMoney(MoneyType.FIVE_CENTS, 100);
+        } catch (IOException e){
+            e.printStackTrace();
+            return;
+        }
+        
+        ATM atm = new ATM("Canberra", stack);
+        try {
+            Session session = new Session(atm);
+            atm.run(session);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        
     }
 }
