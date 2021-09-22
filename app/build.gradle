@@ -46,5 +46,10 @@ test {
 //jacocoTestReport {
     //dependsOn test // tests are required to run before generating the report
 //}
-
+jacocoTestReport { 
+    reports { 
+        html.enabled = true 
+        csv.enabled = true 
+    }
+}  
 
