@@ -48,7 +48,7 @@ public class MoneyStack{
     }
 
     public double totalMoney() { //or double return type?? //Tim - should return double.
-        int totalMoney = 0;
+        double totalMoney = 0;
         for(MoneyType T: money.keySet()){
             totalMoney += T.getValue()*money.get(T);
         }
