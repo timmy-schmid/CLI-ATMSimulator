@@ -1,5 +1,6 @@
 package R18_G2_ASM1;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,12 +55,15 @@ class TransactionTest {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         startDate = dateFormat.parse("2018-06-01");
         expiraryDate = dateFormat.parse("2023-05-31");
+        BigDecimal balance_1 = new BigDecimal("38762.99");
+        BigDecimal balance_2 = new BigDecimal("10000.00");
+        BigDecimal balance_3 = new BigDecimal("10000.99");
     
-        userA = new Card(38762.99, 55673, startDate, expiraryDate,
+        userA = new Card(balance_1, 55673, startDate, expiraryDate,
         false, true, false, 888888);
-        userB = new Card(10000.00, 55674, startDate, expiraryDate,
+        userB = new Card(balance_2, 55674, startDate, expiraryDate,
         false, true, true, 777777);
-        userC = new Card(10000.99, 55675, startDate, expiraryDate,
+        userC = new Card(balance_3, 55675, startDate, expiraryDate,
         false, false, false, 666666);
 
         amount = 300.50; //to withdraw

@@ -4,6 +4,7 @@ import java.lang.Math;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 
 /** 
@@ -18,7 +19,7 @@ import java.io.IOException;
 public class Transaction {
     
     // protected double originalAmount; //delete later if not necessary
-    protected double amount;  //represents total amount
+    protected BigDecimal amount;  //represents total amount
     
     /**
      * A user's card
@@ -50,8 +51,8 @@ public class Transaction {
      * @param transactionID A transaction's ID
      */
     public Transaction(ATM attachedATM, TransactionType type, Card card,  int transactionID){
-        
-        this.amount = 0; //set initially as just cash amount, requires ATM working first
+        BigDecimal a = new BigDecimal("0");
+        this.amount = a; //set initially as just cash amount, requires ATM working first
         this.type = type; //attachedATM.askForTransType();
         this.attachedATM = attachedATM;
         this.card = card;
@@ -130,7 +131,7 @@ public class Transaction {
      * getAmount
      * @return returns a user's total desired amount
      */
-    public double getAmount(){
+    public BigDecimal getAmount(){
         return this.amount;
     }
 
@@ -164,12 +165,14 @@ public class Transaction {
         handle exception when amount not divisble by 5/10 (must be notes, no coins)
         e.g. amount = 24.5 (not ok) vs 25 (ok)
      */
-    public void splitDepositAmountUp(double amount) { //doesn't consider max limit tho...
-        if (amount%5 != 0) {
+    public void splitDepositAmountUp(BigDecimal amount) { //doesn't consider max limit tho...
+        BigDecimal div = new BigDecimal("5");
+        BigDecimal[] dr = amount.divideAndRemainder(div);
+        if (dr[1].signum() != 0) {
             // System.out.println("Must be of notes format.");
             throw new IllegalArgumentException("Error: amount should only be notes, no coins accepted.");
         } else {    
-            double total = amount; //decreases
+            BigDecimal total = amount; //decreases
             int toStoreAmount = 0; //key amount
             
             //entry = key, map value = amount
