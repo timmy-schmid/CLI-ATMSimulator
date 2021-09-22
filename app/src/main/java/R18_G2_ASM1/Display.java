@@ -15,7 +15,7 @@ public class Display extends ATMComponent{
   }
 
   public void displayMessage(String s) {
-    out.println(s);
+    out.println("\n"+s);
   }
 
   public void displayMessageNoNewLine(String s) {
