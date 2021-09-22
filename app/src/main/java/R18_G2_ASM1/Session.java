@@ -27,12 +27,15 @@ public class Session {
     private File csvCard;
     private TransactionType transactionType;
     private String userType;
+    private boolean writeSuccess;
+    private boolean canContinue;
 
     /**
      * Constructs and initialises a new session.
      * @param ATM the attatched ATM which the session is running on.
      */
     public Session(ATM ATM) {//, TransactionType transactionType,int sessionID){
+        canContinue = true;
         pinAttemptNum = 0;
         attachedATM = ATM;
         //this.sessionID = sessionID;
@@ -79,30 +82,70 @@ public class Session {
      */
     public void run(int cardNum) throws InvalidTypeException{
         //assume it is DEPOSIT and transaction id is 1
-        transactionType = TransactionType.BALANCE;
-        card  = this.retrieveCardFromFile(cardNum, csvCard);
-        //hardcoded below coz reading file doesn't fully work..
-        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-        Date start_date = null;
-        Date expiration_date = null;
+        //transactionType = TransactionType.WITHDRAWAL;
 
-        try {
-            // this.validateSession(card);
-            start_date = dateFormat1.parse("2018-03-05");
-            expiration_date = dateFormat1.parse("2023-03-04");
-            this.card = new Card(50103.29, 78503, start_date, expiration_date, true, true, true, 912012);
-
-        } catch (ParseException e) {
-            // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
-        }
-
-        if (validateSession(card)){
-            this.attachedATM.getATMLogger().createLogMessage("Session.run", messageType.INFO, "Insert card no. " + this.card.getCardNumber() + " passed");
-            // transactionType = this.attachedATM.askForTransType();
-            this.transact(card, transactionType, 1);
-            
-        }
         
+        card  = this.retrieveCardFromFile(cardNum, csvCard);
+        // System.out.println(card.balance+" "+card.getPin());
+        if (userType == "admin"){
+            currentStatus = SessionStatus.ADMIN_MODE;
+            return;
+        }
+
+        if (card == null){
+            currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+            return;
+        }
+
+        if (card.is_blocked()){
+            currentStatus = SessionStatus.CARD_BLOCKED;
+            return;
+        }
+
+        if (card.is_lost()){
+            currentStatus = SessionStatus.CARD_LOST;
+            return;
+        }
+
+        if (!validateSession(card)){
+            return;
+        }
+
+        
+        while (!checkPIN()){
+            if (pinAttemptNum == 3){
+                card.setIs_blocked(true);
+                writeSuccess = this.writeCardToFile(cardNum, csvCard);
+                currentStatus = SessionStatus.CARD_BLOCKED;
+                return;
+            }
+        }
+
+        transactionType = attachedATM.askForTransType();
+
+        currentStatus = SessionStatus.SUCCESS;
+
+        // //hardcoded below coz reading file doesn't fully work..
+        // DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        // Date start_date = null;
+        // Date expiration_date = null;
+
+        // try {
+        //     // this.validateSession(card);
+        //     start_date = dateFormat1.parse("2018-03-05");
+        //     expiration_date = dateFormat1.parse("2023-03-04");
+        //     this.card = new Card(50103.29, 78503, start_date, expiration_date, true, true, true, 912012);
+
+        // } catch (ParseException e) {
+        //     // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
+        // }
+
+        // if (validateSession(card)){
+        //     // transactionType = this.attachedATM.askForTransType();
+        //     this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
+        //     this.transact(card, transactionType, 1);
+            
+        // }
         
     }
 
@@ -299,7 +342,7 @@ public class Session {
      * @param filePath the relative path of the card .csv file
      * @return weather writing was successful or not.
      */
-    private boolean writeCardToFile(int cardNum, String filePath) {
+    private boolean writeCardToFile(int cardNum, File file) {
         return true;
     }
         
@@ -309,7 +352,7 @@ public class Session {
      */
     public void transact(Card c, TransactionType transactionType, int transactionID){
         Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
-        transaction.setAmount(123.50); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
+        //transaction.setAmount(50100.55); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
         transaction.run(transactionType);
         currentStatus = SessionStatus.SUCCESS;
     }

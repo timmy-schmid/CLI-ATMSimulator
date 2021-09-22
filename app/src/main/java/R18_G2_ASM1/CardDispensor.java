@@ -1,17 +1,18 @@
 package R18_G2_ASM1;
 
+import java.io.InputStream;
 import java.util.Scanner;
+public class CardDispensor extends ATMComponent {
 
-public class CardDispensor extends ATMComponent{
+  private final Scanner sc;
+
+  public CardDispensor(InputStream in) {
+    sc = new Scanner(in);
+  }
 
   public int insertCard() {
 
-    System.out.print("Please insert your card (5 digits): ");
-
-    Scanner sc = new Scanner(System.in);
-
     String tempCardNum = sc.nextLine();
-    sc.close();
 
     if (tempCardNum.length() != 5) {
       throw new InvalidCardException("Invalid card number: Not 5 digits");
@@ -25,8 +26,9 @@ public class CardDispensor extends ATMComponent{
     }
     return cardNum;
   }
-  public void ejectCard() {
-    System.out.println("Your card has been ejected."); //how do we get this to the display??
+
+  public void ejectCard(Display d) {
+    d.displayMessage("Your card has been ejected.");
   }
   
 }

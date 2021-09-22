@@ -26,6 +26,7 @@ Sept 21, 2021 7:00:40 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sept 21, 2021 7:01:39 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
+<<<<<<< HEAD
 Sept 22, 2021 1:20:00 AM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sept 22, 2021 1:23:15 AM R18_G2_ASM1.ATM_logger writeToFile
@@ -101,4 +102,11 @@ INFO: null --> MESSAGE: null
 Sept 22, 2021 8:51:09 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sept 22, 2021 8:52:41 PM R18_G2_ASM1.ATM_logger writeToFile
+=======
+Sep. 22, 2021 6:00:30 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 22, 2021 6:04:56 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 22, 2021 5:00:40 PM R18_G2_ASM1.ATM_logger writeToFile
+>>>>>>> master
 INFO: null --> MESSAGE: null
