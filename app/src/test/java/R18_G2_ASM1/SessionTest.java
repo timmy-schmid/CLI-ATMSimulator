@@ -7,6 +7,7 @@ import R18_G2_ASM1.Session.InvalidTypeException;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,15 +56,28 @@ public class SessionTest {
         assertEquals(false, card.is_lost(),"correctly read the card information");
         assertEquals(false, card.is_blocked(),"correctly read the card information");
         assertEquals(1234, card.getPin(),"correctly read the card information");
-        assertEquals(90.0, card.getbalance(),"correctly read the card balance");
+        assertEquals(BigDecimal.valueOf(90), card.getbalance(),"correctly read the card balance");
         assertEquals("customer", section.getUserType(),"correctly read the card information");
-        Card card2 = section.retrieveCardFromFile(58858, csvCardTest);
-        assertEquals(null, card2);
+        
         Card card3 = section.retrieveCardFromFile(11022, csvCardTest);
         assertEquals(true, card3.is_lost(),"correctly read the card information");
         assertEquals(true, card3.is_blocked(),"correctly read the card information");
 
 
+    }
+    @Test
+    public void testInvalidInputException() throws InvalidTypeException {
+        boolean thrown = false;
+        try {
+            section.retrieveCardFromFile(0, csvCardTest);
+            
+            Card card2 = section.retrieveCardFromFile(58858, csvCardTest);
+            assertEquals(null, card2);
+        } catch (InvalidTypeException e) {
+            thrown = true;
+        }
+
+        assertTrue(thrown);
     }
 
     // @Test
