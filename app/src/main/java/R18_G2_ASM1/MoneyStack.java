@@ -81,19 +81,51 @@ public class MoneyStack{
         } else{
             for(MoneyType key: this.getMoney().keySet()){
                 int quotient = (int)(needWithdraw/key.getValue()); //casting??
-                int remainder  = (int)(needWithdraw%key.getValue());
-                if(quotient > money.get(key)){
+                double remainder  = (needWithdraw -key.getValue()*quotient);
+                if(quotient >= money.get(key)){
                     needWithdraw -= money.get(key)*key.getValue();
                     money.replace(key,0);
                 }else{
                     int originalAmount = money.get(key);
                     needWithdraw = remainder;
-                    money.replace(key,originalAmount-quotient);
+                    money.replace(key,(int)originalAmount-quotient);
                 }
             }
-            return (needWithdraw == 0);
         }
+        return true;
     }
+
+//        if (this.canWithdraw(c) == false){
+//            return false;
+//        } else{
+
+            // for(MoneyType key: this.getMoney().keySet()){
+            //     int quotient = (int)(needWithdraw/key.getValue()); //casting??
+            //     int remainder  = (int)(needWithdraw%key.getValue());
+            //     if(quotient > money.get(key)){
+            //         needWithdraw -= money.get(key)*key.getValue();
+            //         money.replace(key,0);
+            //     }else{
+            //         int originalAmount = money.get(key);
+            //         needWithdraw = remainder;
+            //         money.replace(key,originalAmount-quotient);
+            //         // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
+            //     }
+            // }
+            // System.out.println("************ LINE 71 OF MONEYSTACK!!!!!!!! *************************");
+//            double total = 1000; //amount to withdraw
+//            int toStoreAmount = 0;
+//
+//            for(MoneyType T: money.keySet()){
+//                if (total >= T.getValue()) {
+//                    toStoreAmount = (int)(total/T.getValue()); //where amount added is of type MoneyType
+//                    total = total%T.getValue();
+//                    this.money.replace(T, (int)(T.getValue()-toStoreAmount));
+//                }
+//            }
+//            return true;
+            // return (needWithdraw == 0);
+//        }
 
     public int query(MoneyType c) throws IOException{
         if (money.containsKey(c) == false){
@@ -110,7 +142,7 @@ public class MoneyStack{
         } else{
             for(MoneyType key: this.getMoney().keySet()){
                 int quotient =  (int)(needWithdraw/key.getValue());
-                int remainder = (int)(needWithdraw%key.getValue()); //typecast required, lossy conversion?
+                double remainder  = (needWithdraw -key.getValue()*quotient);//typecast required, lossy conversion?
                 if(quotient > money.get(key)){
                     needWithdraw -= money.get(key)*key.getValue();
                 }else{
@@ -138,12 +170,25 @@ public class MoneyStack{
         addMoneyStack(MoneyStack m) --> add to current moneystack
         balance.withdraw(MoneyStack m) --> for ejectMoney
     */
-    public MoneyStack addMoneyStack(MoneyStack m){
-        return null;
+    public void addMoneyStack(MoneyStack m){
+        for(Map.Entry<MoneyType, Integer> ATMEntry: this.getMoney().entrySet()){
+            for(Map.Entry<MoneyType, Integer> Addentry: m.getMoney().entrySet()){
+                if(ATMEntry.getKey().equals(Addentry.getKey())){
+                    this.getMoney().replace(ATMEntry.getKey(),ATMEntry.getValue()+Addentry.getValue());
+                }
+            }
+        }
     }
 
-    public MoneyStack withdrawStack(MoneyStack m){
-        return null;
+    public boolean withdrawStack(MoneyStack m){
+        for(Map.Entry<MoneyType, Integer> ATMEntry: this.getMoney().entrySet()){
+            for(Map.Entry<MoneyType, Integer> Addentry: m.getMoney().entrySet()){
+                if(ATMEntry.getKey().equals(Addentry.getKey())){
+                    if (ATMEntry.getValue()<Addentry.getValue()){return false;}
+                    else {this.getMoney().replace(ATMEntry.getKey(),ATMEntry.getValue()-Addentry.getValue());}
+                }
+            }
+        }
+        return true;
     }
-
 }
