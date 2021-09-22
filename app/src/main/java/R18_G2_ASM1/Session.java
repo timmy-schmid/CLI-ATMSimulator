@@ -1,53 +1,405 @@
 package R18_G2_ASM1;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.*;
 
 
 import java.util.List;
+    /**
+     * Represents a single XYZ ATM session with a user.
+     * A session uses the ATM it is running on to interact with the user in order to validate and transact on a user's bank card.
+     * A session also stores a status which is determined by the user's actions.
+     * @author Wei Zhang
+     * @version 1.0
+     */
 
 public class Session {
-    private ATM1 attachedATM;
+    private ATM attachedATM;
     private int sessionID;
     private SessionStatus currentStatus;
     private Transaction transaction;
     private Card card;
     private int pinAttemptNum;
+    private File csvCard;
+    private TransactionType transactionType;
+    private String userType;
+    private boolean writeSuccess;
+    private boolean canContinue;
+    private int row;
 
+    /**
+     * Constructs and initialises a new session.
+     * @param ATM the attatched ATM which the session is running on.
+     */
+    public Session(ATM ATM) {//, TransactionType transactionType,int sessionID){
+        canContinue = true;
+        pinAttemptNum = 0;
+        attachedATM = ATM;
+        row = 0;
+        //this.sessionID = sessionID;
+        //this.transactionType = transactionType;
+        csvCard = new File("src/main/datasets/card.csv");
+        // this.transactionType = TransactionType.DEPOSIT; //attachedATM.askForTransType();
 
-    public void run(int cardNum){
-
+        // String absolutePath = this.getClass().getResource("/").getPath();
+        // absolutePath = absolutePath.substring(0,absolutePath.length()-13);
+        // csvCard = new File(absolutePath + "app/src/main/datasets/card.csv");
+        // this.transactionType = ATM.askForTransType();
     }
-    public Session(ATM1 ATM, Card card, Transaction transaction){
-        this.attachedATM = ATM;
-        this.card = card;
-        this.transaction = transaction;
+
+    /**
+     * Starts a new session.
+     * The session will:
+     * <ul>
+     *   <li>Retrieve a matching card from the XYZ database</li>
+     *   <li>Validate card information. If validation is unsuccessful the session will terminate.</li>
+     *   <li>Determine if the user is an admin. If so set the session status to ADMIN_MODE and terminate.</li>
+     *   <li>Sets up a new transaction and runs it</li>
+     *   <li>Terminates the session</li>
+     * </ul>
+     * 
+     * @param cardNum the card number that the session should interact with
+     * @throws InvalidTypeException
+     * @throws IOException
+     */
+    public void run(int cardNum) throws InvalidTypeException, IOException{
+        //assume it is DEPOSIT and transaction id is 1
+        //transactionType = TransactionType.WITHDRAWAL;
+
+        
+        card  = this.retrieveCardFromFile(cardNum, csvCard);
+        // System.out.println(card.balance+" "+card.getPin()+" "+card.is_blocked());
+
+
+        if (card == null){
+            currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+            return;
+        }
+
+        if (card.is_blocked()){
+            currentStatus = SessionStatus.CARD_BLOCKED;
+            return;
+        }
+
+        if (card.is_lost()){
+            currentStatus = SessionStatus.CARD_LOST;
+            return;
+        }
+
+        if (!validateSession(card)){
+            return;
+        }
+
+
+        while (!checkPIN()){
+            System.out.println("Your PIN is not correct!"+" "+(3-pinAttemptNum)+" attempt(s) left.");
+            if (pinAttemptNum == 3){
+                card.setIs_blocked(true);
+                this.writeCardToFile(cardNum, csvCard);
+                currentStatus = SessionStatus.CARD_BLOCKED;
+                return;
+            }
+        }
+
+        if (userType == "admin"){
+            currentStatus = SessionStatus.ADMIN_MODE;
+            return;
+        }
+
+        transactionType = attachedATM.askForTransType();
+
+        transact(card, transactionType, 1);
+
+        currentStatus = SessionStatus.SUCCESS;
+
+        // //hardcoded below coz reading file doesn't fully work..
+        // DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        // Date start_date = null;
+        // Date expiration_date = null;
+
+        // try {
+        //     // this.validateSession(card);
+        //     start_date = dateFormat1.parse("2018-03-05");
+        //     expiration_date = dateFormat1.parse("2023-03-04");
+        //     this.card = new Card(50103.29, 78503, start_date, expiration_date, true, true, true, 912012);
+
+        // } catch (ParseException e) {
+        //     // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
+        // }
+
+        // if (validateSession(card)){
+        //     // transactionType = this.attachedATM.askForTransType();
+        //     this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
+        //     this.transact(card, transactionType, 1);
+            
+        // }
+        
     }
 
-    public SessionStatus getStatus(){
+
+    public int getAttemptNum(){
+        return pinAttemptNum;
+    }
+
+    public void ifWrongPin(){
+        pinAttemptNum++;
+    }
+
+    public String getUserType(){
+        return userType;
+    }
+   /**
+     * Used to verify a card number against the card provided.
+     * Asks the user to enter their PIN (only 3 attempts).
+     * If PIN is expired the session will need update the card in the XYZ card database (.csv) to be blocked. 
+     * Updates the StatusSession according to the following checks:
+     * <ul>
+     *  <li> INVALID_CARD_NUMBER - The card number does not match a card from XYZ bank database</li>
+     *  <li> CARD_NOT_ACTIVE - The card entered is not active as it's start date is later than the current date.</li>
+     *  <li> CARD_EXPIRED - The current date is before the entered cards expiration date.</li>
+     *  <li> CARD_LOST - The card entered has been reported as lost/stolen.</li>
+     *  <li> CARD_BLOCKED - The card entered has been blocked due to too many PIN attempts.</li>
+     * </ul>
+     * 
+     * @param card the card proided by the user
+     * @param c a card from XYZ database //do not need this 
+     * @return true if the session was validated. False if it was not. 
+     * @throws InvalidTypeException
+     */
+    private Boolean validateSession(Card card) throws InvalidTypeException{
+        if (card == null){
+            currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+            return false;
+        }
+        else if (card.getStart_date().after(card.getExpiration_date())){
+            currentStatus = SessionStatus.CARD_NOT_ACTIVE;
+            return false;
+        }
+        else if (card.isExpired()){
+            currentStatus = SessionStatus.CARD_EXPIRED;
+            return false;
+        }
+        else if (card.is_lost()){
+            currentStatus = SessionStatus.CARD_LOST;
+            return false;
+        }
+        else if (card.is_blocked()) {
+            currentStatus = SessionStatus.CARD_BLOCKED;
+            return false;
+        }
+        return true;    
+    }
+
+    /**
+     * Searches a .csv file for a card that matches the user's card number.
+     * The first match in the file is then converted into a card object.
+     * If no card is matched then Null is returned.
+     * 
+     * .csv file has the following columns with format:
+     * <ul> 
+     *  <li> cardNumber - 5 digits</li>
+     *  <li> startDate - formatted as "yyyy-MM-dd"</li>
+     *  <li> expirationDate - formatted as "yyyy-MM-dd"</li>
+     *  <li> lost - T or F</li>
+     *  <li> blocked - T or F</li>
+     *  <li> pin - 4 digits </li>
+     *  <li> accountNo - 6 digits</li> // ignore it for now
+     *  <li> balance - double </li>
+     *  <li> userType - either customer or admin</li>
+     * </ul>
+     * 
+     * @param cardNum the users card number to check against the file
+     * @param filePath the card .csv file
+     * @return a Card object that contains all the data of the 1st matching card in the file. Null if no card found.
+     * @throws InvalidTypeException
+     */
+    public Card retrieveCardFromFile(int cardNum, File csvCard) throws InvalidTypeException {
+        int cardNumber = -1;
+        Date startDate = null;
+        Date expirationDate = null;
+        Boolean lost = false;
+        Boolean blocked = false;
+        Boolean expired = false;
+        int pin = -1;
+        BigDecimal balance = new BigDecimal("-1");
+        Card thisCard;
+
+        try {
+            Scanner myReader = new Scanner(csvCard);
+            while (myReader.hasNextLine()) {
+                row++;
+                String data = myReader.nextLine();
+                String[] infoArr = data.split(",");
+                
+                try{
+                    cardNumber = Integer.parseInt(infoArr[0]);
+                } catch(NumberFormatException e){
+                    System.out.println("Invalid int type, 4 digits");
+                    return null;
+                }
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+                try {
+                    startDate = simpleDateFormat.parse(infoArr[1]);
+                    expirationDate = simpleDateFormat.parse(infoArr[2]);
+                } catch (ParseException e) {
+                    System.out.println("formatted as \"yyyy-MM-dd");
+                    e.printStackTrace();
+                }
+
+                Date dateNow = new Date();
+                expired = expirationDate.before(dateNow);
+
+                if (infoArr[3].equals("T")) {
+                    lost = true;
+                }
+                else if (infoArr[3].equals("F")) {
+                    lost = false;
+                } else {
+                    throw new InvalidTypeException("Invalid Boolean type, Expected: T or F ");
+                }
+
+                if (infoArr[4].equals("T")) {
+                    blocked = Boolean.valueOf("true");
+                }
+                else if (infoArr[4].equals("F")) {
+                    blocked = Boolean.valueOf("false");
+                } else {
+                    throw new InvalidTypeException("Invalid Boolean type, Expected: T or F ");
+                }
+
+                try {
+                    pin = Integer.parseInt(infoArr[5]);
+                } catch(NumberFormatException e){
+                    System.out.println("Invalid int type, 4 digits");
+                }
+
+
+                //ignore account for now
+
+
+                try {
+                    balance = new BigDecimal(infoArr[6]);
+//                    balance = Double.parseDouble(infoArr[6]);
+                } catch(NumberFormatException e){
+                    System.out.println("Invalid double type");
+                }
+
+                if (infoArr[7].equals("customer")) {
+                    userType = "customer";
+                }
+                else if (infoArr[7].equals("admin")) {
+                    userType = "admin";
+                } else {
+                    throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
+                }
+                if (cardNumber == cardNum){
+                    thisCard = new Card(balance, cardNumber, startDate, expirationDate,
+                    lost, blocked, expired, pin);
+                    return thisCard;
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
         return null;
     }
-    public List<Transaction> getTransactions(){
-        return null;
+
+    /**
+     * Searches a .csv file for an external that matches against the card provided.
+     * The first match in the file is then updated with the provided card information.
+     * If no card is matched then the write fails and false is returned.
+     * 
+     * .csv file has the following columns with format:
+     * <ul> 
+     *  <li> cardNumber - 5 digits</li>
+     *  <li> startDate - formatted as "yyyy-MM-dd"</li>
+     *  <li> expirationDate - formatted as "yyyy-MM-dd"</li>
+     *  <li> lost - T or F</li>
+     *  <li> blocked - T or F</li>
+     *  <li> pin - 4 digits </li>
+     *  <li> accountNo - 6 digits</li>
+     *  <li> balance - double</li>
+     *  <li> userType - either customer or admin</li>
+     * </ul>
+     * 
+     * @param cardNum the users card number to check against the file
+     * @param filePath the relative path of the card .csv file
+     * @return weather writing was successful or not.
+     * @throws IOException
+     */
+    private void writeCardToFile(int cardNum, File file) throws IOException {
+        File tempFile = new File("src/main/datasets/cardTemp.csv");
+        try {
+            Scanner myReader = new Scanner(file);
+            FileWriter myWriter = new FileWriter(tempFile);
+            while (myReader.hasNextLine()) {
+                String str = myReader.nextLine();
+                if (str.split(",")[0].equals(Integer.toString(cardNum))){
+                    myWriter.write(str.substring(0,30)+'T'+str.substring(31,str.length())+"\n");
+                }
+                else {
+                    myWriter.write(str+"\n");
+                }
+            }
+            myReader.close();
+            myWriter.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        // if (tempFile.exists()) throw new java.io.IOException("file exists");
+
+        // Rename file (or directory)
+        boolean success = tempFile.renameTo(file);
+
+    }
+        
+    /**
+     * Sets up a new Transaction object and runs it.
+     * Updates the Status to Success.
+     */
+    public void transact(Card c, TransactionType transactionType, int transactionID){
+        Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
+        transaction.run(transactionType);
+        currentStatus = SessionStatus.SUCCESS;
     }
 
-    public SessionStatus validateSession(){
-        return null;
-    }
-
-
-    public List<Card> retrieveCardDB(){
-        return null;
-    }
-
-    public void transact(Account a){
-
-    }
-
-    public boolean checkPIN(){
-        if (card.getPin().equals(attachedATM.askForPIN)){
+    /**
+     * checks the PIN entered with the user against the matching card in the XYZ Bank card database
+     * @return weather the PIN was valid or not.
+     */
+    private boolean checkPIN(){
+        if (card.getPin() == attachedATM.askForPIN()) {
             return true;
         }
+        this.ifWrongPin();
         return false;
+    }
+    /**
+     * gets this sessions current session status
+     * @return a session status based on the SessionStatus enum.
+     */
+    public SessionStatus getStatus() {
+        return currentStatus;
+    }
 
+    public class InvalidTypeException extends Exception { 
+        public InvalidTypeException(String errorMessage) {
+            super(errorMessage);
+        }
     }
 
 }
