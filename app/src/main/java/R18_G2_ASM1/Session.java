@@ -87,19 +87,43 @@ public class Session {
         
         card  = this.retrieveCardFromFile(cardNum, csvCard);
         // System.out.println(card.balance+" "+card.getPin());
+        if (userType == "admin"){
+            currentStatus = SessionStatus.ADMIN_MODE;
+            return;
+        }
+
+        if (card == null){
+            currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+            return;
+        }
+
+        if (card.is_blocked()){
+            currentStatus = SessionStatus.CARD_BLOCKED;
+            return;
+        }
+
+        if (card.is_lost()){
+            currentStatus = SessionStatus.CARD_LOST;
+            return;
+        }
+
+        if (!validateSession(card)){
+            return;
+        }
+
         
         while (!checkPIN()){
             if (pinAttemptNum == 3){
                 card.setIs_blocked(true);
                 writeSuccess = this.writeCardToFile(cardNum, csvCard);
-                canContinue = false;
-                break;
+                currentStatus = SessionStatus.CARD_BLOCKED;
+                return;
             }
         }
 
-        if (canContinue){
-            transactionType = attachedATM.askForTransType();
-        }
+        transactionType = attachedATM.askForTransType();
+
+        currentStatus = SessionStatus.SUCCESS;
 
         // //hardcoded below coz reading file doesn't fully work..
         // DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -116,12 +140,12 @@ public class Session {
         //     // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
         // }
 
-        if (validateSession(card)){
-            // transactionType = this.attachedATM.askForTransType();
-            this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
-            this.transact(card, transactionType, 1);
+        // if (validateSession(card)){
+        //     // transactionType = this.attachedATM.askForTransType();
+        //     this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
+        //     this.transact(card, transactionType, 1);
             
-        }
+        // }
         
     }
 
