@@ -4,7 +4,11 @@ import java.lang.Math;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.io.IOException;
-
+// import java.util.Iterator;
+import java.util.Collection;
+import java.util.Set;
+// import java.util.Map;
+import java.util.*;
 
 /** 
 * TO DO: requires storing total amount as (coins + cash) separately from ATM
@@ -41,6 +45,7 @@ public class Transaction {
      * Loop through this map to call function MoneyStack.addmoney(key, * value)
      */
     protected HashMap <MoneyType, Integer> depositAmountMap;
+    protected HashMap <MoneyType, Integer> newMoneyStack;//used for withdrawing money from moneyStack
 
     /**
      * Constructs a new Transaction object.
@@ -58,14 +63,16 @@ public class Transaction {
         this.transactionID = transactionID;
         this.balance = attachedATM.getATMBalance(); //moneyStack object
         this.depositAmountMap = new LinkedHashMap <MoneyType, Integer>(); // preserves order of key, value sequence!
+        this.newMoneyStack = new LinkedHashMap <MoneyType, Integer>();
+        this.initialSetUpMap();
 
         this.atmLogger = attachedATM.getATMLogger();
-        this.initialSetUpMap();
     }
 
     /**
      * initialSetUpMap
      * Initialises the number of notes in depositAmountMap at the start as 0
+     * Initialises the number of notes+coins in newMoneyStack at the start as 0
      */
     public void initialSetUpMap(){ //for notes only!
         this.depositAmountMap.put(MoneyType.HUNDRED_DOLLARS,0);
@@ -73,6 +80,18 @@ public class Transaction {
         this.depositAmountMap.put(MoneyType.TWENTY_DOLLARS, 0);
         this.depositAmountMap.put(MoneyType.TEN_DOLLARS,  0);
         this.depositAmountMap.put(MoneyType.FIVE_DOLLARS, 0);
+
+        this.newMoneyStack.put(MoneyType.HUNDRED_DOLLARS,0);
+        this.newMoneyStack.put(MoneyType.FIFTY_DOLLARS, 0);
+        this.newMoneyStack.put(MoneyType.TWENTY_DOLLARS, 0);
+        this.newMoneyStack.put(MoneyType.TEN_DOLLARS,  0);
+        this.newMoneyStack.put(MoneyType.FIVE_DOLLARS, 0);
+        this.newMoneyStack.put(MoneyType.TWO_DOLLARS, 0);
+        this.newMoneyStack.put(MoneyType.ONE_DOLLAR, 0);
+        this.newMoneyStack.put(MoneyType.FIFTY_CENTS, 0);
+        this.newMoneyStack.put(MoneyType.TWENTY_CENTS, 0);
+        this.newMoneyStack.put(MoneyType.TEN_CENTS, 0);
+        this.newMoneyStack.put(MoneyType.FIVE_CENTS, 0);
     }
 
     /**
@@ -82,6 +101,15 @@ public class Transaction {
      */
     public HashMap <MoneyType, Integer> getDepositAmountMap(){
         return this.depositAmountMap;
+    }
+
+    /**
+     * getNewMoneyStack
+     * @return a map storing notes and their amount created by 
+     * splitting up user's required amount for withdrawal
+     */
+    public HashMap <MoneyType, Integer> getNewMoneyStack(){
+        return this.newMoneyStack;
     }
 
     /**
@@ -145,16 +173,16 @@ public class Transaction {
         this.amount += coinAmount;
     }
 
-    // /**
-    //  * printMoneyStack
-    //  * prints amount stored on map for debugging purposes
-    //  * @param map stores amount for each money type
-    //  */
-    // public void printMoneyStack(HashMap <MoneyType, Integer> map){
-    //     for (HashMap.Entry <MoneyType, Integer> entry : map.entrySet()) {
-    //         System.out.printf("Money type: $%s ------ amount:[%d]\n", entry.getKey(), entry.getValue());
-    //     }
-    // }
+    /**
+     * printMoneyStack
+     * prints amount stored on map for debugging purposes
+     * @param map stores amount for each money type
+     */
+    public void printMoneyStack(HashMap <MoneyType, Integer> map){
+        for (HashMap.Entry <MoneyType, Integer> entry : map.entrySet()) {
+            System.out.printf("Money type: $%s ------ amount:[%d]\n", entry.getKey(), entry.getValue());
+        }
+    }
 
     /**
         add into a hashmap the amount of deposit to split into coins + cash
@@ -212,6 +240,62 @@ public class Transaction {
         }
     }
 
+    public void deductFromMoneyStack(){
+        // for (HashMap.Entry <MoneyType, Integer> entry: this.getDepositAmountMap().entrySet()){
+        for (HashMap.Entry <MoneyType, Integer> entry : this.getNewMoneyStack().entrySet()) {
+            if (this.getMoneyStackBalance().getMoney().containsKey(entry.getKey()) == true){
+                HashMap<MoneyType, Integer> monMap =  this.getMoneyStackBalance().getMoney();
+                int difference =monMap.get(entry.getKey())-entry.getValue();
+                this.getMoneyStackBalance().getMoney().replace(entry.getKey(), difference);
+            }
+        }
+    }
+
+    public MoneyType findNextMoneyTypeAvailable(Double cashNote, int noteAmount){ //converted double to moneystack - findNextDoubleAvailable
+        MoneyType next = null;
+        Iterator iterator = this.getMoneyStackBalance().getMoney().keySet().iterator();
+
+        while (iterator.hasNext()){ //loop through keys (notes number)
+            MoneyType entry = (MoneyType) iterator.next(); 
+            if (Double.compare(entry.getValue(), cashNote) == 0){
+                next = (MoneyType)iterator.next();
+                break;
+            }
+        }
+        return next;
+    }
+
+    public void withdrawNEW(double retrieveAmount){ 
+        //calculateStorageAmount
+        double total = this.getMoneyStackBalance().totalMoney();
+        int toStoreAmount = 0;
+        MoneyType next = null;
+
+        for (HashMap.Entry <MoneyType, Integer> entry : this.getMoneyStackBalance().getMoney().entrySet()) {
+      
+        if (retrieveAmount <= total){ //enough stored in ATM to be withdrawn
+            next = entry.getKey();
+            if (retrieveAmount >= entry.getKey().getValue()){        
+                toStoreAmount = (int)(retrieveAmount/next.getValue());  
+                double diff = toStoreAmount - entry.getValue(); //8-2
+                if (diff >= 0){ //more tostoreAmount than in moneystack
+                    this.newMoneyStack.replace(next, entry.getValue()); 
+                    this.getMoneyStackBalance().getMoney().replace(next, 0); //entry.getValue());
+                    next = this.findNextMoneyTypeAvailable(entry.getKey().getValue(), entry.getValue()); //$50
+                    toStoreAmount = (int)((retrieveAmount-(entry.getValue()*entry.getKey().getValue()))/next.getValue());  
+
+                    this.newMoneyStack.replace(next, toStoreAmount); 
+                    this.getMoneyStackBalance().getMoney().replace(next, entry.getValue());
+                    
+                } else { //exact match ? - deduct straight up amount from this.money?
+                    this.newMoneyStack.replace(next, toStoreAmount);
+                }
+            }
+        }
+        retrieveAmount = retrieveAmount%next.getValue();
+        }
+    }
+        
     /**
      * run
      * Runs transaction process depending on user's preferred type of transaction
@@ -239,19 +323,14 @@ public class Transaction {
      * @param card a user's card
      */
     public void proceedDepositTransaction(Card card) throws InvalidTypeException {
-        //now loop through depositAmountMap, 
-        // if (card == null){ //since invalidcardexception is already caught in ATM (insert card)
-        //     throw new InvalidCardException
-        //     // System.out.println("Card is invalid, cannot add money to card.");
-        //     return;
-        // }
-        
         if (this.getAmount()%5 != 0){ //not of type note!
             throw new InvalidTypeException("Cannot deposit coins, only notes.");
         }
         // retrieve amount for each note type to add to existing money stack
         this.splitDepositAmountUp(this.amount);
-
+        this.printMoneyStack(this.getDepositAmountMap());
+        
+        //now loop through depositAmountMap, to add moneytype + amount back into moneyStack
         try {
             for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) { //where amount added is of type MoneyType = key, amount = map value
                 this.getMoneyStackBalance().addMoney(entry.getKey(), entry.getValue());
@@ -260,13 +339,11 @@ public class Transaction {
             System.out.println("Cannot add money into MoneyStack.");
             return;
         }
-        // System.out.printf("LINE 259: card amount before deposit = [%.2f]\n", card.getbalance());
         this.modify(card, TransactionType.DEPOSIT);
-        // System.out.printf("LINE 261: card amount after deposit = [%.2f]\n", card.getbalance());
 
         //now print receipt
         this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
-        this.attachedATM.getATMLogger().createLogMessage("ATM.run", messageType.INFO, "The Deposit Transaction was successfully completed.");
+        this.attachedATM.getATMLogger().createLogMessage("Transaction.deposit", messageType.INFO, "The Deposit Transaction was successfully completed.");
         this.resetDepositAmountMap();
     }
 
@@ -278,24 +355,18 @@ public class Transaction {
      * @param card a user's card
      */
     public void proceedWithdrawalTransaction(Card card){
-        // if (card != null) {
-            // if (card.getbalance() >= this.amount){
-            // boolean result = this.getMoneyStackBalance().withdraw(this.getMoneyStackBalance()); //decrease amount in moneystack
-        boolean result = false;
-        try {
-            result = this.getMoneyStackBalance().withdraw1(this.getMoneyStackBalance(), this.amount);
-            // System.out.println("LINE 287!!!!!!!! ~~~~~~~~~~~");
-        } catch (Exception e){ //frozen money?
-            System.out.println("Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.");  
+        this.withdrawNEW(this.amount);
+        this.deductFromMoneyStack();
+        
+        // } catch (Exception e){ //frozen money?
+        //     System.out.println("Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.");  
 
-            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
-        }
-        if (result == true && this.getMoneyStackBalance().getstatusOfMoney() == true){
+        //     this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
+        // }
+        if (this.getMoneyStackBalance().getstatusOfMoney() == true){
             // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
-            this.modify(card, TransactionType.WITHDRAWAL);
-            
-            // this.attachedATM.printReceipt(this, this.getMoneyStackBalance()); //only prints for moneystackbalance currently??
-            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.INFO, "withdrawal was successful!");
+            this.modify(card, TransactionType.WITHDRAWAL);            
+            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.INFO, "The Withdrawal Transaction was successfully completed.");
         }
     }
 

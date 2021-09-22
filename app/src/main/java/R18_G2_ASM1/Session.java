@@ -79,7 +79,7 @@ public class Session {
      */
     public void run(int cardNum) throws InvalidTypeException{
         //assume it is DEPOSIT and transaction id is 1
-        transactionType = TransactionType.WITHDRAWAL;
+        transactionType = TransactionType.BALANCE;
         card  = this.retrieveCardFromFile(cardNum, csvCard);
         //hardcoded below coz reading file doesn't fully work..
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -309,10 +309,8 @@ public class Session {
      */
     public void transact(Card c, TransactionType transactionType, int transactionID){
         Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
-        transaction.setAmount(50100.55); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
+        transaction.setAmount(123.50); //JUST FOR TESTING NOW::::: requires ATM's getStackNotes()/getStackCoins() to work or from user input first... :'))
         transaction.run(transactionType);
-        // transaction.getBalanceInfo(c);
-        //perhaps move print reciept here instead of inside transaction?? (else prints twice for deposit then check balanace)
         currentStatus = SessionStatus.SUCCESS;
     }
 
