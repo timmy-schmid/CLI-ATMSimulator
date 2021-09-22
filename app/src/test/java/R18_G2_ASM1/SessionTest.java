@@ -1,5 +1,6 @@
 package R18_G2_ASM1;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 import R18_G2_ASM1.Session.InvalidTypeException;
 
@@ -56,7 +57,19 @@ public class SessionTest {
         assertEquals(1234, card.getPin(),"correctly read the card information");
         assertEquals(90.0, card.getbalance(),"correctly read the card balance");
         assertEquals("customer", section.getUserType(),"correctly read the card information");
+        Card card2 = section.retrieveCardFromFile(58858, csvCardTest);
+        assertEquals(null, card2);
+        Card card3 = section.retrieveCardFromFile(11022, csvCardTest);
+        assertEquals(true, card3.is_lost(),"correctly read the card information");
+        assertEquals(true, card3.is_blocked(),"correctly read the card information");
+
+
     }
+
+    // @Test
+    // void passwordIsNullThrowsException() throws InvalidTypeException {  
+    //     section.retrieveCardFromFile(0, csvCardTest);
+    // }  
 
     // public static void main(String[] args) throws InvalidTypeException, IOException{
 
