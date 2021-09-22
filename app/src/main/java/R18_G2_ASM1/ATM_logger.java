@@ -11,10 +11,10 @@ import java.text.ParseException;
 /** 
 
 * TO DO: consider having a delay in time each time a function calls this method
-
+*
 * Logs that display onto screen/Standard Output when a session runs.
 * It records error messages, history and transaction processes.
-
+*
 * @author Anna Su
 * @version 1.0
 *
@@ -24,7 +24,7 @@ import java.text.ParseException;
     <li> Name - Package.ATM_logger</li>
     <li> method - writeToFile</li>
   </ul>
-
+*
   Followed by information in a similar format:
   <ul> 
     <li> messageType - either INFO, ERROR or WARNING</li>
@@ -46,11 +46,11 @@ public class ATM_logger{
   /**
    * Constructs a new ATM_logger object
    */
-  public ATM_logger(){ //class name = LOGFILE ?
+  public ATM_logger(){
     this.type = StatusType.INFO; //initially?
     this.message = null;
     this.classMethod = null;
-    this.path = "src/main/logs"; // double check later, using absolute path for now
+    this.path = "src/main/logs";
     this.logFileName = "/SessionLog1.log";
   }
 
@@ -74,7 +74,7 @@ public class ATM_logger{
    createLogMessage
    This function validates the parameters before proceeding to store the required data into variables, only accepting the valid keywords. It then writes to a log file.
    @param classMethod specific method from class that calls this function
-   @param messageType type of message [string vs messageType]
+   @param StatusType type of message
    @param message description to write in log file
    */
   public void createLogMessage(String classMethod, StatusType type, String message) {
@@ -90,7 +90,7 @@ public class ATM_logger{
    writeToFile
    This function validates the parameters before proceeding to write to a specific log file in simple, human readable format.
    @param classMethod specific method from class that calls this function
-   @param type type of message [string vs messageType]
+   @param type type of message
    @param message description to write in log file
    */
   public void writeToFile(String classMethod, StatusType type, String message, String logFileName){

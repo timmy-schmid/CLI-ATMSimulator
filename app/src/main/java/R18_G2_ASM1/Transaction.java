@@ -4,11 +4,10 @@ import java.lang.Math;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.io.IOException;
-// import java.util.Iterator;
 import java.util.Collection;
 import java.util.Set;
-// import java.util.Map;
 import java.util.*;
+import java.math.BigDecimal;
 
 /** 
 * TO DO: requires storing total amount as (coins + cash) separately from ATM
@@ -343,7 +342,7 @@ public class Transaction {
 
         //now print receipt
         this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
-        this.attachedATM.getATMLogger().createLogMessage("Transaction.deposit", messageType.INFO, "The Deposit Transaction was successfully completed.");
+        this.attachedATM.getATMLogger().createLogMessage("Transaction.deposit", StatusType.INFO, "The Deposit Transaction was successfully completed.");
         this.resetDepositAmountMap();
     }
 
@@ -366,7 +365,7 @@ public class Transaction {
         if (this.getMoneyStackBalance().getstatusOfMoney() == true){
             // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
             this.modify(card, TransactionType.WITHDRAWAL);            
-            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.INFO, "The Withdrawal Transaction was successfully completed.");
+            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.INFO, "The Withdrawal Transaction was successfully completed.");
         }
     }
 

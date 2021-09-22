@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.io.IOException;
+import java.math.BigDecimal;
+
 
 public class MoneyStack{
     private HashMap<MoneyType, Integer> money; //A: double or integer??
