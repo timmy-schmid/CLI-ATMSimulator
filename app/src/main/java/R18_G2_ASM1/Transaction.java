@@ -46,6 +46,9 @@ public class Transaction {
     protected HashMap <MoneyType, Integer> depositAmountMap;
     protected HashMap <MoneyType, Integer> newMoneyStack;//used for withdrawing money from moneyStack
 
+    protected MoneyStack CASH;
+    protected MoneyStack COINS;
+
     /**
      * Constructs a new Transaction object.
      * @param attachedATM an ATM object
@@ -64,8 +67,9 @@ public class Transaction {
         this.depositAmountMap = new LinkedHashMap <MoneyType, Integer>(); // preserves order of key, value sequence!
         this.newMoneyStack = new LinkedHashMap <MoneyType, Integer>();
         this.initialSetUpMap();
-
         this.atmLogger = attachedATM.getATMLogger();
+        this.CASH = null; //attachedATM.askForMoneyStackNotes();
+        this.COINS = null; //attachedATM.askForMoneyStackCoins();
     }
 
     /**
@@ -80,17 +84,17 @@ public class Transaction {
         this.depositAmountMap.put(MoneyType.TEN_DOLLARS,  0);
         this.depositAmountMap.put(MoneyType.FIVE_DOLLARS, 0);
 
-        this.newMoneyStack.put(MoneyType.HUNDRED_DOLLARS,0);
-        this.newMoneyStack.put(MoneyType.FIFTY_DOLLARS, 0);
-        this.newMoneyStack.put(MoneyType.TWENTY_DOLLARS, 0);
-        this.newMoneyStack.put(MoneyType.TEN_DOLLARS,  0);
-        this.newMoneyStack.put(MoneyType.FIVE_DOLLARS, 0);
-        this.newMoneyStack.put(MoneyType.TWO_DOLLARS, 0);
-        this.newMoneyStack.put(MoneyType.ONE_DOLLAR, 0);
-        this.newMoneyStack.put(MoneyType.FIFTY_CENTS, 0);
-        this.newMoneyStack.put(MoneyType.TWENTY_CENTS, 0);
-        this.newMoneyStack.put(MoneyType.TEN_CENTS, 0);
-        this.newMoneyStack.put(MoneyType.FIVE_CENTS, 0);
+        // this.newMoneyStack.put(MoneyType.HUNDRED_DOLLARS,0);
+        // this.newMoneyStack.put(MoneyType.FIFTY_DOLLARS, 0);
+        // this.newMoneyStack.put(MoneyType.TWENTY_DOLLARS, 0);
+        // this.newMoneyStack.put(MoneyType.TEN_DOLLARS,  0);
+        // this.newMoneyStack.put(MoneyType.FIVE_DOLLARS, 0);
+        // this.newMoneyStack.put(MoneyType.TWO_DOLLARS, 0);
+        // this.newMoneyStack.put(MoneyType.ONE_DOLLAR, 0);
+        // this.newMoneyStack.put(MoneyType.FIFTY_CENTS, 0);
+        // this.newMoneyStack.put(MoneyType.TWENTY_CENTS, 0);
+        // this.newMoneyStack.put(MoneyType.TEN_CENTS, 0);
+        // this.newMoneyStack.put(MoneyType.FIVE_CENTS, 0);
     }
 
     /**
@@ -102,14 +106,14 @@ public class Transaction {
         return this.depositAmountMap;
     }
 
-    /**
-     * getNewMoneyStack
-     * @return a map storing notes and their amount created by 
-     * splitting up user's required amount for withdrawal
-     */
-    public HashMap <MoneyType, Integer> getNewMoneyStack(){
-        return this.newMoneyStack;
-    }
+    // /**
+    //  * getNewMoneyStack
+    //  * @return a map storing notes and their amount created by 
+    //  * splitting up user's required amount for withdrawal
+    //  */
+    // public HashMap <MoneyType, Integer> getNewMoneyStack(){
+    //     return this.newMoneyStack;
+    // }
 
     /**
      * resetDepositAmountMap
@@ -122,7 +126,7 @@ public class Transaction {
     }
 
     /**
-     * getTransactionID
+     * getTransactionID  ------------>> PROBABLY REMOVE THIS!
      * @return returns the transaction ID
      */
     public int getTransactionID(){ 
@@ -225,7 +229,7 @@ public class Transaction {
             
             } else if (type == TransactionType.WITHDRAWAL){
                 if (card.getbalance() >= this.amount) { //INCOMPLETE!!!!
-                    //add coins amount to this.amout
+                    //add coins amount to this.amount
                     // this.setAmount(this.attachedATM.askForDollarAmount());
                     card.balance -= this.amount;
                 } else {
@@ -239,16 +243,16 @@ public class Transaction {
         }
     }
 
-    public void deductFromMoneyStack(){
-        // for (HashMap.Entry <MoneyType, Integer> entry: this.getDepositAmountMap().entrySet()){
-        for (HashMap.Entry <MoneyType, Integer> entry : this.getNewMoneyStack().entrySet()) {
-            if (this.getMoneyStackBalance().getMoney().containsKey(entry.getKey()) == true){
-                HashMap<MoneyType, Integer> monMap =  this.getMoneyStackBalance().getMoney();
-                int difference =monMap.get(entry.getKey())-entry.getValue();
-                this.getMoneyStackBalance().getMoney().replace(entry.getKey(), difference);
-            }
-        }
-    }
+    // public void deductFromMoneyStack(){
+    //     // for (HashMap.Entry <MoneyType, Integer> entry: this.getDepositAmountMap().entrySet()){
+    //     for (HashMap.Entry <MoneyType, Integer> entry : this.getNewMoneyStack().entrySet()) {
+    //         if (this.getMoneyStackBalance().getMoney().containsKey(entry.getKey()) == true){
+    //             HashMap<MoneyType, Integer> monMap =  this.getMoneyStackBalance().getMoney();
+    //             int difference =monMap.get(entry.getKey())-entry.getValue();
+    //             this.getMoneyStackBalance().getMoney().replace(entry.getKey(), difference);
+    //         }
+    //     }
+    // }
 
     public MoneyType findNextMoneyTypeAvailable(Double cashNote, int noteAmount){ //converted double to moneystack - findNextDoubleAvailable
         MoneyType next = null;
@@ -264,36 +268,36 @@ public class Transaction {
         return next;
     }
 
-    public void withdrawNEW(double retrieveAmount){ 
-        //calculateStorageAmount
-        double total = this.getMoneyStackBalance().totalMoney();
-        int toStoreAmount = 0;
-        MoneyType next = null;
+    // public void withdrawNEW(double retrieveAmount){ 
+    //     //calculateStorageAmount
+    //     double total = this.getMoneyStackBalance().totalMoney();
+    //     int toStoreAmount = 0;
+    //     MoneyType next = null;
 
-        for (HashMap.Entry <MoneyType, Integer> entry : this.getMoneyStackBalance().getMoney().entrySet()) {
+    //     for (HashMap.Entry <MoneyType, Integer> entry : this.getMoneyStackBalance().getMoney().entrySet()) {
       
-        if (retrieveAmount <= total){ //enough stored in ATM to be withdrawn
-            next = entry.getKey();
-            if (retrieveAmount >= entry.getKey().getValue()){        
-                toStoreAmount = (int)(retrieveAmount/next.getValue());  
-                double diff = toStoreAmount - entry.getValue(); //8-2
-                if (diff >= 0){ //more tostoreAmount than in moneystack
-                    this.newMoneyStack.replace(next, entry.getValue()); 
-                    this.getMoneyStackBalance().getMoney().replace(next, 0); //entry.getValue());
-                    next = this.findNextMoneyTypeAvailable(entry.getKey().getValue(), entry.getValue()); //$50
-                    toStoreAmount = (int)((retrieveAmount-(entry.getValue()*entry.getKey().getValue()))/next.getValue());  
+    //     if (retrieveAmount <= total){ //enough stored in ATM to be withdrawn
+    //         next = entry.getKey();
+    //         if (retrieveAmount >= entry.getKey().getValue()){        
+    //             toStoreAmount = (int)(retrieveAmount/next.getValue());  
+    //             double diff = toStoreAmount - entry.getValue(); //8-2
+    //             if (diff >= 0){ //more tostoreAmount than in moneystack
+    //                 this.newMoneyStack.replace(next, entry.getValue()); 
+    //                 this.getMoneyStackBalance().getMoney().replace(next, 0); //entry.getValue());
+    //                 next = this.findNextMoneyTypeAvailable(entry.getKey().getValue(), entry.getValue()); //$50
+    //                 toStoreAmount = (int)((retrieveAmount-(entry.getValue()*entry.getKey().getValue()))/next.getValue());  
 
-                    this.newMoneyStack.replace(next, toStoreAmount); 
-                    this.getMoneyStackBalance().getMoney().replace(next, entry.getValue());
+    //                 this.newMoneyStack.replace(next, toStoreAmount); 
+    //                 this.getMoneyStackBalance().getMoney().replace(next, entry.getValue());
                     
-                } else { //exact match ? - deduct straight up amount from this.money?
-                    this.newMoneyStack.replace(next, toStoreAmount);
-                }
-            }
-        }
-        retrieveAmount = retrieveAmount%next.getValue();
-        }
-    }
+    //             } else { //exact match ? - deduct straight up amount from this.money?
+    //                 this.newMoneyStack.replace(next, toStoreAmount);
+    //             }
+    //         }
+    //     }
+    //     retrieveAmount = retrieveAmount%next.getValue();
+    //     }
+    // }
         
     /**
      * run
@@ -301,6 +305,10 @@ public class Transaction {
      * @param type type of transaction
      */
     public void run(TransactionType type) {
+        
+        this.CASH = this.attachedATM.askForMoneyStackNotes();
+        this.setAmount(this.CASH.totalMoney()); //add cash to amount required for transaction
+        System.out.println("LINE 311 TRANSACTION TYPE: " + type);
         if (type == TransactionType.DEPOSIT){
             try {
                 this.proceedDepositTransaction(this.getCard());
@@ -309,6 +317,14 @@ public class Transaction {
             }
     
         } else if (type == TransactionType.WITHDRAWAL){
+            
+            this.COINS = this.attachedATM.askForMoneyStackCoins();
+            if (this.COINS == null){
+                System.out.println("FAILED TO RETRIEVE COINS AMOUNT FROM MONEYSTACK TO WITHDRAWAL!");
+                return;
+            }
+           
+            this.setAmount(this.COINS.totalMoney()); //add extra coins for withdrawal
             this.proceedWithdrawalTransaction(this.getCard());
     
         } else if (type == TransactionType.BALANCE) {
@@ -338,7 +354,9 @@ public class Transaction {
             System.out.println("Cannot add money into MoneyStack.");
             return;
         }
+        System.out.printf("LINE357 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getbalance());
         this.modify(card, TransactionType.DEPOSIT);
+        System.out.printf("AFTER: USER CARD AMOUNT = [%.2f]\n", card.getbalance());
 
         //now print receipt
         this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
@@ -354,17 +372,29 @@ public class Transaction {
      * @param card a user's card
      */
     public void proceedWithdrawalTransaction(Card card){
-        this.withdrawNEW(this.amount);
-        this.deductFromMoneyStack();
+        // this.withdrawNEW(this.amount);
+        // this.deductFromMoneyStack();
+
+        // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
+        // System.out.println("BEFORE:::::: LINE 360!!!!!!\nAFTER\n");
+        
+        boolean result = false;
+        result = this.getMoneyStackBalance().withdraw(this.CASH);
+        result = this.getMoneyStackBalance().withdraw(this.COINS);
+
+        this.printMoneyStack(this.getMoneyStackBalance().getMoney());
+        if (result == false){
         
         // } catch (Exception e){ //frozen money?
         //     System.out.println("Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.");  
 
-        //     this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", messageType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
-        // }
+            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
+        }
+
         if (this.getMoneyStackBalance().getstatusOfMoney() == true){
-            // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
-            this.modify(card, TransactionType.WITHDRAWAL);            
+            System.out.printf("LINE395 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getbalance());
+            this.modify(card, TransactionType.WITHDRAWAL);     
+            System.out.printf("LINE397 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getbalance());       
             this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.INFO, "The Withdrawal Transaction was successfully completed.");
         }
     }

@@ -71,13 +71,14 @@ public class ATM {
     this.atmLogger = logger;
   }
 
-/**
- * @return an ATM logger object
- */
+  /**
+  * @return an ATM logger object
+  */
   public ATM_logger getATMLogger() { //newly added
     return this.atmLogger;
   }
   
+
  /**
  * Starts up the ATM.
  * A user is promoted to insert their card. After insertion the inputted session is executed.
@@ -344,7 +345,7 @@ public class ATM {
 
       KeypadButton pressed = keypad.pressButton();
       if (pressed == KeypadButton.ONE) {
-        m.addMoneyStack(askForMoneyStackNotes());
+        m.addMoneyStack(askForMoneyStackNotes()); //maybe have a return value for this function in case cancel is pressed? m = null, write to log file
       } else if (pressed == KeypadButton.TWO) {
         m.addMoneyStack(askForMoneyStackCoins());
       }  else if (pressed == KeypadButton.THREE) {
@@ -425,7 +426,7 @@ public class ATM {
    * @return a MoneyStack representation of the ATM's current balance
    */
   public MoneyStack getATMBalance() {
-    return balance;
+    return this.balance;
   }
   
   /**

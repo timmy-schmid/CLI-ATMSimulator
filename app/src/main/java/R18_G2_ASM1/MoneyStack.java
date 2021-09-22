@@ -15,23 +15,6 @@ public class MoneyStack{
     //true is for normal and false is for frozen
     private boolean statuOfMoney = true;
 
-    /* constructor
-    //seems we don't have parameters to pass
-    public MoneyStack(){
-        this.money = new LinkedHashMap <MoneyType, Integer>(); //replace hashmap with linkedhashmap
-        money.put(MoneyType.HUNDRED_DOLLARS,50); //5000
-        money.put(MoneyType.FIFTY_DOLLARS, 50); //2500
-        money.put(MoneyType.TWENTY_DOLLARS, 50);
-        money.put(MoneyType.TEN_DOLLARS,  50);
-        money.put(MoneyType.FIVE_DOLLARS, 100);
-        money.put(MoneyType.TWO_DOLLARS, 100);
-        money.put(MoneyType.ONE_DOLLAR, 100);
-        money.put(MoneyType.FIFTY_CENTS,  100);
-        money.put(MoneyType.TWENTY_CENTS, 100);
-        money.put(MoneyType.TEN_CENTS, 100);
-        money.put(MoneyType.FIVE_CENTS, 100);
-    }*/
-
     // constructor
     //should default to 0
     public MoneyStack(){
@@ -77,6 +60,7 @@ public class MoneyStack{
     public boolean withdraw(MoneyStack c){ //needs edit i think....
         double needWithdraw = c.totalMoney();
         if (this.canWithdraw(c) == false){
+            // System.out.println("CANT WITHDRAW!!!!! LINE 63 :(((((");
             return false;
         } else{
             for(MoneyType key: this.getMoney().keySet()){
@@ -89,43 +73,12 @@ public class MoneyStack{
                     int originalAmount = money.get(key);
                     needWithdraw = remainder;
                     money.replace(key,(int)originalAmount-quotient);
+                    // System.out.printf("REPLACEMENT LINE 74: MONEYSTACK [%.2f]---------- [%d]\n",  key.getValue(), (int)originalAmount-quotient);
                 }
             }
         }
         return true;
     }
-
-//        if (this.canWithdraw(c) == false){
-//            return false;
-//        } else{
-
-            // for(MoneyType key: this.getMoney().keySet()){
-            //     int quotient = (int)(needWithdraw/key.getValue()); //casting??
-            //     int remainder  = (int)(needWithdraw%key.getValue());
-            //     if(quotient > money.get(key)){
-            //         needWithdraw -= money.get(key)*key.getValue();
-            //         money.replace(key,0);
-            //     }else{
-            //         int originalAmount = money.get(key);
-            //         needWithdraw = remainder;
-            //         money.replace(key,originalAmount-quotient);
-            //         // System.out.printf("original amount = [%d], needwithdraw = [%d], replacement = [%d]\n\n", originalAmount, needWithdraw, originalAmount-quotient);
-            //     }
-            // }
-            // System.out.println("************ LINE 71 OF MONEYSTACK!!!!!!!! *************************");
-//            double total = 1000; //amount to withdraw
-//            int toStoreAmount = 0;
-//
-//            for(MoneyType T: money.keySet()){
-//                if (total >= T.getValue()) {
-//                    toStoreAmount = (int)(total/T.getValue()); //where amount added is of type MoneyType
-//                    total = total%T.getValue();
-//                    this.money.replace(T, (int)(T.getValue()-toStoreAmount));
-//                }
-//            }
-//            return true;
-            // return (needWithdraw == 0);
-//        }
 
     public int query(MoneyType c) throws IOException{
         if (money.containsKey(c) == false){
@@ -137,6 +90,7 @@ public class MoneyStack{
 
     public boolean canWithdraw(MoneyStack c){
         double needWithdraw = c.totalMoney(); //Tim - changed to double.
+        System.out.printf("TOTAL MONEY STORED IN ONEYSTACK LINE 93!!!!!!! [%.2f]\n", needWithdraw);
         if (needWithdraw > this.totalMoney()){ //change this.money --> this?
             return false;
         } else{
@@ -171,6 +125,10 @@ public class MoneyStack{
         balance.withdraw(MoneyStack m) --> for ejectMoney
     */
     public void addMoneyStack(MoneyStack m){
+        if (m == null){
+            // Anna - I.e. if when running addCash() in ATM, the admin presses 'Cancel', then this moneystack will be null!!
+            return;
+        }
         for(Map.Entry<MoneyType, Integer> ATMEntry: this.getMoney().entrySet()){
             for(Map.Entry<MoneyType, Integer> Addentry: m.getMoney().entrySet()){
                 if(ATMEntry.getKey().equals(Addentry.getKey())){
