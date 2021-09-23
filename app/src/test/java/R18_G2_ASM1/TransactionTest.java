@@ -136,7 +136,7 @@ class TransactionTest {
     }
     
     @Test
-    public void voidtestResetMapWorks(){ //ensures all notes remain 0 again
+    public void testResetMapWorks(){ //ensures all notes remain 0 again
         depositC.initialSetUpMap();
         depositC.resetDepositAmountMap();
         for (HashMap.Entry <MoneyType, Integer> entry: depositC.getDepositAmountMap().entrySet()){
@@ -145,13 +145,13 @@ class TransactionTest {
     }
     
     @Test 
-    public void voidtestGetUserAmount(){ //positive test, number is divisble by 5
+    public void testGetUserAmount(){ //positive test, number is divisble by 5
         depositC.setAmount(depositAmount); //no coins
         assertEquals(depositC.getAmount(), depositC.getAmount());
     }
 
     @Test 
-    public void voidtestcanDepositAmount(){ //positive test, deposit amount is divisble by 5
+    public void testCanDepositAmount(){ //positive test, deposit amount is divisble by 5
         BigDecimal cardBalance = userC.getBalance(); 
         depositC.setAmount(depositAmount);
         try {
@@ -163,7 +163,7 @@ class TransactionTest {
     }
 
     @Test 
-    public void voidtestCantDepositAmount(){ //negative test, failure to deposit due to amount is NOT divisble by 5
+    public void testCantDepositAmount(){ //negative test, failure to deposit due to amount is NOT divisble by 5
         BigDecimal amount = new BigDecimal(124.00);
         depositC.setAmount(amount);
         try {
