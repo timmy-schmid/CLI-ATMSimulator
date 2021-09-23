@@ -74,7 +74,7 @@ public class ATM_logger{
    createLogMessage
    This function validates the parameters before proceeding to store the required data into variables, only accepting the valid keywords. It then writes to a log file.
    @param classMethod specific method from class that calls this function
-   @param StatusType type of message
+   @param type the type of message to write in the log file
    @param message description to write in log file
    */
   public void createLogMessage(String classMethod, StatusType type, String message) {
@@ -83,12 +83,12 @@ public class ATM_logger{
     this.type = type;
     this.message = message;
 
-    try {
+    //try { Tim - no need to catch as never thrown
       writeToFile(this.classMethod, this.type, this.message, this.getFileName());
-    } catch (IOException e){
-      System.out.println("Error with handling/opening the file.");
+    //} catch (IOException e){
+      //System.out.println("Error with handling/opening the file.");
 
-    }
+    //}
   }
 
   /**
@@ -97,8 +97,9 @@ public class ATM_logger{
    @param classMethod specific method from class that calls this function
    @param type type of message
    @param message description to write in log file
+   @param logFileName The location of the file where the log is to be written to
    */
-  public void writeToFile(String classMethod, StatusType type, String message, String logFileName) throws IOException{
+  public void writeToFile(String classMethod, StatusType type, String message, String logFileName) {
     //if the parameters are not null, write to file otherwise keep waiting till info is provided
     if (classMethod == null || type == null || message == null) {
       System.out.println("Not time to write to file yet!");

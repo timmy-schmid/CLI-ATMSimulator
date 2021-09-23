@@ -29,12 +29,12 @@ public class App {
         }
         
         ATM atm = new ATM("Canberra", stack);
-        try {
+        //try {
             Session session = new Session(atm);
             atm.run(session);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        //} catch (IOException e){
+            //e.printStackTrace();
+        //}
         
     }
 }

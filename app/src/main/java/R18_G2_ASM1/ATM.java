@@ -52,11 +52,11 @@ public class ATM {
    * The ATM in constructed with its individual components.
    * @param location A string representation of where the ATM is located
    * @param cashDisp The cashDispensor component of the ATM
-   * @param cardDip The cardDispensor component of the ATM
+   * @param cardDisp The cardDispensor component of the ATM
    * @param display The display component of the ATM
    * @param keypad The keypad component of the ATM
    * @param moneyStack the starting balance of the ATM
-   * 
+   * @param logger a logger responsible for recording ATM activity (used for debugging)
    */
   public ATM(String location, CashDispensor cashDisp, CardDispensor cardDisp,
              Display display, Keypad keypad, MoneyStack moneyStack, ATM_logger logger) {
@@ -98,10 +98,10 @@ public class ATM {
  * </ul>
  * 
  * The ATM will shutdown after a session status has been resolved.
- * @throws IOException
- * @throws InvalidTypeException
+ * 
+ * @param session. A session instance is passed into the ATM. The ATM will execute on this session.
  */
-  public void run(Session session) throws IOException {
+  public void run(Session session) { //removed exception so it can be handled in Session
 
     //Welcome Menu
     StringBuilder s = new StringBuilder();
@@ -123,13 +123,13 @@ public class ATM {
     }
 
     //runs the session
-    try {
-      session.run(cardNum);
-    } catch (InvalidTypeException e) {
-      display.displayMessage(e.getMessage());
-      this.getATMLogger().createLogMessage("Session", StatusType.ERROR, e.getMessage());
-      return;
-    }
+    //try {
+    session.run(cardNum);
+    //} catch (InvalidTypeException e) {
+      //display.displayMessage(e.getMessage());
+      //this.getATMLogger().createLogMessage("Session", StatusType.ERROR, e.getMessage());
+      //return;
+    //}
 
     SessionStatus status = session.getStatus();
     display.displayMessageNoNewLine(status.toString());

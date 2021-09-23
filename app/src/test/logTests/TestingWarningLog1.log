@@ -4,3 +4,15 @@ Sept 23, 2021 2:39:15 PM R18_G2_ASM1.ATM_logger writeToFile
 WARNING: class.method --> MESSAGE: warning message
 Sept 23, 2021 2:42:05 PM R18_G2_ASM1.ATM_logger writeToFile
 WARNING: class.method --> MESSAGE: warning message
+Sep. 23, 2021 4:08:31 PM R18_G2_ASM1.ATM_logger writeToFile
+WARNING: class.method --> MESSAGE: warning message
+Sep. 23, 2021 4:08:31 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 4:22:41 PM R18_G2_ASM1.ATM_logger writeToFile
+WARNING: class.method --> MESSAGE: warning message
+Sep. 23, 2021 4:22:41 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 5:09:33 PM R18_G2_ASM1.ATM_logger writeToFile
+WARNING: class.method --> MESSAGE: warning message
+Sep. 23, 2021 5:09:33 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.

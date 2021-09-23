@@ -112,7 +112,7 @@ public class Transaction {
     }
 
     /**
-     * getTransactionID  ------------>> PROBABLY REMOVE THIS!
+     * getTransactionID  ------------ PROBABLY REMOVE THIS!
      * @return returns the transaction ID
      */
     public int getTransactionID(){
@@ -176,11 +176,12 @@ public class Transaction {
     /**
      add into a hashmap the amount of deposit to split into coins + cash
      like findRemainder()/addMoney() function basically
-     @param amount the amount required to deposit into ATM
-
+     @param amount the amount required to deposit into ATM in notes
+     @throws InvalidTypeException If coins have been added.
      handle exception when amount not divisble by 5/10 (must be notes, no coins)
      e.g. amount = 24.5 (not ok) vs 25 (ok)
      */
+
     // public void splitDepositAmountUp(double amount) throws InvalidTypeException{ 
     public void splitDepositAmountUp(BigDecimal amount) throws InvalidTypeException{ 
         BigDecimal div = new BigDecimal("5");
@@ -275,6 +276,7 @@ public class Transaction {
      * proceedDepositTransaction
      * Add's money onto user's card and adds notes/coins to MoneyStack
      * @param card a user's card
+     * @throws InvalidTypeException if coins are deposited.
      */
     public void proceedDepositTransaction(Card card) throws InvalidTypeException {
         BigDecimal div = new BigDecimal("5");

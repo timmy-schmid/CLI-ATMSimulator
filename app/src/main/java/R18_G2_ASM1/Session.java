@@ -70,10 +70,8 @@ public class Session {
      * </ul>
      * 
      * @param cardNum the card number that the session should interact with
-     * @throws InvalidTypeException
-     * @throws IOException
      */
-    public void run(int cardNum) throws InvalidTypeException, IOException{
+    public void run(int cardNum) {
         //assume it is DEPOSIT and transaction id is 1
         //transactionType = TransactionType.WITHDRAWAL;
 
@@ -175,7 +173,7 @@ public class Session {
      * @return true if the session was validated. False if it was not. 
      * @throws InvalidTypeException
      */
-    private Boolean validateSession(Card card) throws InvalidTypeException{
+    private Boolean validateSession(Card card) {
         if (card == null){
             currentStatus = SessionStatus.INVALID_CARD_NUMBER;
             return false;
@@ -212,17 +210,16 @@ public class Session {
      *  <li> lost - T or F</li>
      *  <li> blocked - T or F</li>
      *  <li> pin - 4 digits </li>
-     *  <li> accountNo - 6 digits</li> // ignore it for now
+     *  <li> accountNo - 6 digits</li>
      *  <li> balance - double </li>
      *  <li> userType - either customer or admin</li>
      * </ul>
      * 
      * @param cardNum the users card number to check against the file
-     * @param filePath the card .csv file
+     * @param csvCard the filePath the card .csv file
      * @return a Card object that contains all the data of the 1st matching card in the file. Null if no card found.
-     * @throws InvalidTypeException
      */
-    public Card retrieveCardFromFile(int cardNum, File csvCard) throws InvalidTypeException {
+    public Card retrieveCardFromFile(int cardNum, File csvCard) {
         int cardNumber = -1;
         Date startDate = null;
         Date expirationDate = null;
@@ -244,7 +241,7 @@ public class Session {
                 try{
                     cardNumber = Integer.parseInt(infoArr[0]);
                 } catch(NumberFormatException e){
-                    System.out.println("Invalid int type, 4 digits");
+                    System.out.println("Invalid int type, 4 digits"); // this should handled with CARD_READ_ERROR
                     return null;
                 }
                 String pattern = "yyyy-MM-dd";
@@ -254,7 +251,7 @@ public class Session {
                     startDate = simpleDateFormat.parse(infoArr[1]);
                     expirationDate = simpleDateFormat.parse(infoArr[2]);
                 } catch (ParseException e) {
-                    System.out.println("formatted as \"yyyy-MM-dd");
+                    System.out.println("formatted as \"yyyy-MM-dd"); // this should handled with CARD_READ_ERROR
                     e.printStackTrace();
                 }
 
@@ -267,7 +264,7 @@ public class Session {
                 else if (infoArr[3].equals("F")) {
                     lost = false;
                 } else {
-                    throw new InvalidTypeException("Invalid Boolean type, Expected: T or F ");
+                    //throw new InvalidTypeException("Invalid Boolean type, Expected: T or F "); Handle this internally within this class and create new SessionsStatus CARD_READ_ERROR
                 }
 
                 if (infoArr[4].equals("T")) {
@@ -276,13 +273,13 @@ public class Session {
                 else if (infoArr[4].equals("F")) {
                     blocked = Boolean.valueOf("false");
                 } else {
-                    throw new InvalidTypeException("Invalid Boolean type, Expected: T or F ");
+                    //throw new InvalidTypeException("Invalid Boolean type, Expected: T or F "); Handle this internally within this class and create new SessionsStatus CARD_READ_ERROR
                 }
 
                 try {
                     pin = Integer.parseInt(infoArr[5]);
                 } catch(NumberFormatException e){
-                    System.out.println("Invalid int type, 4 digits");
+                    System.out.println("Invalid int type, 4 digits"); // this should handled with CARD_READ_ERROR
                 }
 
 
@@ -293,7 +290,7 @@ public class Session {
                     // balance = Double.parseDouble(infoArr[6]);
                     balance = new BigDecimal(infoArr[6]);
                 } catch(NumberFormatException e){
-                    System.out.println("Invalid double type");
+                    System.out.println("Invalid double type"); // this should handled with CARD_READ_ERROR
                 }
 
                 if (infoArr[7].equals("customer")) {
@@ -302,7 +299,7 @@ public class Session {
                 else if (infoArr[7].equals("admin")) {
                     userType = "admin";
                 } else {
-                    throw new InvalidTypeException("Invalid user type, Expected: customer or admin ");
+                    //throw new InvalidTypeException("Invalid user type, Expected: customer or admin "); // this should handled with CARD_READ_ERROR
                 }
                 if (cardNumber == cardNum){
                     thisCard = new Card(balance, cardNumber, startDate, expirationDate,
@@ -313,7 +310,7 @@ public class Session {
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
-            e.printStackTrace();
+            e.printStackTrace(); // this should handled with DATABASE_FILE_ERROR
         }
 
         return null;
@@ -338,11 +335,9 @@ public class Session {
      * </ul>
      * 
      * @param cardNum the users card number to check against the file
-     * @param filePath the relative path of the card .csv file
-     * @return weather writing was successful or not.
-     * @throws IOException
+     * @param file the relative path of the card .csv file
      */
-    public void writeCardToFile(int cardNum, File file) throws IOException {
+    public void writeCardToFile(int cardNum, File file) {
         
         try {
             Scanner myReader = new Scanner(file);
@@ -361,9 +356,12 @@ public class Session {
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
+            //add some handling for FileNotFound. Use CARD_WRITE_ERROR SessionStatus. Also we need to make sure that no transactions are made if a write error occurs.
+        } catch (IOException e) {
+            //add some handling for writing errors. USE DATABASE_FILE_ERROR SessionStatus.
         }
 
-        // if (tempFile.exists()) throw new java.io.IOException("file exists");
+        // if (tempFile.exists()) throw new java.io.IOException("file exists")
 
         // Rename file (or directory)
         boolean success = tempFile.renameTo(file);
@@ -373,6 +371,9 @@ public class Session {
     /**
      * Sets up a new Transaction object and runs it.
      * Updates the Status to Success.
+     * @param c the card that the transaction is to be run on
+     * @param transactionType the type of transaction to perform on the card
+     * @param transactionID a unique ID for the transaction
      */
     public void transact(Card c, TransactionType transactionType, int transactionID){
         Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);

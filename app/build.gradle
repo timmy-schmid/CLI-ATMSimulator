@@ -9,6 +9,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'java'
     id 'jacoco' //used for gradle test jacocoTestReport
     id 'com.adarshr.test-logger' version '3.0.0' //See: https://stackoverflow.com/questions/3963708/gradle-how-to-display-test-results-in-the-console-in-real-time
 }
@@ -42,14 +43,19 @@ run{
 test {
     useJUnitPlatform()     // Use JUnit Platform for unit tests.
     finalizedBy jacocoTestReport // report is always generated after tests run
+    finalizedBy javadoc
 }
 //jacocoTestReport {
     //dependsOn test // tests are required to run before generating the report
 //}
 jacocoTestReport { 
     reports { 
-        html.enabled = true 
-        csv.enabled = true 
+        html.required = true 
+        csv.required = true 
     }
-}  
+}
+
+task myJavadocs(type: Javadoc) {
+  source = sourceSets.main.allJava
+}
 

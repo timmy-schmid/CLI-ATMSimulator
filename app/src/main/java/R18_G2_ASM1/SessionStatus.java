@@ -20,6 +20,15 @@ public enum SessionStatus {
                "Please contact XYZ Bank to unblock your card.\n" +
                "We apologise for any inconvienience.\n",StatusType.ERROR),
 
+  CARD_WRITE_ERROR("There was an internal issue with writing to the XYZ DB. As a result the transaction has been cancelled\n" +
+                   "This issue has been logged. Please use a different ATM to complete your transaction", StatusType.ERROR),
+
+  CARD_READ_ERROR("There was an internal issue with reading card data from the XYZ DB. There is some corrupt information and as a result the transaction has been cancelled\n" +
+  "This issue has been logged. Please use a different ATM to complete your transaction", StatusType.ERROR),
+
+  DATABASE_FILE_ERROR("There was an internal issue with retrieving the XYZ database. No database file was found. " +
+                      "This issue has been logged. Please use a different ATM to complete your transaction",StatusType.ERROR),
+
   ADMIN_MODE("The ATM is now in ADMIN MODE\n",StatusType.INFO),
   CANCELLED("The session was cancelled.",StatusType.INFO),
 
