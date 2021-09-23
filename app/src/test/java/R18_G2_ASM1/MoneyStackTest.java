@@ -238,28 +238,19 @@ public class MoneyStackTest {
         MoneyStack testMoneyStack = new MoneyStack();
         try{
             testMoneyStack.addMoney(MoneyType.HUNDRED_DOLLARS,100);
-            testMoneyStack.addMoney(MoneyType.FIFTY_DOLLARS,100);
-            testMoneyStack.addMoney(MoneyType.TWENTY_DOLLARS,100);
-            testMoneyStack.addMoney(MoneyType.TEN_DOLLARS,100);
-            testMoneyStack.addMoney(MoneyType.FIVE_DOLLARS,100);
-            testMoneyStack.addMoney(MoneyType.TWO_DOLLARS,100);
-            testMoneyStack.addMoney(MoneyType.ONE_DOLLAR,100);
         }catch (IOException e){
             assertEquals(IOException.class, e.getClass());
         }
-        BigDecimal oMoneyAmout = testMoneyStack.totalMoney();
         MoneyStack wdMoneyStack = new MoneyStack();
         try{
             wdMoneyStack.addMoney(MoneyType.HUNDRED_DOLLARS,2);
-            wdMoneyStack.addMoney(MoneyType.FIFTY_DOLLARS,1);
         }catch (IOException e){
             assertEquals(IOException.class, e.getClass());
         }
         BigDecimal wdMoneyAmout = wdMoneyStack.totalMoney();
         BigDecimal nowMoneyAmount = testMoneyStack.totalMoney();
-        BigDecimal compareMoneyAmout = wdMoneyAmout.add(nowMoneyAmount);
         Assertions.assertTrue(testMoneyStack.withdraw(wdMoneyStack));
-        Assertions.assertTrue(oMoneyAmout.compareTo(compareMoneyAmout) == 0);
+        Assertions.assertTrue(wdMoneyAmout.intValue()+nowMoneyAmount.intValue() == 10000);
     }
 
     @Test
