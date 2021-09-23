@@ -79,13 +79,13 @@ class CardTest {
   }
 
   @Test
-  void getbalance() throws ParseException {
+  void getBalance() throws ParseException {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
-    assertEquals(c.getbalance(), new BigDecimal(38762.99));
+    assertEquals(c.getBalance(), new BigDecimal(38762.99));
   }
 
   @Test
@@ -96,7 +96,7 @@ class CardTest {
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
     c.setBalance(new BigDecimal(10000));
-    assertEquals(c.getbalance(), new BigDecimal(10000));
+    assertEquals(c.getBalance(), new BigDecimal(10000));
   }
 
   @Test
@@ -190,17 +190,17 @@ class CardTest {
   }
 
   @Test
-  void check_pin() throws ParseException {
+  void checkPin() throws ParseException {
     DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     Date start_date = dateFormat1.parse("2018-06-01");
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
-    assertTrue(c.check_pin(888888));
-    assertFalse(c.check_pin(123123));
+    assertTrue(c.checkPin(888888));
+    assertFalse(c.checkPin(123123));
     c.setPin(999999);
-    assertFalse(c.check_pin(888888));
-    assertTrue(c.check_pin(999999));
+    assertFalse(c.checkPin(888888));
+    assertTrue(c.checkPin(999999));
   }
 
   @Test
@@ -210,11 +210,7 @@ class CardTest {
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
-    c.block_card();
+    c.blockCard();
     assertTrue(c.isBlocked());
-  }
-
-  @Test
-  void getCardDetails() {
   }
 }

@@ -223,8 +223,8 @@ public class Transaction {
                 card.balance = card.balance.add(this.amount); // += this.amount;
             
             } else if (type == TransactionType.WITHDRAWAL){
-                if (card.getbalance().compareTo(this.amount) >= 0){
-                    if (card.getbalance().compareTo(minCardBalance) <= 0){ //when balance is low on card, print on screen/write to log file?
+                if (card.getBalance().compareTo(this.amount) >= 0){
+                    if (card.getBalance().compareTo(minCardBalance) <= 0){ //when balance is low on card, print on screen/write to log file?
                         this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "Your card balance is less than $5.00.");
                     }
                     card.balance = card.balance.subtract(this.amount);
@@ -300,9 +300,9 @@ public class Transaction {
             System.out.println("Cannot add money into MoneyStack.");
             return;
         }
-        System.out.printf("LINE357 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getbalance());
+        System.out.printf("LINE357 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getBalance());
         this.modify(card, TransactionType.DEPOSIT);
-        System.out.printf("AFTER: USER CARD AMOUNT = [%.2f]\n", card.getbalance());
+        System.out.printf("AFTER: USER CARD AMOUNT = [%.2f]\n", card.getBalance());
 
         //now print receipt
         this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
@@ -335,9 +335,9 @@ public class Transaction {
         }
 
         if (this.getMoneyStackBalance().getstatusOfMoney() == true){
-            System.out.printf("LINE395 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getbalance());
+            System.out.printf("LINE395 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getBalance());
             this.modify(card, TransactionType.WITHDRAWAL);
-            System.out.printf("LINE397 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getbalance());
+            System.out.printf("LINE397 BEFORE: USER CARD AMOUNT = [%.2f]\n", card.getBalance());
             this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.INFO, "The Withdrawal Transaction was successfully completed.");
         }
     }

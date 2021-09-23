@@ -152,14 +152,14 @@ class TransactionTest {
 
     @Test 
     public void voidtestcanDepositAmount(){ //positive test, deposit amount is divisble by 5
-        BigDecimal cardBalance = userC.getbalance(); 
+        BigDecimal cardBalance = userC.getBalance(); 
         depositC.setAmount(depositAmount);
         try {
             depositC.proceedDepositTransaction(userC);
         } catch (InvalidTypeException e) {
             assertEquals(InvalidTypeException.class, e.getClass());
         }
-        assertEquals(userC.getbalance(), cardBalance.add(depositAmount), "Amount in card did not increase,proceedDepositTransaction function failed! ");
+        assertEquals(userC.getBalance(), cardBalance.add(depositAmount), "Amount in card did not increase,proceedDepositTransaction function failed! ");
     }
 
     @Test 
@@ -175,12 +175,12 @@ class TransactionTest {
 
     @Test //testing deposit adds money to card
     public void testCanModifyCardDeposit(){ //testing deposit money to card is valid
-        BigDecimal cardBalance = userC.getbalance(); //initial
+        BigDecimal cardBalance = userC.getBalance(); //initial
         BigDecimal amount = new BigDecimal(15.00);
         //initialise amount in deposit
         depositC.setAmount(amount);
         depositC.modify(depositC.getCard(), depositC.getType()); //userC
-        assertTrue(userC.getbalance().compareTo(cardBalance.add(amount)) == 0);
+        assertTrue(userC.getBalance().compareTo(cardBalance.add(amount)) == 0);
     }
 
      @Test //negative test: card is invalid
@@ -220,7 +220,7 @@ class TransactionTest {
 
     @Test //negative test for when balance is too low on card to withdraw
     public void testCantModifyCardWithdrawal(){ //out
-        BigDecimal cardBalance = userA.getbalance(); //initial
+        BigDecimal cardBalance = userA.getBalance(); //initial
         userA.setBalance(new BigDecimal(100.50));
         BigDecimal withdrawAmount = new BigDecimal(125.35);
         //initialise amount in deposit
@@ -238,21 +238,21 @@ class TransactionTest {
     
     @Test //testing withdrawal removes money from card
     public void testCanModifyCardWithdrawal(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
-        BigDecimal cardBalance = userA.getbalance(); //initial
+        BigDecimal cardBalance = userA.getBalance(); //initial
         BigDecimal amount = new BigDecimal(124.35);
         //initialise amount in withdrawal
         withdrawalA.setAmount(amount);
         withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType()); //userA
-        assertTrue(userA.getbalance().compareTo(cardBalance.subtract(amount)) == 0);
+        assertTrue(userA.getBalance().compareTo(cardBalance.subtract(amount)) == 0);
     }
     // @Test
     // public void testCanWithdrawalAmount(){ //testing when userA's balance is too low and can't withdraw money out
     //     BigDecimal amount = 15.95;
-    //     BigDecimal cardBalance = userA.getbalance(); //38762
+    //     BigDecimal cardBalance = userA.getBalance(); //38762
     //     withdrawalA.setAmount(amount);
     //     withdrawalA.proceedWithdrawalTransaction(userA); //withdraw1 fails????
-    //     String lala = "userA's balance = " + userA.getbalance() + ", cardbalance = [" + cardBalance +"], amount = [" +amount+"]\n\n";
-    //     // assert(userA.getbalance() == cardBalance-amount);
+    //     String lala = "userA's balance = " + userA.getBalance() + ", cardbalance = [" + cardBalance +"], amount = [" +amount+"]\n\n";
+    //     // assert(userA.getBalance() == cardBalance-amount);
     //     // assertEquals()
         
     //     assertEquals(outContent.toString(), lala); //"Sorry your card is unavailable. Please try again.\n");

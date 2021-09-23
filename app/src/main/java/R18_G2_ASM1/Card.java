@@ -50,7 +50,7 @@ public class Card {
     return pin;
   }
 
-  public BigDecimal getbalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
@@ -104,7 +104,7 @@ public class Card {
     return is_AfterStartDate;
   }
 
-  public boolean check_pin(int pin) {
+  public boolean checkPin(int pin) {
     if(this.pin - pin < 0.1) {
       return true;
     }
@@ -113,13 +113,13 @@ public class Card {
     }
   }
 
-  public void block_card() {
+  public void blockCard() {
     this.isBlocked = true;
   }
 
   public void getCardDetails(){
     System.out.println("\nPrinting card details below!!!");
-    System.out.println("Card number " + cardNumber + ", amount stored  = " + getbalance() + ", expires on: "  + this.expirationDate);
+    System.out.println("Card number " + cardNumber + ", amount stored  = " + getBalance() + ", expires on: "  + this.expirationDate);
   }
 
 
