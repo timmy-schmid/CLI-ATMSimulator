@@ -27,7 +27,7 @@ import java.text.ParseException;
 *
   Followed by information in a similar format:
   <ul> 
-    <li> messageType - either INFO, ERROR or WARNING</li>
+    <li> StatusType - either INFO, ERROR or WARNING</li>
     <li> classMethod - location of where function was called from</li>
     <li> message - Description of the message type</li>
   </ul>
@@ -120,7 +120,7 @@ public class ATM_logger{
 
         logger.addHandler(fh); //adds a log handler to receive logging msgs
 
-        //this provides output in human readable format to the log file!!
+        //this provides output in human readable format to the log file!
         SimpleFormatter sFormatter = new SimpleFormatter();
         fh.setFormatter(sFormatter);
 
@@ -131,7 +131,10 @@ public class ATM_logger{
           logger.severe(this.classMethod + " --> MESSAGE: " + this.message);
         } else if (type == StatusType.WARNING){
           logger.warning(this.classMethod + " --> MESSAGE: " + this.message);
+        } else if (type == StatusType.FATAL){
+          logger.warning(this.classMethod + " --> MESSAGE: " + this.message);
         }
+
       } catch (IOException | SecurityException e){ 
         //e.g. if a security manager doesn't have but requires a logging permission, retrieved from https://docs.oracle.com/javase/7/docs/api/java/util/logging/FileHandler.html 
         System.out.println("Error with handling/opening the file.");
