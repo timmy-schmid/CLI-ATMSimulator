@@ -246,7 +246,7 @@ public class Transaction {
      */
     public void run(TransactionType type) {
 
-        this.CASH = this.attachedATM.askForMoneyStackNotes();
+        this.CASH = this.attachedATM.askForMoneyStackNotes(type);
         this.setAmount(this.CASH.totalMoney()); //add cash to amount required for transaction
         System.out.println("LINE 311 TRANSACTION TYPE: " + type);
         if (type == TransactionType.DEPOSIT){
@@ -258,7 +258,7 @@ public class Transaction {
 
         } else if (type == TransactionType.WITHDRAWAL){
 
-            this.COINS = this.attachedATM.askForMoneyStackCoins();
+            this.COINS = this.attachedATM.askForMoneyStackCoins(type);
             if (this.COINS == null){
                 System.out.println("FAILED TO RETRIEVE COINS AMOUNT FROM MONEYSTACK TO WITHDRAWAL!");
                 return;
