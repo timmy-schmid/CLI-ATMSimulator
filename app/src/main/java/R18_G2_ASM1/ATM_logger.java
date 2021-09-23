@@ -83,7 +83,12 @@ public class ATM_logger{
     this.type = type;
     this.message = message;
 
-    writeToFile(this.classMethod, this.type, this.message, this.getFileName());
+    try {
+      writeToFile(this.classMethod, this.type, this.message, this.getFileName());
+    } catch (IOException e){
+      System.out.println("Error with handling/opening the file.");
+
+    }
   }
 
   /**
@@ -93,10 +98,10 @@ public class ATM_logger{
    @param type type of message
    @param message description to write in log file
    */
-  public void writeToFile(String classMethod, StatusType type, String message, String logFileName){
+  public void writeToFile(String classMethod, StatusType type, String message, String logFileName) throws IOException{
     //if the parameters are not null, write to file otherwise keep waiting till info is provided
     if (classMethod == null || type == null || message == null) {
-      System.out.println("Not time to write to file yet!!");
+      System.out.println("Not time to write to file yet!");
       return;
 
     } else {
