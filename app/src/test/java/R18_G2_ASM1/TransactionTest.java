@@ -154,11 +154,12 @@ class TransactionTest {
     public void voidtestcanDepositAmount(){ //positive test, deposit amount is divisble by 5
         BigDecimal cardBalance = userC.getbalance(); 
         depositC.setAmount(depositAmount);
-        try {
-            depositC.proceedDepositTransaction(userC);
-        } catch (InvalidTypeException e) {
-            assertEquals(InvalidTypeException.class, e.getClass());
-        }
+        // try {
+            String result = depositC.proceedDepositTransaction(userC);
+        // } catch (InvalidTypeException e) {
+            // assertEquals(InvalidTypeException.class, e.getClass());
+            assertEquals(result, "Deposit successful");
+        // }
         assertEquals(userC.getbalance(), cardBalance.add(depositAmount), "Amount in card did not increase,proceedDepositTransaction function failed! ");
     }
 
@@ -166,11 +167,8 @@ class TransactionTest {
     public void voidtestCantDepositAmount(){ //negative test, failure to deposit due to amount is NOT divisble by 5
         BigDecimal amount = new BigDecimal(124.00);
         depositC.setAmount(amount);
-        try {
-            depositC.proceedDepositTransaction(userC);
-        } catch (InvalidTypeException e) {
-            assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
-        }
+        String result = depositC.proceedDepositTransaction(userC);
+        assertEquals(result, "Cannot deposit coins, only notes. Deposit Unsuccessful");
     }
 
     @Test //testing deposit adds money to card
@@ -195,23 +193,26 @@ class TransactionTest {
 
     @Test //amount is not of type note
     public void canSplitDepositAmountUp(){
-        BigDecimal amount = new BigDecimal(107.35);
-        try {
-            depositC.splitDepositAmountUp(amount);
-        } catch (InvalidTypeException e){
-            assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
-        }
+        BigDecimal amount = new BigDecimal(107.34);
+        // try {
+        depositC.splitDepositAmountUp(amount);
+        // } catch (InvalidTypeException e){
+        boolean changed = depositC.checkIfDepositAmountMapChanged();
+        assert(changed == false);
+        //     assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
+        // }
     }
 
     @Test 
     public void testCorrectDepositSplitUp(){ //ensures the deposit amount code works
         BigDecimal amount = new BigDecimal(120.00);
-        try {
-            depositC.splitDepositAmountUp(amount);
-        } catch (InvalidTypeException e){
-            assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
-        }
-
+        // try {
+        depositC.splitDepositAmountUp(amount);
+        boolean changed = depositC.checkIfDepositAmountMapChanged();
+        assert(changed == true);
+        // } catch (InvalidTypeException e){
+        //     assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
+        // }
         HashMap<MoneyType, Integer> depositMap = depositC.getDepositAmountMap();
         assertEquals(depositMap.get(MoneyType.HUNDRED_DOLLARS), 1);
         assertEquals(depositMap.get(MoneyType.FIFTY_DOLLARS), 0);
@@ -231,12 +232,12 @@ class TransactionTest {
 
     // @Test //negative test for when you cant withdraw money from ATM at that moment due to inadequate amount of money
     // public void testFrozenMoney(){
-    //     withdrawalA.setAmount(10981.25); //withdrawal amount
-    //     withdrawalA.proceedWithdrawalTransaction(userA);
-    //     assertEquals(outContent.toString(), "Unable to withdraw from ATM due to, unavailable amounts of coins/cash. Sorry for the inconvenience, please try in another ATM or come another day.\n");
+    //     // withdrawalA.setAmount(new BigDecimal(10981.25)); //withdrawal amount
+    //     String result = withdrawalA.proceedWithdrawalTransaction(userA);
+    //     assertEquals(result, "insufficient cash available in ATM");
     // }
     
-    @Test //testing withdrawal removes money from card
+    @Test 
     public void testCanModifyCardWithdrawal(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
         BigDecimal cardBalance = userA.getbalance(); //initial
         BigDecimal amount = new BigDecimal(124.35);
@@ -247,15 +248,12 @@ class TransactionTest {
     }
     // @Test
     // public void testCanWithdrawalAmount(){ //testing when userA's balance is too low and can't withdraw money out
-    //     BigDecimal amount = 15.95;
+    //     BigDecimal amount = new BigDecimal(15.95);
     //     BigDecimal cardBalance = userA.getbalance(); //38762
     //     withdrawalA.setAmount(amount);
-    //     withdrawalA.proceedWithdrawalTransaction(userA); //withdraw1 fails????
-    //     String lala = "userA's balance = " + userA.getbalance() + ", cardbalance = [" + cardBalance +"], amount = [" +amount+"]\n\n";
-    //     // assert(userA.getbalance() == cardBalance-amount);
-    //     // assertEquals()
-        
-    //     assertEquals(outContent.toString(), lala); //"Sorry your card is unavailable. Please try again.\n");
+    //     String result = withdrawalA.proceedWithdrawalTransaction(userA); //withdraw1 fails????
+    //     assertTrue(userA.getbalance().compareTo(cardBalance.subtract(amount)) == 0);
+    //     assertEquals(result, "Withdraw successful");
     // }
 
     // @Test
@@ -289,7 +287,7 @@ class TransactionTest {
         Card failed = null;
         balanceCheckB.getBalanceInfo(failed);
         assertEquals(outContent.toString(), "Sorry your card is unavailable. Please try again.\n");
-    }//cannot pass this one-Ke Xu
+    }
 
     @Test //the map amount changed! --> positive test case for withdrawal transaction
     public void testMoneyStackChanged(){

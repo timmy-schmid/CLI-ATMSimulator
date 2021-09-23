@@ -1,9 +1,12 @@
-<b>ASSIGNMENT 1 WORKING IN PROGRESS!</b>DUE FRIDAY 24th SEPTEMBER!
+<b>ASSIGNMENT 1</b>
 
-Check and modify Miro UML diagrams and add any notes if necessary.
-Check google doc for due date and schedules for next meeting!
+# ABOUT
 
-# TODO !!!!! [Add below any other notes to check out]
+For our first assignment, our task was to work collaboratively as a team to design and build an ATM application. We accessed tools such as Slack, Jenkins, Miro and google docs to demonstrate our participation and work in progress. These can be found in the links attached below.
+
+The following information contains tasks for our group members to work on, git commands, how to work with gradle, testing and extra helpful links.
+
+# Working in progress
 
 -> make sure indenting is 2 spaces, use CamelCase for variable naming!
 -> add in Javadoc comments + test cases
@@ -11,10 +14,10 @@ Check google doc for due date and schedules for next meeting!
 -> Starting working on report + allocate sections to write about
 -> keep code consistent + nicely styled + minimise redundancy
 
-# IMPORTANT!!! Working with Jenkins 
+# IMPORTANT!! Working with Jenkins 
 
 Ensure that [gradle clean build test] works properly locally before you push any changes to the master branch as Jenkins will detect this and 
-cause a build failure. Each time a build fails, we should aim to resolve the problem as soon as possible!!!
+cause a build failure. Each time a build fails, we should aim to resolve the problem as soon as possible!!
 
 # 1. FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB, merging with your local branch files!!!!
 git checkout master --> git pull --> git checkout your_branch_name --> git merge master

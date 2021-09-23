@@ -30,7 +30,7 @@ public enum SessionStatus {
                       "This issue has been logged. Please use a different ATM to complete your transaction",StatusType.ERROR),
 
   ADMIN_MODE("The ATM is now in ADMIN MODE\n",StatusType.INFO),
-  CANCELLED("The session was cancelled.",StatusType.INFO),
+  CANCELLED("The session was cancelled. ",StatusType.INFO),
 
   SUCCESS("The Transaction was successfully completed.\n" +
           "Thank-you for using XYZ Bank :)\n",StatusType.INFO);
