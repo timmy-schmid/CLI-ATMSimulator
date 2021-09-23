@@ -29,6 +29,7 @@ public class Session {
     private Card card;
     private int pinAttemptNum;
     private File csvCard;
+    private File tempFile;
     private TransactionType transactionType;
     private String userType;
     private boolean writeSuccess;
@@ -47,6 +48,8 @@ public class Session {
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
         csvCard = new File("src/main/datasets/card.csv");
+        tempFile = new File("src/main/datasets/cardTemp.csv");
+        
         // this.transactionType = TransactionType.DEPOSIT; //attachedATM.askForTransType();
 
         // String absolutePath = this.getClass().getResource("/").getPath();
@@ -339,8 +342,8 @@ public class Session {
      * @return weather writing was successful or not.
      * @throws IOException
      */
-    private void writeCardToFile(int cardNum, File file) throws IOException {
-        File tempFile = new File("src/main/datasets/cardTemp.csv");
+    public void writeCardToFile(int cardNum, File file) throws IOException {
+        
         try {
             Scanner myReader = new Scanner(file);
             FileWriter myWriter = new FileWriter(tempFile);
@@ -401,5 +404,10 @@ public class Session {
             super(errorMessage);
         }
     }
+
+    public void changeCsvFile(File newFile){
+        csvCard = newFile;
+    }
+
 
 }

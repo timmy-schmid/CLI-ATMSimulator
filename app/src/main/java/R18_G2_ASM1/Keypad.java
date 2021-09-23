@@ -26,7 +26,7 @@ public class Keypad extends ATMComponent {
     boolean validPress = false; 
     KeypadButton button = null;
     while (!validPress) {
-      Scanner sc = new Scanner(System.in);
+      // Scanner sc = new Scanner(System.in);
       
       try {
         int userInput = Integer.parseInt(sc.nextLine());

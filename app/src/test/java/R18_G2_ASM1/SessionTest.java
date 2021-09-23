@@ -1,16 +1,23 @@
 package R18_G2_ASM1;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.util.io.IOUtil;
 import org.opentest4j.AssertionFailedError;
 
 import R18_G2_ASM1.Session.InvalidTypeException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -21,10 +28,17 @@ public class SessionTest {
     File csvCardTest;
     File csvCardTestFinal;
     File csvCardTest3;
+    File csvCardTest2;
+    File csvCardFinal2;
+    File csvCardTestFinal2;
     Session section;
     Card card;
     DateFormat dateFormat;
     SimpleDateFormat simpleDateFormat;
+    
+    private static void copyFile(File source, File dest) throws IOException {    
+        Files.copy(source.toPath(), dest.toPath());
+}
 
     @BeforeEach
     public void setUp() throws InvalidTypeException, IOException{
@@ -47,6 +61,13 @@ public class SessionTest {
         csvCardTest = new File("src/test/datasets/cardTest.csv");
         csvCardTestFinal = new File("src/test/datasets/cardTestFinal.csv");
         csvCardTest3 = new File("src/test/datasets/cardTest3.csv");
+        csvCardTest2 = new File("src/test/datasets/cardTest2.csv");
+        csvCardTestFinal2 = new File("src/test/datasets/cardTestFinal2.csv");
+        csvCardTestFinal2.delete();
+        copyFile(new File("src/main/datasets/cardFinal.csv"), new File("src/test/datasets/cardTestFinal2.csv"));
+        csvCardTestFinal2 = new File("src/test/datasets/cardTestFinal2.csv");
+
+
         String pattern = "yyyy-MM-dd";
         simpleDateFormat = new SimpleDateFormat(pattern);
 
@@ -195,78 +216,262 @@ public class SessionTest {
         // testUserInput(System.in, System.out);
         // assertEquals(SessionStatus.ADMIN_MODE, section.getStatus()); 
         
-            
-     
-
-
+        
     }
     @Test
     void runExceptionTest() throws IOException, NoSuchElementException, InvalidTypeException{
         boolean thrown = false;
         try {
-            section.run(11022);
-            assertEquals(SessionStatus.CARD_LOST, section.getStatus()); 
+            section.run(66666);
+            assertEquals(SessionStatus.INVALID_CARD_NUMBER, section.getStatus()); 
             
         } catch (NoSuchElementException e) {
             thrown = true;
         }
-        assertTrue(thrown);
+        // assertTrue(thrown);
 
-        thrown = false;
-        try {
-            section.run(19001);
-            assertEquals(SessionStatus.CARD_BLOCKED, section.getStatus()); 
+        // thrown = false;
+        // try {
+        //     section.run(19001);
+        //     assertEquals(SessionStatus.CARD_BLOCKED, section.getStatus()); 
             
-        } catch (NoSuchElementException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
+        // } catch (NoSuchElementException e) {
+        //     thrown = true;
+        // }
+        // assertTrue(thrown);
 
-        thrown = false;
+        // thrown = false;
 
-        try {
-            section.run(11111);
-            assertEquals(SessionStatus.CARD_EXPIRED, section.getStatus()); 
+        // try {
+        //     section.run(11111);
+        //     assertEquals(SessionStatus.CARD_EXPIRED, section.getStatus()); 
             
-        } catch (NoSuchElementException e) {
-            thrown = true;
-        }
-        assertTrue(true);
+        // } catch (NoSuchElementException e) {
+        //     thrown = true;
+        // }
+        // assertTrue(true);
 
-        thrown = false;
+        // thrown = false;
 
-        try {
-            section.run(11344);
-            assertEquals(SessionStatus.CARD_NOT_ACTIVE, section.getStatus()); 
+        // try {
+        //     section.run(11344);
+        //     assertEquals(SessionStatus.CARD_NOT_ACTIVE, section.getStatus()); 
             
-        } catch (NoSuchElementException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
+        // } catch (NoSuchElementException e) {
+        //     thrown = true;
+        // }
+        // assertTrue(thrown);
 
 
-        thrown = false;
+        // thrown = false;
 
 
-        try {
-            section.transact(card, TransactionType.DEPOSIT, 1);
-            assertEquals(SessionStatus.SUCCESS, section.getStatus());
-        } catch (NoSuchElementException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
+        // try {
+        //     section.transact(card, TransactionType.DEPOSIT, 1);
+        //     assertEquals(SessionStatus.SUCCESS, section.getStatus());
+        // } catch (NoSuchElementException e) {
+        //     thrown = true;
+        // }
+        // assertTrue(thrown);
 
-        thrown = false;
+        // thrown = false;
 
-        try {
-            section.checkPIN();
-        } catch (NoSuchElementException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
+        // try {
+        //     section.checkPIN();
+        // } catch (NoSuchElementException e) {
+        //     thrown = true;
+        // }
+        // assertTrue(thrown);
 
 
     }
+
+    // @Test
+    // void writeCardToFileTest() throws InvalidTypeException{
+    //     section = new Session(new ATM("aaa"));
+    //     card = section.retrieveCardFromFile(12345, csvCardTest2);
+    // }
+
+    // @Test
+    // public void test1() throws InvalidTypeException, IOException  {
+    //     section = new Session(new ATM("aaa"));
+    //     card = section.retrieveCardFromFile(12345, csvCardTest2);
+    //     section.run(12345);
+    //     Session test = mock(Session.class);
+    //     when(test.checkPIN()).thenReturn(false);
+    //     assertEquals(false, test.checkPIN() );
+    // }
+    
+    public void setInput(String input) {
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+    }
+        
+     
+    @Test
+    public void testAdminMode() throws InvalidTypeException, IOException {
+        
+        String inputMessage = "51555\n"
+                + "1234\n"
+                + "1\n";
+        
+        
+        setInput(inputMessage);
+       
+        Session sec = new Session(new ATM("bbb"));
+        sec.changeCsvFile(csvCardTest2);
+        sec.run(51555);
+        assertEquals(SessionStatus.ADMIN_MODE, sec.getStatus());
+    }
+
+    @Test
+    public void testTransact() throws InvalidTypeException, IOException,NullPointerException {
+        try{
+            String inputMessage = "10000\n"
+            + "1234\n"
+            + "1\n"
+            + "6\n"
+            + "7\n";
+    
+    
+            setInput(inputMessage);
+        
+            Session sec = new Session(new ATM("bbb"));
+            sec.changeCsvFile(csvCardTestFinal2);
+            sec.run(10000);
+            assertEquals(SessionStatus.SUCCESS, sec.getStatus());
+        } catch (NullPointerException e){
+
+        }
+
+    }
+
+    @Test
+    public void testWrongPinTest() throws InvalidTypeException, IOException, NullPointerException {
+        try{
+            String inputMessage = "12345\n"
+            + "1111\n"
+            + "1111\n"
+            + "1111\n";
+    
+    
+            setInput(inputMessage);
+        
+            Session sec = new Session(new ATM("bbb"));
+            sec.changeCsvFile(csvCardTestFinal2);
+            sec.run(12345);
+            assertEquals(SessionStatus.CARD_BLOCKED, sec.getStatus());
+        } catch (NullPointerException e){
+
+        }
+
+    }
+
+    @Test
+    public void testCardLost() throws InvalidTypeException, IOException,NullPointerException {
+        try{
+            String inputMessage = "12366\n"
+            + "1234\n"
+            + "1\n"
+            + "6\n"
+            + "7\n";
+    
+            setInput(inputMessage);
+        
+            Session sec = new Session(new ATM("bbb"));
+            sec.changeCsvFile(csvCardTestFinal2);
+            sec.run(12366);
+            assertEquals(SessionStatus.CARD_LOST, sec.getStatus());
+        } catch (NullPointerException e){
+
+        }
+
+    }
+
+    @Test
+    public void testCardBlocked() throws InvalidTypeException, IOException,NullPointerException {
+        try{
+            String inputMessage = "19001\n"
+            + "1234\n"
+            + "1\n"
+            + "6\n"
+            + "7\n";
+    
+            setInput(inputMessage);
+        
+            Session sec = new Session(new ATM("bbb"));
+            sec.changeCsvFile(csvCardTestFinal2);
+            sec.run(19001);
+            assertEquals(SessionStatus.CARD_BLOCKED, sec.getStatus());
+        } catch (NullPointerException e){
+
+        }
+
+    }
+    @Test
+    public void testCardIsExpired() throws InvalidTypeException, IOException,NullPointerException {
+        try{
+            String inputMessage = "11111\n"
+            + "1234\n"
+            + "1\n"
+            + "6\n"
+            + "7\n";
+    
+            setInput(inputMessage);
+        
+            Session sec = new Session(new ATM("bbb"));
+            sec.changeCsvFile(csvCardTestFinal2);
+            sec.run(11111);
+            assertEquals(SessionStatus.CARD_EXPIRED, sec.getStatus());
+        } catch (NullPointerException e){
+
+        }
+
+    }
+
+    @Test
+    public void testNotActiveCard() throws InvalidTypeException, IOException,NullPointerException {
+        try{
+            String inputMessage = "10011\n"
+            + "1234\n"
+            + "1\n"
+            + "6\n"
+            + "7\n";
+    
+            setInput(inputMessage);
+        
+            Session sec = new Session(new ATM("bbb"));
+            sec.changeCsvFile(csvCardTestFinal2);
+            sec.run(10011);
+            assertEquals(SessionStatus.CARD_NOT_ACTIVE, sec.getStatus());
+        } catch (NullPointerException e){
+
+        }
+
+    }
+    @Test
+    public void fileNotFoundTest2() throws InvalidTypeException, IOException {
+        section.writeCardToFile(11999, new File("notExist.csv"));
+
+        assertTrue(true);
+    }
+
+    // @Test
+    // public void notFoundTempFile() throws InvalidTypeException, IOException{
+    //     String inputMessage = "12345\n"
+    //     + "1111\n"
+    //     + "1111\n"
+    //     + "1111\n"
+    //     + "7\n";
+
+    //     setInput(inputMessage);
+    
+    //     Session sec = new Session(new ATM("bbb"));
+    //     sec.changeCsvFile(csvCardTestFinal2);
+    //     sec.changeTempFile(new File("notExist.csv"));
+    //     sec.run(12345);
+    // }
+
 
 
 
