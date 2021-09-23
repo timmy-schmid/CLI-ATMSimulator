@@ -230,7 +230,7 @@ class TransactionTest {
         //initialise amount in deposit
         withdrawalA.setAmount(withdrawAmount);
         withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType());
-        assertEquals(outContent.toString(), "Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.");
+        assertEquals(outContent.toString(), "Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.\n");
     }
 
     // @Test //negative test for when you cant withdraw money from ATM at that moment due to inadequate amount of money
@@ -297,7 +297,7 @@ class TransactionTest {
     public void testCantCheckBalanceInfo() { //negative test as card is invalid
         Card failed = null;
         balanceCheckB.getBalanceInfo(failed);
-        assertEquals(outContent.toString(), "Sorry your card is unavailable. Please try again.");
+        assertEquals(outContent.toString(), "Sorry your card is unavailable. Please try again.\n");
     }//cannot pass this one-Ke Xu
 
     @Test //the map amount changed! --> positive test case for withdrawal transaction
