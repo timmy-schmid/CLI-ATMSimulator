@@ -59,7 +59,7 @@ public class MoneyStackTest {
     public void testaddMoneyStacknull(){
         MoneyStack testMoneyStack = new MoneyStack();
         testMoneyStack.addMoneyStack(null);
-        Assertions.assertEquals(testMoneyStack.totalMoney().intValue(),100);
+        Assertions.assertEquals(testMoneyStack.totalMoney().intValue(),0);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MoneyStackTest {
         }catch (IOException e){
             assertEquals(IOException.class, e.getClass());
         }
-        testMoneyStack.addMoneyStack(wdMoneyStack);
+        wdMoneyStack.addMoneyStack(testMoneyStack);
         Assertions.assertTrue(testMoneyStack.totalMoney().compareTo(wdMoneyStack.totalMoney()) == 0);
     }
 
@@ -109,7 +109,7 @@ public class MoneyStackTest {
         }catch (IOException e){
             assertEquals(IOException.class, e.getClass());
         }
-        Assertions.assertTrue(wdMoneyStack.withdrawStack(testMoneyStack));
+        Assertions.assertTrue(testMoneyStack.withdrawStack(wdMoneyStack));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class MoneyStackTest {
         }
         MoneyStack wdMoneyStack = new MoneyStack();
         try{
-            testMoneyStack.addMoney(MoneyType.TWENTY_CENTS,7);
+            wdMoneyStack.addMoney(MoneyType.TWENTY_CENTS,7);
         }catch (IOException e){
             assertEquals(IOException.class, e.getClass());
         }
@@ -257,8 +257,9 @@ public class MoneyStackTest {
         }
         BigDecimal wdMoneyAmout = wdMoneyStack.totalMoney();
         BigDecimal nowMoneyAmount = testMoneyStack.totalMoney();
+        BigDecimal compareMoneyAmout = wdMoneyAmout.add(nowMoneyAmount);
         Assertions.assertTrue(testMoneyStack.withdraw(wdMoneyStack));
-        Assertions.assertTrue(testMoneyStack.totalMoney().compareTo(wdMoneyAmout.add(nowMoneyAmount)) == 0);
+        Assertions.assertTrue(oMoneyAmout.compareTo(compareMoneyAmout) == 0);
     }
 
     @Test
