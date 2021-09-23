@@ -20,8 +20,7 @@ import java.math.BigDecimal;
  */
 public class Transaction {
     protected BigDecimal amount;     
-    // protected double amount;  //represents total amount
-    
+        
     /**
      * A user's card
      */
@@ -58,7 +57,7 @@ public class Transaction {
     public Transaction(ATM attachedATM, TransactionType type, Card card,  int transactionID){
         
         this.amount = new BigDecimal(0); //set initially as just cash amount, requires ATM working first
-        this.type = type; //attachedATM.askForTransType();
+        this.type = type;
         this.attachedATM = attachedATM;
         this.card = card;
         this.transactionID = transactionID;
@@ -190,11 +189,8 @@ public class Transaction {
         if(dr[1].signum() != 0){
             throw new InvalidTypeException("Error: amount should only be notes, no coins accepted.");
         } else {    
-            // double total = amount; //decreases
             BigDecimal total = amount; //decreases
             int toStoreAmount = 0; //key amount
-            // BigDecimal div = new BigDecimal(entry.getKey().getValue());
-            // BigDecimal[] dr = amount.divideAndRemainder(div);
 
             //entry = key, map value = amount
             for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {    
@@ -219,13 +215,17 @@ public class Transaction {
      * prints amount remaining on MoneyStack for debugging purposes
      */
     public void modify(Card card, TransactionType type){
+        BigDecimal minCardBalance = new BigDecimal(5.00);
+
         if (card != null){
             if (type == TransactionType.DEPOSIT) {
                 card.balance = card.balance.add(this.amount); // += this.amount;
             
             } else if (type == TransactionType.WITHDRAWAL){
-                // if (card.getbalance() >= this.amount) {
                 if (card.getbalance().compareTo(this.amount) >= 0){
+                    if (card.getbalance().compareTo(minCardBalance) <= 0){ //when balance is low on card, print on screen/write to log file?
+                        this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "Your card balance is less than $5.00.");
+                    }
                     card.balance = card.balance.subtract(this.amount);
                 } else {
                     System.out.println("Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.");
@@ -237,62 +237,6 @@ public class Transaction {
             this.atmLogger.createLogMessage("Transaction.modify", StatusType.ERROR, "Sorry your card is unavailable. Please try again.");
         }
     }
-
-    // public void deductFromMoneyStack(){
-    //     // for (HashMap.Entry <MoneyType, Integer> entry: this.getDepositAmountMap().entrySet()){
-    //     for (HashMap.Entry <MoneyType, Integer> entry : this.getNewMoneyStack().entrySet()) {
-    //         if (this.getMoneyStackBalance().getMoney().containsKey(entry.getKey()) == true){
-    //             HashMap<MoneyType, Integer> monMap =  this.getMoneyStackBalance().getMoney();
-    //             int difference =monMap.get(entry.getKey())-entry.getValue();
-    //             this.getMoneyStackBalance().getMoney().replace(entry.getKey(), difference);
-    //         }
-    //     }
-    // }
-
-    // public MoneyType findNextMoneyTypeAvailable(Double cashNote, int noteAmount){ //converted double to moneystack - findNextDoubleAvailable
-    //     MoneyType next = null;
-    //     Iterator iterator = this.getMoneyStackBalance().getMoney().keySet().iterator();
-
-    //     while (iterator.hasNext()){ //loop through keys (notes number)
-    //         MoneyType entry = (MoneyType) iterator.next(); 
-    //         if (Double.compare(entry.getValue(), cashNote) == 0){
-    //             next = (MoneyType)iterator.next();
-    //             break;
-    //         }
-    //     }
-    //     return next;
-    // }
-
-    // public void withdrawNEW(double retrieveAmount){ 
-    //     //calculateStorageAmount
-    //     double total = this.getMoneyStackBalance().totalMoney();
-    //     int toStoreAmount = 0;
-    //     MoneyType next = null;
-
-    //     for (HashMap.Entry <MoneyType, Integer> entry : this.getMoneyStackBalance().getMoney().entrySet()) {
-
-    //     if (retrieveAmount <= total){ //enough stored in ATM to be withdrawn
-    //         next = entry.getKey();
-    //         if (retrieveAmount >= entry.getKey().getValue()){        
-    //             toStoreAmount = (int)(retrieveAmount/next.getValue());  
-    //             double diff = toStoreAmount - entry.getValue(); //8-2
-    //             if (diff >= 0){ //more tostoreAmount than in moneystack
-    //                 this.newMoneyStack.replace(next, entry.getValue()); 
-    //                 this.getMoneyStackBalance().getMoney().replace(next, 0); //entry.getValue());
-    //                 next = this.findNextMoneyTypeAvailable(entry.getKey().getValue(), entry.getValue()); //$50
-    //                 toStoreAmount = (int)((retrieveAmount-(entry.getValue()*entry.getKey().getValue()))/next.getValue());  
-
-    //                 this.newMoneyStack.replace(next, toStoreAmount); 
-    //                 this.getMoneyStackBalance().getMoney().replace(next, entry.getValue());
-
-    //             } else { //exact match ? - deduct straight up amount from this.money?
-    //                 this.newMoneyStack.replace(next, toStoreAmount);
-    //             }
-    //         }
-    //     }
-    //     retrieveAmount = retrieveAmount%next.getValue();
-    //     }
-    // }
 
     /**
      * run
@@ -372,9 +316,6 @@ public class Transaction {
      * @param card a user's card
      */
     public void proceedWithdrawalTransaction(Card card){
-        // this.withdrawNEW(this.amount);
-        // this.deductFromMoneyStack();
-
         // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
         // System.out.println("BEFORE:::::: LINE 360!!!!!!\nAFTER\n");
 

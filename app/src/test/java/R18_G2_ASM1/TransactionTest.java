@@ -39,10 +39,10 @@ class TransactionTest {
     Date date;
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream(); //for testing printing statements
-    private final ByteArrayOutputStream errorContent = new ByteArrayOutputStream(); //writes common data into many files 
+    // private final ByteArrayOutputStream errorContent = new ByteArrayOutputStream(); //writes common data into many files 
     
     private final PrintStream originalOutput = System.out;
-    private final PrintStream originalError = System.err;
+    // private final PrintStream originalError = System.err;
     
     private BigDecimal amount;
     
@@ -97,13 +97,11 @@ class TransactionTest {
 
         //setupStreams
         System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errorContent));
-
-        // app = new App();
+        // System.setErr(new PrintStream(errorContent));
     }
 
     @AfterEach
-    public void tearDown(){ //eject card from atm?
+    public void tearDown(){ 
         userA = null;
         userB = null;
         userC = null;
@@ -115,11 +113,9 @@ class TransactionTest {
         //restoreStreams
 
         moneyStack = null;
-        // app = null;
-        // atm = null;
 
         System.setOut(originalOutput);
-        System.setErr(originalError);
+        // System.setErr(originalError);
     }
 
     @Test
