@@ -122,4 +122,17 @@ class ATM_loggerTest{
       assertEquals(outContent.toString(), "Error with handling/opening the file.\n");
     }
   }
+
+  @Test //positive test case for FATAL status type
+  public void testCanWriteFatalMessage(){
+    logger.setPath("src/test/logTests");
+    logger.setLogFileName("/TestingFatalLog1.log");
+    logger.createLogMessage("class.method", StatusType.FATAL, "fatal error message");
+    try {
+      logger.writeToFile(classMethod, type, message, logger.getFileName());
+    } catch (IOException e) {
+      assertEquals(IOException.class, e.getClass());
+      assertEquals(outContent.toString(), "Error with handling/opening the file.\n");
+    }
+  }
 }
