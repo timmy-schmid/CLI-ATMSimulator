@@ -5,9 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.*;
 
 import java.math.BigDecimal;
@@ -23,7 +21,6 @@ import java.util.List;
 
 public class Session {
     private ATM attachedATM;
-    private int sessionID;
     private SessionStatus currentStatus;
     private Transaction transaction;
     private Card card;
@@ -32,30 +29,20 @@ public class Session {
     private File tempFile;
     private TransactionType transactionType;
     private String userType;
-    private boolean writeSuccess;
-    private boolean canContinue;
-    private int row;
+
 
     /**
      * Constructs and initialises a new session.
      * @param ATM the attatched ATM which the session is running on.
      */
-    public Session(ATM ATM) {//, TransactionType transactionType,int sessionID){
-        canContinue = true;
+    public Session(ATM ATM) {
         pinAttemptNum = 0;
         attachedATM = ATM;
-        row = 0;
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
         csvCard = new File("src/main/datasets/card.csv");
         tempFile = new File("src/main/datasets/cardTemp.csv");
         
-        // this.transactionType = TransactionType.DEPOSIT; //attachedATM.askForTransType();
-
-        // String absolutePath = this.getClass().getResource("/").getPath();
-        // absolutePath = absolutePath.substring(0,absolutePath.length()-13);
-        // csvCard = new File(absolutePath + "app/src/main/datasets/card.csv");
-        // this.transactionType = ATM.askForTransType();
     }
 
     /**
@@ -72,28 +59,10 @@ public class Session {
      * @param cardNum the card number that the session should interact with
      */
     public void run(int cardNum) {
-        //assume it is DEPOSIT and transaction id is 1
-        //transactionType = TransactionType.WITHDRAWAL;
 
         
         card  = this.retrieveCardFromFile(cardNum, csvCard);
-        // System.out.println(card.balance+" "+card.getPin()+" "+card.is_blocked());
 
-
-        // if (card == null){
-        //     currentStatus = SessionStatus.INVALID_CARD_NUMBER;
-        //     return;
-        // }
-
-        // if (card.is_blocked()){
-        //     currentStatus = SessionStatus.CARD_BLOCKED;
-        //     return;
-        // }
-
-        // if (card.is_lost()){
-        //     currentStatus = SessionStatus.CARD_LOST;
-        //     return;
-        // }
 
         if (!validateSession(card)){
             return;
@@ -118,28 +87,6 @@ public class Session {
         transactionType = attachedATM.askForTransType();
 
         transact(card, transactionType, 1);
-
-        // //hardcoded below coz reading file doesn't fully work..
-        // DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-        // Date start_date = null;
-        // Date expiration_date = null;
-
-        // try {
-        //     // this.validateSession(card);
-        //     start_date = dateFormat1.parse("2018-03-05");
-        //     expiration_date = dateFormat1.parse("2023-03-04");
-        //     this.card = new Card(50103.29, 78503, start_date, expiration_date, true, true, true, 912012);
-
-        // } catch (ParseException e) {
-        //     // this.attachedATM.getATMLogger().createLogMessage("session.validateSession", messageType.ERROR, "validate session FAILED!");
-        // }
-
-        // if (validateSession(card)){
-        //     // transactionType = this.attachedATM.askForTransType();
-        //     this.attachedATM.getATMLogger().createLogMessage("Session.run", StatusType.INFO, "Insert card passed");
-        //     this.transact(card, transactionType, 1);
-            
-        // }
         
     }
 
@@ -155,6 +102,8 @@ public class Session {
     public String getUserType(){
         return userType;
     }
+
+
    /**
      * Used to verify a card number against the card provided.
      * Asks the user to enter their PIN (only 3 attempts).
@@ -175,7 +124,9 @@ public class Session {
      */
     private Boolean validateSession(Card card) {
         if (card == null){
-            currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+            if (currentStatus == null){
+                currentStatus = SessionStatus.INVALID_CARD_NUMBER;
+            }
             return false;
         }
         else if (card.getStartDate().after(card.getExpirationDate())){
@@ -234,15 +185,13 @@ public class Session {
         try {
             Scanner myReader = new Scanner(csvCard);
             while (myReader.hasNextLine()) {
-                row++;
                 String data = myReader.nextLine();
                 String[] infoArr = data.split(",");
                 
                 try{
                     cardNumber = Integer.parseInt(infoArr[0]);
                 } catch(NumberFormatException e){
-                    System.out.println("Invalid int type, 4 digits"); // this should handled with CARD_READ_ERROR
-                    return null;
+                    currentStatus = SessionStatus.CARD_READ_ERROR;
                 }
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -250,9 +199,9 @@ public class Session {
                 try {
                     startDate = simpleDateFormat.parse(infoArr[1]);
                     expirationDate = simpleDateFormat.parse(infoArr[2]);
-                } catch (ParseException e) {
-                    System.out.println("formatted as \"yyyy-MM-dd"); // this should handled with CARD_READ_ERROR
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    currentStatus = SessionStatus.CARD_READ_ERROR;
+                    break;
                 }
 
                 Date dateNow = new Date();
@@ -309,8 +258,7 @@ public class Session {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace(); // this should handled with DATABASE_FILE_ERROR
+            currentStatus = SessionStatus.DATABASE_FILE_ERROR;
         }
 
         return null;
@@ -354,14 +302,12 @@ public class Session {
             myReader.close();
             myWriter.close();
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            currentStatus = SessionStatus.CARD_WRITE_ERROR;
             //add some handling for FileNotFound. Use CARD_WRITE_ERROR SessionStatus. Also we need to make sure that no transactions are made if a write error occurs.
         } catch (IOException e) {
+            currentStatus = SessionStatus.DATABASE_FILE_ERROR;
             //add some handling for writing errors. USE DATABASE_FILE_ERROR SessionStatus.
         }
-
-        // if (tempFile.exists()) throw new java.io.IOException("file exists")
 
         // Rename file (or directory)
         boolean success = tempFile.renameTo(file);
