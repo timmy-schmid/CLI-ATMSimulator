@@ -103,7 +103,7 @@ public class Session {
         while (!checkPIN()){
             System.out.println("Your PIN is not correct!"+" "+(3-pinAttemptNum)+" attempt(s) left.");
             if (pinAttemptNum == 3){
-                card.setIs_blocked(true);
+                card.setIsBlocked(true);
                 this.writeCardToFile(cardNum, csvCard);
                 currentStatus = SessionStatus.CARD_BLOCKED;
                 return;
@@ -178,7 +178,7 @@ public class Session {
             currentStatus = SessionStatus.INVALID_CARD_NUMBER;
             return false;
         }
-        else if (card.getStart_date().after(card.getExpiration_date())){
+        else if (card.getStartDate().after(card.getExpirationDate())){
             currentStatus = SessionStatus.CARD_NOT_ACTIVE;
             return false;
         }
@@ -186,11 +186,11 @@ public class Session {
             currentStatus = SessionStatus.CARD_EXPIRED;
             return false;
         }
-        else if (card.is_lost()){
+        else if (card.isLost()){
             currentStatus = SessionStatus.CARD_LOST;
             return false;
         }
-        else if (card.is_blocked()) {
+        else if (card.isBlocked()) {
             currentStatus = SessionStatus.CARD_BLOCKED;
             return false;
         }

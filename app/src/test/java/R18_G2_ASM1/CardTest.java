@@ -18,7 +18,7 @@ class CardTest {
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);//change the is_los, blocked, expired in initialiser???
-    assertFalse(c.is_blocked());
+    assertFalse(c.isBlocked());
   }
 
   @Test
@@ -28,7 +28,7 @@ class CardTest {
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
-    assertFalse(c.is_lost());
+    assertFalse(c.isLost());
   }
 
   @Test
@@ -41,7 +41,7 @@ class CardTest {
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2023-05-31");
     // assertTrue(c.getExpiration_date() == test_date);
-    assertTrue(c.getExpiration_date().compareTo(test_date) == 0); // A - changed to this for date comparison!!!
+    assertTrue(c.getExpirationDate().compareTo(test_date) == 0); // A - changed to this for date comparison!!!
 
   }
 
@@ -55,7 +55,7 @@ class CardTest {
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2018-06-01");
     // assertTrue(c.getStart_date() == test_date);
-    assertTrue(c.getStart_date().compareTo(test_date) == 0); // A - changed to this for date comparison!!!
+    assertTrue(c.getStartDate().compareTo(test_date) == 0); // A - changed to this for date comparison!!!
   }
 
   @Test
@@ -119,8 +119,8 @@ class CardTest {
         false, false, false, 888888);
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2028-06-01");
-    c.setExpiration_date(test_date);
-    assertEquals(c.getExpiration_date(), test_date);
+    c.setExpirationDate(test_date);
+    assertEquals(c.getExpirationDate(), test_date);
   }
 
   @Test
@@ -130,8 +130,8 @@ class CardTest {
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
-    c.setIs_blocked(true);
-    assertTrue(c.is_blocked());
+    c.setIsBlocked(true);
+    assertTrue(c.isBlocked());
   }
 
   @Test
@@ -141,8 +141,8 @@ class CardTest {
     Date expiration_date = dateFormat1.parse("2023-05-31");
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
-    c.setIs_lost(true);
-    assertTrue(c.is_lost());
+    c.setIsLost(true);
+    assertTrue(c.isLost());
   }
 
   @Test
@@ -165,8 +165,8 @@ class CardTest {
         false, false, false, 888888);
     DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date test_date = fmt.parse("2018-07-01");
-    c.setStart_date(test_date);
-    assertEquals(c.getStart_date(), test_date);
+    c.setStartDate(test_date);
+    assertEquals(c.getStartDate(), test_date);
   }
 
   @Test
@@ -211,7 +211,7 @@ class CardTest {
     Card c = new Card(new BigDecimal(38762.99), 55673, start_date, expiration_date,
         false, false, false, 888888);
     c.block_card();
-    assertTrue(c.is_blocked());
+    assertTrue(c.isBlocked());
   }
 
   @Test
