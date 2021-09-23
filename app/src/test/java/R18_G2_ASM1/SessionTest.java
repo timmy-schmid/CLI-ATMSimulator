@@ -91,17 +91,17 @@ public class SessionTest {
     @Test
     void retrieveCardFromFileTest() throws InvalidTypeException, IOException, ParseException{
         assertEquals(12345, card.getCardNumber(),"correctly read the card number");
-        assertEquals(simpleDateFormat.parse("2017-01-01"), card.getStart_date(),"correctly read the card start date");
-        assertEquals(simpleDateFormat.parse("2027-01-01"), card.getExpiration_date(),"correctly read the expiration date");
-        assertEquals(false, card.is_lost(),"correctly read the card information");
-        assertEquals(false, card.is_blocked(),"correctly read the card information");
+        assertEquals(simpleDateFormat.parse("2017-01-01"), card.getStartDate(),"correctly read the card start date");
+        assertEquals(simpleDateFormat.parse("2027-01-01"), card.getExpirationDate(),"correctly read the expiration date");
+        assertEquals(false, card.isLost(),"correctly read the card information");
+        assertEquals(false, card.isBlocked(),"correctly read the card information");
         assertEquals(1234, card.getPin(),"correctly read the card information");
-        assertEquals(BigDecimal.valueOf(90), card.getbalance(),"correctly read the card balance");
+        assertEquals(BigDecimal.valueOf(90), card.getBalance(),"correctly read the card balance");
         assertEquals("customer", section.getUserType(),"correctly read the card information");
         
         Card card3 = section.retrieveCardFromFile(11022, csvCardTest);
-        assertEquals(true, card3.is_lost(),"correctly read the card information");
-        assertEquals(true, card3.is_blocked(),"correctly read the card information");
+        assertEquals(true, card3.isLost(),"correctly read the card information");
+        assertEquals(true, card3.isBlocked(),"correctly read the card information");
 
         Card card2 = section.retrieveCardFromFile(58858, csvCardTestFinal);
         assertEquals(null, card2);

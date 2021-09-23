@@ -7,39 +7,39 @@ import java.math.BigDecimal;
 public class Card {
   protected BigDecimal balance;
   private int cardNumber;
-  private Date start_date;
-  private Date expiration_date;
-  private boolean is_lost;
-  private boolean is_blocked;
-  private boolean is_expire;
+  private Date startDate;
+  private Date expirationDate;
+  private boolean isLost;
+  private boolean isBlocked;
+  private boolean isExpire;
   private int pin;
 
-  public Card(BigDecimal balance, int cardNumber, Date start_date, Date expiration_date,
-      boolean is_lost, boolean is_blocked, boolean is_expire, int pin) {
+  public Card(BigDecimal balance, int cardNumber, Date startDate, Date expirationDate,
+      boolean isLost, boolean isBlocked, boolean isExpire, int pin) {
     this.balance = balance;
     this.cardNumber = cardNumber;
-    this.start_date = start_date;
-    this.expiration_date = expiration_date;
-    this.is_lost = is_lost;
-    this.is_blocked = is_blocked;
-    this.is_expire = is_expire;
+    this.startDate = startDate;
+    this.expirationDate = expirationDate;
+    this.isLost = isLost;
+    this.isBlocked = isBlocked;
+    this.isExpire = isExpire;
     this.pin = pin;
   }
 
-  public boolean is_blocked() {
-    return is_blocked;
+  public boolean isBlocked() {
+    return isBlocked;
   }
 
-  public boolean is_lost() {
-    return is_lost;
+  public boolean isLost() {
+    return isLost;
   }
 
-  public Date getExpiration_date() {
-    return expiration_date;
+  public Date getExpirationDate() {
+    return expirationDate;
   }
 
-  public Date getStart_date() {
-    return start_date;
+  public Date getStartDate() {
+    return startDate;
   }
 
   public int getCardNumber() {
@@ -50,7 +50,7 @@ public class Card {
     return pin;
   }
 
-  public BigDecimal getbalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
@@ -62,49 +62,49 @@ public class Card {
     this.cardNumber = cardNumber;
   }
 
-  public void setExpiration_date(Date expiration_date) {
-    this.expiration_date = expiration_date;
+  public void setExpirationDate(Date expirationDate) {
+    this.expirationDate = expirationDate;
   }
 
-  public void setIs_blocked(boolean is_blocked) {
-    this.is_blocked = is_blocked;
+  public void setIsBlocked(boolean isBlocked) {
+    this.isBlocked = isBlocked;
   }
 
-  public void setIs_lost(boolean is_lost) {
-    this.is_lost = is_lost;
+  public void setIsLost(boolean isLost) {
+    this.isLost = isLost;
   }
 
   public void setPin(int pin) {
     this.pin = pin;
   }
 
-  public void setStart_date(Date start_date) {
-    this.start_date = start_date;
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
   }
 
   public boolean isExpired() {
     SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
     Date now_date = new Date();
     ft.format(now_date);
-    boolean is_expire = false;
-    int signal = now_date.compareTo(expiration_date);
+    boolean isExpire = false;
+    int signal = now_date.compareTo(expirationDate);
     if(signal >= 0) {
-      is_expire = true;
+      isExpire = true;
     }
-    return is_expire;
+    return isExpire;
   }
 
   public boolean isAfterStartDate() {
     Date now_date = new Date();
     boolean is_AfterStartDate = false;
-    int signal = now_date.compareTo(start_date);
+    int signal = now_date.compareTo(startDate);
     if(signal >= 0) {
       is_AfterStartDate = true;
     }
     return is_AfterStartDate;
   }
 
-  public boolean check_pin(int pin) {
+  public boolean checkPin(int pin) {
     if(this.pin - pin < 0.1) {
       return true;
     }
@@ -113,13 +113,13 @@ public class Card {
     }
   }
 
-  public void block_card() {
-    this.is_blocked = true;
+  public void blockCard() {
+    this.isBlocked = true;
   }
 
   public void getCardDetails(){
     System.out.println("\nPrinting card details below!!!");
-    System.out.println("Card number " + cardNumber + ", amount stored  = " + getbalance() + ", expires on: "  + this.expiration_date);
+    System.out.println("Card number " + cardNumber + ", amount stored  = " + getBalance() + ", expires on: "  + this.expirationDate);
   }
 
 
