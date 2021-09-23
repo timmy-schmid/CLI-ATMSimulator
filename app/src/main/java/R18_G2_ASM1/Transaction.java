@@ -234,7 +234,7 @@ public class Transaction {
     public String run(TransactionType type) {
         String returnMessage = null;
         
-        this.NOTES = this.attachedATM.askForMoneyStackNotes();
+        this.NOTES = this.attachedATM.askForMoneyStackNotes(type);
         if (this.NOTES == null){
             return "Transaction cancelled";
         }

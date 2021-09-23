@@ -154,13 +154,9 @@ class TransactionTest {
     public void testCanDepositAmount(){ //positive test, deposit amount is divisble by 5
         BigDecimal cardBalance = userC.getBalance(); 
         depositC.setAmount(depositAmount);
-        // try {
-            String result = depositC.proceedDepositTransaction(userC);
-        // } catch (InvalidTypeException e) {
-            // assertEquals(InvalidTypeException.class, e.getClass());
-            assertEquals(result, "Deposit successful");
-        // }
-        assertEquals(userC.getbalance(), cardBalance.add(depositAmount), "Amount in card did not increase,proceedDepositTransaction function failed! ");
+        String result = depositC.proceedDepositTransaction(userC);
+        assertEquals(result, "Deposit successful");
+        assertEquals(userC.getBalance(), cardBalance.add(depositAmount), "Amount in card did not increase,proceedDepositTransaction function failed! ");
     }
 
     @Test 
@@ -194,25 +190,18 @@ class TransactionTest {
     @Test //amount is not of type note
     public void canSplitDepositAmountUp(){
         BigDecimal amount = new BigDecimal(107.34);
-        // try {
         depositC.splitDepositAmountUp(amount);
-        // } catch (InvalidTypeException e){
         boolean changed = depositC.checkIfDepositAmountMapChanged();
         assert(changed == false);
-        //     assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
-        // }
+
     }
 
     @Test 
     public void testCorrectDepositSplitUp(){ //ensures the deposit amount code works
         BigDecimal amount = new BigDecimal(120.00);
-        // try {
         depositC.splitDepositAmountUp(amount);
         boolean changed = depositC.checkIfDepositAmountMapChanged();
         assert(changed == true);
-        // } catch (InvalidTypeException e){
-        //     assertEquals(InvalidTypeException.class, e.getClass()); //goes here!
-        // }
         HashMap<MoneyType, Integer> depositMap = depositC.getDepositAmountMap();
         assertEquals(depositMap.get(MoneyType.HUNDRED_DOLLARS), 1);
         assertEquals(depositMap.get(MoneyType.FIFTY_DOLLARS), 0);
