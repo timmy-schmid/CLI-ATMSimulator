@@ -87,7 +87,7 @@ public class Session {
         transactionType = attachedATM.askForTransType();
 
         transact(card, transactionType);
-        
+        this.writeCardToFile(cardNum, csvCard);
     }
 
 
@@ -301,7 +301,14 @@ public class Session {
             while (myReader.hasNextLine()) {
                 String str = myReader.nextLine();
                 if (str.split(",")[0].equals(Integer.toString(cardNum))){
-                    myWriter.write(str.substring(0,30)+'T'+str.substring(31,str.length())+"\n");
+                    if (card.isBlocked()){
+                        myWriter.write(str.substring(0,30)+'T'+str.substring(31,str.length())+"\n");
+
+                    }
+                    else{
+                        String[] arr = str.split(",");
+                        myWriter.write(arr[0]+","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+","+card.balance.toString()+","+arr[7]+"\n");
+                    }
                 }
                 else {
                     myWriter.write(str+"\n");
