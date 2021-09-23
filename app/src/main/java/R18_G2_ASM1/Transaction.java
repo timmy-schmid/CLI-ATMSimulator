@@ -231,12 +231,7 @@ public class Transaction {
             }
 
         } else if (type == TransactionType.WITHDRAWAL){
-<<<<<<< HEAD
-
             this.COINS = this.attachedATM.askForMoneyStackCoins(type);
-=======
-            this.COINS = this.attachedATM.askForMoneyStackCoins();
->>>>>>> b3e0c50f67e52beb9cccab480266ee05df386571
             if (this.COINS == null){
                 System.out.println("FAILED TO RETRIEVE COINS AMOUNT FROM MONEYSTACK TO WITHDRAWAL!");
                 return false;
