@@ -136,7 +136,7 @@ class TransactionTest {
     }
     
     @Test
-    public void voidtestResetMapWorks(){ //ensures all notes remain 0 again
+    public void testResetMapWorks(){ //ensures all notes remain 0 again
         depositC.initialSetUpMap();
         depositC.resetDepositAmountMap();
         for (HashMap.Entry <MoneyType, Integer> entry: depositC.getDepositAmountMap().entrySet()){
@@ -145,14 +145,14 @@ class TransactionTest {
     }
     
     @Test 
-    public void voidtestGetUserAmount(){ //positive test, number is divisble by 5
+    public void testGetUserAmount(){ //positive test, number is divisble by 5
         depositC.setAmount(depositAmount); //no coins
         assertEquals(depositC.getAmount(), depositC.getAmount());
     }
 
     @Test 
-    public void voidtestcanDepositAmount(){ //positive test, deposit amount is divisble by 5
-        BigDecimal cardBalance = userC.getbalance(); 
+    public void testCanDepositAmount(){ //positive test, deposit amount is divisble by 5
+        BigDecimal cardBalance = userC.getBalance(); 
         depositC.setAmount(depositAmount);
         // try {
             String result = depositC.proceedDepositTransaction(userC);
@@ -164,7 +164,7 @@ class TransactionTest {
     }
 
     @Test 
-    public void voidtestCantDepositAmount(){ //negative test, failure to deposit due to amount is NOT divisble by 5
+    public void testCantDepositAmount(){ //negative test, failure to deposit due to amount is NOT divisble by 5
         BigDecimal amount = new BigDecimal(124.00);
         depositC.setAmount(amount);
         String result = depositC.proceedDepositTransaction(userC);
@@ -173,12 +173,12 @@ class TransactionTest {
 
     @Test //testing deposit adds money to card
     public void testCanModifyCardDeposit(){ //testing deposit money to card is valid
-        BigDecimal cardBalance = userC.getbalance(); //initial
+        BigDecimal cardBalance = userC.getBalance(); //initial
         BigDecimal amount = new BigDecimal(15.00);
         //initialise amount in deposit
         depositC.setAmount(amount);
         depositC.modify(depositC.getCard(), depositC.getType()); //userC
-        assertTrue(userC.getbalance().compareTo(cardBalance.add(amount)) == 0);
+        assertTrue(userC.getBalance().compareTo(cardBalance.add(amount)) == 0);
     }
 
      @Test //negative test: card is invalid
@@ -221,7 +221,7 @@ class TransactionTest {
 
     @Test //negative test for when balance is too low on card to withdraw
     public void testCantModifyCardWithdrawal(){ //out
-        BigDecimal cardBalance = userA.getbalance(); //initial
+        BigDecimal cardBalance = userA.getBalance(); //initial
         userA.setBalance(new BigDecimal(100.50));
         BigDecimal withdrawAmount = new BigDecimal(125.35);
         //initialise amount in deposit
@@ -239,12 +239,12 @@ class TransactionTest {
     
     @Test 
     public void testCanModifyCardWithdrawal(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
-        BigDecimal cardBalance = userA.getbalance(); //initial
+        BigDecimal cardBalance = userA.getBalance(); //initial
         BigDecimal amount = new BigDecimal(124.35);
         //initialise amount in withdrawal
         withdrawalA.setAmount(amount);
         withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType()); //userA
-        assertTrue(userA.getbalance().compareTo(cardBalance.subtract(amount)) == 0);
+        assertTrue(userA.getBalance().compareTo(cardBalance.subtract(amount)) == 0);
     }
     // @Test
     // public void testCanWithdrawalAmount(){ //testing when userA's balance is too low and can't withdraw money out

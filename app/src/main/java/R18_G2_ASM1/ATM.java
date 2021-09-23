@@ -44,8 +44,9 @@ public class ATM {
    * @param moneystack the starting balance of the ATM
    */
   public ATM(String location, MoneyStack moneystack) {
-    this(location);
-    this.balance = moneystack;
+    this(location, new CashDispensor(),new CardDispensor(System.in),
+         new Display(System.out), new Keypad(System.in, System.out), moneystack,
+         new ATM_logger());
   }
   /**
    * Constructs and initialises a new ATM with an initial balance represented by a MoneyStack object.
@@ -177,13 +178,14 @@ public class ATM {
 
 
   /**
-   * used to query the ATM user on how many denominations of 1 (or more) Australian bank notes they would like to deposit.
+   * used to query the ATM user on how many denominations of 1 (or more) Australian bank notes they would like to transact.
    * The user is given an option of $100, $50, $20, $10 and $5 notes to choose from using the keypad.
    * A user can select cancel at any time in the process.
    * The user can select finish at any time in the process to finalise the query.
+   * @param t the type of transaction
    * @return a MoneyStack representation of the total amount of notes the user has entered. If the user cancels during the process null is returned.
    */
-  public MoneyStack askForMoneyStackNotes() {
+  public MoneyStack askForMoneyStackNotes(TransactionType t) {
 
     MoneyStack m = new MoneyStack();
     StringBuilder s = new StringBuilder();
@@ -200,7 +202,7 @@ public class ATM {
     //Keeps looping until FINISH is selected
     while (true) { // 
       s.setLength(0); // clears the stringbuilder buffer.
-      s.append("DEPOSIT MONEY - NOTES - Please select a denomination to deposit:\n");
+      s.append(t.name() + " MONEY - NOTES - Please select a denomination to " + t.name().toLowerCase() + ":\n");
       s.append("  1. $100\n");
       s.append("  2. $50\n");
       s.append("  3. $20\n");
@@ -211,7 +213,7 @@ public class ATM {
       s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
       KeypadButton pressed = keypad.pressButton();
-      String howMany = "How many bills would you like to deposit: ";
+      String howMany = "How many notes would you like to " + t.name().toLowerCase() + ":";
     
       try { //exception handling!
         if (pressed == KeypadButton.ONE) {
@@ -244,13 +246,14 @@ public class ATM {
   }
   
   /**
-   * used interally by the ATM to query an admin user on how many denominations of 1 (or more) Australian coins they would like to deposit.
+   * used interally by the ATM to query an admin user on how many denominations of 1 (or more) Australian coins they would like to transact.
    * The user is given an option of $2, $1, 50c, 20c, 10c and 5c coins to choose from using the keypad.
    * An admin user can select cancel at any time in the process.
    * The admin user can select finish at any time in the process to finalise the query.
+   * @param t the type of transaction
    * @return a MoneyStack representation of the total amount of coins the admin user has entered. If the admin user cancels during the process null is returned.
    */
-  public MoneyStack askForMoneyStackCoins() {
+  public MoneyStack askForMoneyStackCoins(TransactionType t) {
 
     MoneyStack m = new MoneyStack();
     StringBuilder s = new StringBuilder();
@@ -268,7 +271,7 @@ public class ATM {
     //Keeps looping until FINISH is selected
     while (true) { // 
       s.setLength(0); // clears the stringbuilder buffer.
-      s.append("DEPOSIT MONEY - COINS - Please select a denomination to deposit:\n");
+      s.append(t.name() + " MONEY - COINS - Please select a denomination to " + t.name().toLowerCase() + ":\n");
       s.append("  1. $2\n");
       s.append("  2. $1\n");
       s.append("  3. 50c\n");
@@ -280,7 +283,7 @@ public class ATM {
       s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
 
-      String howMany = "How many coins would you like to deposit: ";
+      String howMany = "How many coins would you like to " + t.name().toLowerCase() + ":";
       KeypadButton pressed = keypad.pressButton();
 
       try {
@@ -347,9 +350,9 @@ public class ATM {
 
       KeypadButton pressed = keypad.pressButton();
       if (pressed == KeypadButton.ONE) {
-        m.addMoneyStack(askForMoneyStackNotes()); //maybe have a return value for this function in case cancel is pressed? m = null, write to log file
+        m.addMoneyStack(askForMoneyStackNotes(TransactionType.DEPOSIT)); //maybe have a return value for this function in case cancel is pressed? m = null, write to log file
       } else if (pressed == KeypadButton.TWO) {
-        m.addMoneyStack(askForMoneyStackCoins());
+        m.addMoneyStack(askForMoneyStackCoins(TransactionType.DEPOSIT));
       }  else if (pressed == KeypadButton.THREE) {
         cashDispensor.depositMoney(m,balance);
         break;
@@ -363,7 +366,7 @@ public class ATM {
   /**
    * This class is used internally by the ATM via an admin user to change the location of the ATM
    */
-  private void changeLocation() {
+  public void changeLocation() {
     display.displayMessage("Please enter a new location"); 
     Scanner sc = new Scanner(System.in);
     this.terminalLocation = sc.nextLine();
@@ -410,9 +413,11 @@ public class ATM {
     s.append("  3. BALANCE CHECK\n");
     display.displayMessage(s.toString()); 
 
-    if (keypad.pressButton() == KeypadButton.ONE) {
+    KeypadButton pressed = keypad.pressButton();
+
+    if (pressed == KeypadButton.ONE) {
       return TransactionType.WITHDRAWAL;
-    } else if (keypad.pressButton() == KeypadButton.TWO) {
+    } else if (pressed == KeypadButton.TWO) {
       return TransactionType.DEPOSIT;
     }  else {
       return TransactionType.BALANCE; 
@@ -480,11 +485,9 @@ public class ATM {
     /**
    * Used to ask the user to enter a dollar amount used for deposits.
    * @return the amount the user has chosen rounded to 2dp.
-   */  
-  public BigDecimal askForDollarAmount() {
-    return keypad.enterCashAmount();    
-  }
+   */ 
 
-
-
+  //public BigDecimal askForDollarAmount() {
+    //return keypad.enterCashAmount();    
+  //}
 }

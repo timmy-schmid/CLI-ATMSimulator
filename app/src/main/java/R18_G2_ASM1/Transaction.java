@@ -208,8 +208,8 @@ public class Transaction {
                 card.balance = card.balance.add(this.amount);
             
             } else if (type == TransactionType.WITHDRAWAL){
-                if (card.getbalance().compareTo(this.amount) >= 0){
-                    if (card.getbalance().compareTo(minCardBalance) <= 0){ //when balance is low on card, print on screen/write to log file?
+                if (card.getBalance().compareTo(this.amount) >= 0){
+                    if (card.getBalance().compareTo(minCardBalance) <= 0){ //when balance is low on card, print on screen/write to log file?
                         this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "Your card balance is less than $5.00.");
                     }
                     card.balance = card.balance.subtract(this.amount);
@@ -245,7 +245,7 @@ public class Transaction {
             return returnMessage;
         
         } else if (type == TransactionType.WITHDRAWAL){
-            this.COINS = this.attachedATM.askForMoneyStackCoins();
+            this.COINS = this.attachedATM.askForMoneyStackCoins(type);
             if (this.COINS == null){
                 return "Transaction cancelled"; //FAILED TO RETRIEVE COINS AMOUNT FROM MONEYSTACK TO WITHDRAWAL
             }

@@ -137,8 +137,7 @@ public class ATMTest {
     
     testAtm.askForPIN();
     verify(mockKeypad,times(2)).enterInt();
-    assertEquals(expectedOut,actualOut.toString());
-    
+    assertEquals(expectedOut,actualOut.toString()); 
   }
 
 

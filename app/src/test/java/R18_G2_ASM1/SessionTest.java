@@ -96,7 +96,7 @@ public class SessionTest {
         assertEquals(false, card.isLost(),"correctly read the card information");
         assertEquals(false, card.isBlocked(),"correctly read the card information");
         assertEquals(1234, card.getPin(),"correctly read the card information");
-        assertEquals(BigDecimal.valueOf(90), card.getbalance(),"correctly read the card balance");
+        assertEquals(BigDecimal.valueOf(90), card.getBalance(),"correctly read the card balance");
         assertEquals("customer", section.getUserType(),"correctly read the card information");
         
         Card card3 = section.retrieveCardFromFile(11022, csvCardTest);

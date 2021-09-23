@@ -42,12 +42,13 @@ run{
 }
 test {
     useJUnitPlatform()     // Use JUnit Platform for unit tests.
-    finalizedBy jacocoTestReport // report is always generated after tests run
-    finalizedBy javadoc // Javadocs compiled after test are run
+    //finalizedBy jacocoTestReport // report is always generated after tests run
+    //finalizedBy javadoc // Javadocs compiled after test are run
 }
 //jacocoTestReport {
     //dependsOn test // tests are required to run before generating the report
 //}
+/* 
 jacocoTestReport { 
     reports { 
         html.required = true 
@@ -57,5 +58,5 @@ jacocoTestReport {
 
 task myJavadocs(type: Javadoc) {
   source = sourceSets.main.allJava
-}
+}*/
 

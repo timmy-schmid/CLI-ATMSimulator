@@ -11,8 +11,11 @@ import java.util.Scanner;
 public class Keypad extends ATMComponent {
 
   private Map<Integer, KeypadButton> buttonMap = new HashMap<>();
-  private final Scanner sc;
-  private final PrintStream out;
+  
+  private PrintStream out;
+  private Scanner sc;
+
+
 
   public Keypad(InputStream in, PrintStream out) {
     for (KeypadButton k : KeypadButton.values()) {
@@ -26,8 +29,7 @@ public class Keypad extends ATMComponent {
     boolean validPress = false; 
     KeypadButton button = null;
     while (!validPress) {
-      // Scanner sc = new Scanner(System.in);
-      
+
       try {
         int userInput = Integer.parseInt(sc.nextLine());
         button = buttonMap.get(userInput);
@@ -41,6 +43,7 @@ public class Keypad extends ATMComponent {
         continue;
       }
       validPress = true;
+
     }
     return button;
   }
@@ -50,7 +53,13 @@ public class Keypad extends ATMComponent {
         out.println("Invalid selection. Please enter a number.");
         sc.nextLine();
     }
-    return sc.nextInt();
+    int intToReturn = sc.nextInt();
+    
+    if (sc.hasNextLine()) {
+      sc.nextLine();
+    }
+    
+    return intToReturn;
   }
 
   public BigDecimal enterCashAmount() {
@@ -58,6 +67,13 @@ public class Keypad extends ATMComponent {
       out.println("Invalid selection. Please enter dollar amount.");
       sc.nextLine();
     }
-    return sc.nextBigDecimal().setScale(2,RoundingMode.HALF_UP); //rounds to 2dp.
+
+    BigDecimal amountToReturn = sc.nextBigDecimal().setScale(2,RoundingMode.HALF_UP); //rounds to 2dp.
+
+    if (sc.hasNextLine()) {
+      sc.nextLine();
+    }
+
+    return amountToReturn;
   }
 }
