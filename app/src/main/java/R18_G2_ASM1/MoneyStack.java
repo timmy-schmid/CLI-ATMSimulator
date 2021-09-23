@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 
 public class MoneyStack{
-    private HashMap<MoneyType, Integer> money; //A: double or integer??
+    private LinkedHashMap<MoneyType, Integer> money; //A: double or integer??
     //according to the comments in miro, may add "status of money"? since some money might be frozen and cannot be withdrawn, or this can be added to the card status
     //true is for normal and false is for frozen
     private boolean statuOfMoney = true;
@@ -33,7 +33,7 @@ public class MoneyStack{
     }
 
     public BigDecimal totalMoney(){
-    // public double totalMoney() { //or double return type?? //Tim - should return double.
+    // public double totalMoney() { //or double return type??
         BigDecimal totalMoney = new BigDecimal(0);
         for(MoneyType T: money.keySet()){
             totalMoney  = totalMoney.add(T.getValue().multiply(new BigDecimal(money.get(T))));
@@ -46,17 +46,19 @@ public class MoneyStack{
     }
 
     //remove static? Change to invalidtype exception? or just leave as IOexception?
-    public void addMoney(MoneyType m, int amount) throws IOException{
-       if(this.getMoney().containsKey(m) == false){
-           System.out.println("Error: money type doesn't exist");
-           throw new IOException("Error: money type doesn't exist");
-       }else{
+    // delete the exception since we have all kind of money in ATM
+    public void addMoney(MoneyType m, int amount) throws IOException {
+//       if(this.getMoney().containsKey(m) == false){
+//           System.out.println("Error: money type doesn't exist");
+//           throw new IOException("Error: money type doesn't exist");
+//       }else{
            int originalValue = this.getMoney().get(m);
            this.getMoney().replace(m,originalValue+amount);
        }
-    }
+
 
     //consider what happens if you deduct over the original amount stored per note.. [amount becomes negative unless you set restrictions...]
+    // cuz the quotient round down so deduct number is always small than the withdraw ,where the negative wouldn't show
 
     public boolean withdraw(MoneyStack c){ //needs edit i think....
         // double needWithdraw = c.totalMoney();
@@ -146,6 +148,7 @@ public class MoneyStack{
     public void addMoneyStack(MoneyStack m){
         if (m == null){
             // Anna - I.e. if when running addCash() in ATM, the admin presses 'Cancel', then this moneystack will be null!!
+            // make sense
             return;
         }
         for(Map.Entry<MoneyType, Integer> ATMEntry: this.getMoney().entrySet()){
