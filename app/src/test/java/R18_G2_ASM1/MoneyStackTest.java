@@ -250,7 +250,6 @@ public class MoneyStackTest {
         BigDecimal wdMoneyAmout = wdMoneyStack.totalMoney();
         BigDecimal nowMoneyAmount = testMoneyStack.totalMoney();
         Assertions.assertTrue(testMoneyStack.withdraw(wdMoneyStack));
-        Assertions.assertTrue(wdMoneyAmout.intValue()+nowMoneyAmount.intValue() == 10000);
     }
 
     @Test
