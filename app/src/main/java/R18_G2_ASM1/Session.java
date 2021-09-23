@@ -117,7 +117,7 @@ public class Session {
 
         transactionType = attachedATM.askForTransType();
 
-        transact(card, transactionType, 1);
+        transact(card, transactionType);
 
         // //hardcoded below coz reading file doesn't fully work..
         // DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -373,12 +373,16 @@ public class Session {
      * Updates the Status to Success.
      * @param c the card that the transaction is to be run on
      * @param transactionType the type of transaction to perform on the card
-     * @param transactionID a unique ID for the transaction
      */
-    public void transact(Card c, TransactionType transactionType, int transactionID){
-        Transaction transaction = new Transaction(attachedATM, transactionType, c, transactionID);
-        transaction.run(transactionType);
-        currentStatus = SessionStatus.SUCCESS;
+    public void transact(Card c, TransactionType transactionType){
+        Transaction transaction = new Transaction(attachedATM, transactionType, c);
+        boolean result = transaction.run(transactionType);
+        //check result to update sessionstatus!
+        if (result == true) {
+            currentStatus = SessionStatus.SUCCESS;
+        } else {
+            // needs edit
+        }
     }
 
     /**

@@ -88,11 +88,11 @@ class TransactionTest {
         amount = new BigDecimal(300.50); //to withdraw
         depositAmount = new BigDecimal(150.00); // to deposit
 
-        withdrawalA = new Transaction(atm, TransactionType.WITHDRAWAL, userA, 1);
+        withdrawalA = new Transaction(atm, TransactionType.WITHDRAWAL, userA);
 
-        balanceCheckB = new Transaction(atm, TransactionType.BALANCE, userB, 2);
+        balanceCheckB = new Transaction(atm, TransactionType.BALANCE, userB);
 
-        depositC = new Transaction(atm, TransactionType.DEPOSIT, userC, 3);
+        depositC = new Transaction(atm, TransactionType.DEPOSIT, userC);
         depositC.initialSetUpMap();
 
         //setupStreams
@@ -257,11 +257,6 @@ class TransactionTest {
         
     //     assertEquals(outContent.toString(), lala); //"Sorry your card is unavailable. Please try again.\n");
     // }
-
-    @Test
-    public void testCanGetTransactionId(){
-        assertTrue(balanceCheckB.getTransactionID() == 2);
-    }
 
     // @Test
     // public void testCanCheckBalanceInfo(){
