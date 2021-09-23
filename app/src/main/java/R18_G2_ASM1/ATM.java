@@ -378,17 +378,12 @@ public class ATM {
   public int askForPIN() {
 
 
-    display.displayMessage("Please enter your 4 digit PIN:"); 
+    display.displayMessageNoNewLine("Please enter your 4 digit PIN: "); 
 
-    boolean validLength = false;
-    int pin = 0;
-    while (!validLength) {
+    int pin = keypad.enterInt();
+    while (pin < 1 || pin > 9999) {
+      display.displayMessage("PIN is not 4 positive digits. Try again:");
       pin = keypad.enterInt();
-      if (String.valueOf(pin).length() != 4) {
-        display.displayMessage("PIN is not 4 digits. Try again:");
-        continue;
-      }
-      validLength = true;
     }
     return pin;
   }

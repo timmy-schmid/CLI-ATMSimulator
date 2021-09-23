@@ -40,3 +40,43 @@ Sep. 23, 2021 5:38:45 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sep. 23, 2021 5:38:45 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:01:24 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:01:24 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:02:27 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:02:27 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:03:35 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:03:35 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:03:57 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:03:57 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:15:03 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:15:04 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:19:55 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:19:55 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:25:37 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:25:37 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:27:03 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:27:03 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:27:37 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:27:38 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.
+Sep. 23, 2021 6:29:29 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 23, 2021 6:29:29 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.

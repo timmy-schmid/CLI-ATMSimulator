@@ -114,22 +114,30 @@ public class ATMTest {
   }
 
   @Test
-  public void askForPinTooManyDigitsShouldThrowError() {
-
-
+  public void askForPinTooManyDigitsShouldPrintError() {
+  
+    String expectedOut = "Please enter your 4 digit PIN: " +
+                         "PIN is not 4 positive digits. Try again:\n";
+    actualOut.reset(); //reset the display buffer
+    reset(mockKeypad); //reset verify
+    when(mockKeypad.enterInt()).thenReturn(14525).thenReturn(1424);
     
-
+    testAtm.askForPIN();
+    verify(mockKeypad,times(2)).enterInt();
+    assertEquals(expectedOut,actualOut.toString());
   }
 
   @Test
-  public void askForPinTooLitteDigitsShouldThrowError() {
-
+  public void askForPinNegativeIntegerShouldPrintError() {
+    String expectedOut = "Please enter your 4 digit PIN: " +
+                         "PIN is not 4 positive digits. Try again:\n";
+    actualOut.reset(); //reset the display buffer
+    reset(mockKeypad); //reset verify
+    when(mockKeypad.enterInt()).thenReturn(-42).thenReturn(1424);
     
-  }
-
-  @Test
-  public void askForPinNonInt() {
-
+    testAtm.askForPIN();
+    verify(mockKeypad,times(2)).enterInt();
+    assertEquals(expectedOut,actualOut.toString());
     
   }
 
