@@ -96,33 +96,15 @@ class ATM_loggerTest{
     File file = new File(logger.getPath()+logger.getFileName());
     assert(file.length() == 0);
   }
-  
-   /* Not sure this test is necessary as IOException is never thrown and is handled internally. 
-  @Test //negative test, can't write to file in invalid directory
-  public void testCantWriteToFile(){ //maybe read the file or assert (file isnt empty?)
-    logger.createLogMessage("class.method", StatusType.INFO, "testing message");
-    logger.setPath("src/hello/lala"); //set to be an invalid path
-    logger.setLogFileName("/TestingLog4.log");
-    try {
-      logger.writeToFile(classMethod, type, message, logger.getFileName());
-    } catch (IOException e) {
-      assertEquals(IOException.class, e.getClass());
-      assertEquals(outContent.toString(), "Error with handling/opening the file.\n");
-    }
-  }
-
 
   @Test //positive test case for WARNING status type
   public void testCanWriteWarningMessage(){
     logger.setPath("src/test/logTests");
     logger.setLogFileName("/TestingWarningLog1.log");
     logger.createLogMessage("class.method", StatusType.WARNING, "warning message");
-    try {
-      logger.writeToFile(classMethod, type, message, logger.getFileName());
-    } catch (IOException e) {
-      assertEquals(IOException.class, e.getClass());
-      assertEquals(outContent.toString(), "Error with handling/opening the file.\n");
-    }
+    
+    File file = new File(logger.getPath()+logger.getFileName());
+    assert(file.length() != 0);
   }
   
 
@@ -131,11 +113,9 @@ class ATM_loggerTest{
     logger.setPath("src/test/logTests");
     logger.setLogFileName("/TestingFatalLog1.log");
     logger.createLogMessage("class.method", StatusType.FATAL, "fatal error message");
-    try {
-      logger.writeToFile(classMethod, type, message, logger.getFileName());
-    } catch (IOException e) {
-      assertEquals(IOException.class, e.getClass());
-      assertEquals(outContent.toString(), "Error with handling/opening the file.\n");
-    }
-  }*/
+    
+    File file = new File(logger.getPath()+logger.getFileName());
+    assert(file.length() != 0);
+    
+  }
 }

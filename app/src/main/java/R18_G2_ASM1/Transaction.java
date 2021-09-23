@@ -19,7 +19,7 @@ import java.math.BigDecimal;
  * @version 1.0
  */
 public class Transaction {
-    protected BigDecimal amount;     
+    protected BigDecimal amount;
         
     /**
      * A user's card
@@ -33,7 +33,6 @@ public class Transaction {
 
     private ATM attachedATM;
     private MoneyStack balance;
-    protected int transactionID;
 
     protected ATM_logger atmLogger;
 
@@ -42,7 +41,6 @@ public class Transaction {
      * Loop through this map to call function MoneyStack.addmoney(key, * value)
      */
     protected HashMap <MoneyType, Integer> depositAmountMap;
-    protected HashMap <MoneyType, Integer> newMoneyStack;//used for withdrawing money from moneyStack
 
     protected MoneyStack CASH;
     protected MoneyStack COINS;
@@ -52,28 +50,24 @@ public class Transaction {
      * @param attachedATM an ATM object
      * @param type type of Transaction to proceed
      * @param card A user's card
-     * @param transactionID A transaction's ID
      */
-    public Transaction(ATM attachedATM, TransactionType type, Card card,  int transactionID){
+    public Transaction(ATM attachedATM, TransactionType type, Card card){
         
-        this.amount = new BigDecimal(0); //set initially as just cash amount, requires ATM working first
+        this.amount = new BigDecimal(0);
         this.type = type;
         this.attachedATM = attachedATM;
         this.card = card;
-        this.transactionID = transactionID;
         this.balance = attachedATM.getATMBalance(); //moneyStack object
         this.depositAmountMap = new LinkedHashMap <MoneyType, Integer>(); // preserves order of key, value sequence!
-        this.newMoneyStack = new LinkedHashMap <MoneyType, Integer>();
         this.initialSetUpMap();
         this.atmLogger = attachedATM.getATMLogger();
-        this.CASH = null; //attachedATM.askForMoneyStackNotes();
-        this.COINS = null; //attachedATM.askForMoneyStackCoins();
+        this.CASH = null;
+        this.COINS = null;
     }
 
     /**
      * initialSetUpMap
      * Initialises the number of notes in depositAmountMap at the start as 0
-     * Initialises the number of notes+coins in newMoneyStack at the start as 0
      */
     public void initialSetUpMap(){ //for notes only!
         this.depositAmountMap.put(MoneyType.HUNDRED_DOLLARS,0);
@@ -92,15 +86,6 @@ public class Transaction {
         return this.depositAmountMap;
     }
 
-    // /**
-    //  * getNewMoneyStack
-    //  * @return a map storing notes and their amount created by
-    //  * splitting up user's required amount for withdrawal
-    //  */
-    // public HashMap <MoneyType, Integer> getNewMoneyStack(){
-    //     return this.newMoneyStack;
-    // }
-
     /**
      * resetDepositAmountMap
      * Resets the amount of notes stored in the map as 0
@@ -109,14 +94,6 @@ public class Transaction {
         for (HashMap.Entry <MoneyType, Integer> entry: this.getDepositAmountMap().entrySet()){
             this.depositAmountMap.replace(entry.getKey(), 0);
         }
-    }
-
-    /**
-     * getTransactionID  ------------ PROBABLY REMOVE THIS!
-     * @return returns the transaction ID
-     */
-    public int getTransactionID(){
-        return this.transactionID;
     }
 
     /**
@@ -154,12 +131,12 @@ public class Transaction {
     /**
      * setAmount
      * Sets user total amount to a different amount
-     * @param coinAmount extra amount to add if the transaction type is 'deposit'
+     * @param extraAmount extra amount to add to existing amount
      * if deposit: [cash only]
      * if withdrawal: [cash + coins]
      */
-    public void setAmount(BigDecimal coinAmount){
-        this.amount  = this.amount.add(coinAmount);
+    public void setAmount(BigDecimal extraAmount){
+        this.amount  = this.amount.add(extraAmount);
     }
 
     /**
@@ -179,14 +156,11 @@ public class Transaction {
      @param amount the amount required to deposit into ATM in notes
      @throws InvalidTypeException If coins have been added.
      handle exception when amount not divisble by 5/10 (must be notes, no coins)
-     e.g. amount = 24.5 (not ok) vs 25 (ok)
      */
 
-    // public void splitDepositAmountUp(double amount) throws InvalidTypeException{ 
     public void splitDepositAmountUp(BigDecimal amount) throws InvalidTypeException{ 
         BigDecimal div = new BigDecimal("5");
         BigDecimal[] dr = amount.divideAndRemainder(div);
-        // if (amount%5 != 0) { //NEEDS EDIT!!!! what if .50 or .35c?
         if(dr[1].signum() != 0){
             throw new InvalidTypeException("Error: amount should only be notes, no coins accepted.");
         } else {    
@@ -196,10 +170,7 @@ public class Transaction {
             //entry = key, map value = amount
             for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {    
                 if (total.compareTo(entry.getKey().getValue()) >= 0) {
-                // if (total >= entry.getKey().getValue()) {
                     dr = total.divideAndRemainder(entry.getKey().getValue());
-                    // toStoreAmount = (int)(total/entry.getKey().getValue()); //where amount added is of type MoneyType --> quotient
-                    // total = total%entry.getKey().getValue();
                     total = dr[1];
                     this.depositAmountMap.put(entry.getKey(), dr[0].intValue());
                 }
@@ -213,7 +184,6 @@ public class Transaction {
      * and deducts money if type is 'Withdraw'
      * @param card a user's card
      * @param type type of transaction
-     * prints amount remaining on MoneyStack for debugging purposes
      */
     public void modify(Card card, TransactionType type){
         BigDecimal minCardBalance = new BigDecimal(5.00);
@@ -243,33 +213,39 @@ public class Transaction {
      * run
      * Runs transaction process depending on user's preferred type of transaction
      * @param type type of transaction
+     * @return whether the transaction was successful or not
      */
-    public void run(TransactionType type) {
+    public boolean run(TransactionType type) {
 
         this.CASH = this.attachedATM.askForMoneyStackNotes();
         this.setAmount(this.CASH.totalMoney()); //add cash to amount required for transaction
         System.out.println("LINE 311 TRANSACTION TYPE: " + type);
+
         if (type == TransactionType.DEPOSIT){
             try {
                 this.proceedDepositTransaction(this.getCard());
+                return true;
             } catch (InvalidTypeException e){
                 e.printStackTrace();
+                return false;
             }
 
         } else if (type == TransactionType.WITHDRAWAL){
-
             this.COINS = this.attachedATM.askForMoneyStackCoins();
             if (this.COINS == null){
                 System.out.println("FAILED TO RETRIEVE COINS AMOUNT FROM MONEYSTACK TO WITHDRAWAL!");
-                return;
+                return false;
             }
 
             this.setAmount(this.COINS.totalMoney()); //add extra coins for withdrawal
             this.proceedWithdrawalTransaction(this.getCard());
+            return true; //needs edit, maybe have areturn type for each proceed[type]transaction??? 
 
         } else if (type == TransactionType.BALANCE) {
             this.getBalanceInfo(this.getCard());
+            return true;
         }
+        return false;
     }
 
     /**
