@@ -150,7 +150,7 @@ public class Transaction {
     /**
      * setAmount
      * Sets user's total amount to a different amount
-     * @param extraAmount extra amount to add to existing amount that must be >= 0
+     * @param extraAmount extra amount to add to existing amount that must be greater than or 0
      *
      */
     public void setAmount(BigDecimal extraAmount){
