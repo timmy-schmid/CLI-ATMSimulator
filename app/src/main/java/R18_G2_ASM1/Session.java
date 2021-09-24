@@ -41,13 +41,13 @@ public class Session {
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
 
-        // csvCard = new File("src/main/datasets/card.csv");
-        // tempFile = new File("src/main/datasets/cardTemp.csv");
+        csvCard = new File("src/main/datasets/card.csv");
+        tempFile = new File("src/main/datasets/cardTemp.csv");
 
-        String absolutePath = this.getClass().getResource("/").getPath();
-        absolutePath = absolutePath.substring(0,absolutePath.length()-24);
-        csvCard = new File(absolutePath + "src/main/datasets/card.csv");
-        tempFile = new File(absolutePath + "src/main/datasets/cardTemp.csv");
+        // String absolutePath = this.getClass().getResource("/").getPath();
+        // absolutePath = absolutePath.substring(0,absolutePath.length()-24);
+        // csvCard = new File(absolutePath + "src/main/datasets/card.csv");
+        // tempFile = new File(absolutePath + "src/main/datasets/cardTemp.csv");
     
     }
 
