@@ -214,7 +214,7 @@ public class Session {
                 }
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("AEST"));
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
                 try {
                     startDate = simpleDateFormat.parse(infoArr[1]);
                     expirationDate = simpleDateFormat.parse(infoArr[2]);

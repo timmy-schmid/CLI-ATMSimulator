@@ -71,7 +71,7 @@ public class SessionTest {
 
         String pattern = "yyyy-MM-dd";
         simpleDateFormat = new SimpleDateFormat(pattern);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("AEST"));
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
 
         section = new Session(new ATM("loc"));
         card = section.retrieveCardFromFile(12345, csvCardTestFinal);

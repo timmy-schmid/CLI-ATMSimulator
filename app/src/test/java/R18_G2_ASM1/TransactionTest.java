@@ -232,10 +232,18 @@ class TransactionTest {
     }
 
     @Test
-    public void testCanCheckBalanceInfo(){
+    public void testCanCheckBalanceInfo() throws ParseException{
         balanceCheckB.getBalanceInfo(userB);
+
+        SimpleDateFormat tmp = new SimpleDateFormat ("yyyy-MM-dd");
+        tmp.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+        Date d = tmp.parse("2023-05-31");
+
+        SimpleDateFormat ft = new SimpleDateFormat ("EE d MMM yyyy hh:mm aaa z");
+        ft.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+
         String expected = "\nPrinting card details below!!\n\n"+
-            "Card number [55674] has $10000.00 amount remaining and expires on: Wed, 31 May 2023 12:00 am AEST.\n"+
+            "Card number [55674] has $10000.00 amount remaining and expires on: " + ft.format(d) + ".\n" +
             "The balance query was successful.\n";
         assertEquals(expected, outContent.toString());
     }
