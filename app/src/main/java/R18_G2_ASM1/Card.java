@@ -14,6 +14,7 @@ public class Card {
   private boolean isExpire;
   private int pin;
 
+  
   public Card(BigDecimal balance, int cardNumber, Date startDate, Date expirationDate,
       boolean isLost, boolean isBlocked, boolean isExpire, int pin) {
     this.balance = balance;
@@ -24,6 +25,7 @@ public class Card {
     this.isBlocked = isBlocked;
     this.isExpire = isExpire;
     this.pin = pin;
+
   }
 
   public boolean isBlocked() {
@@ -84,6 +86,7 @@ public class Card {
 
   public boolean isExpired() {
     SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+    ft.setTimeZone(TimeZone.getTimeZone("AEST"));
     Date now_date = new Date();
     ft.format(now_date);
     boolean isExpire = false;
