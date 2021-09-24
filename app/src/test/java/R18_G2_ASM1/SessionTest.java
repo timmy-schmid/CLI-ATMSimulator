@@ -340,7 +340,7 @@ public class SessionTest {
             Session sec = new Session(new ATM("bbb"));
             sec.changeCsvFile(csvCardTestFinal2);
             sec.run(10000);
-            assertEquals(SessionStatus.SUCCESS, sec.getStatus());
+            assertEquals(SessionStatus.CANCELLED, sec.getStatus());
         } catch (NullPointerException e){
 
         }

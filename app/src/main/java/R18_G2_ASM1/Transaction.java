@@ -199,30 +199,33 @@ public class Transaction {
      * and deducts money if type is 'Withdraw'
      * @param card a user's card
      * @param type type of transaction
+     * @return whether the modification was successful or not
      */
-    public void modify(Card card, TransactionType type){
+    public String modify(Card card, TransactionType type){
         BigDecimal minCardBalance = new BigDecimal(5.00);
 
         if (card != null){
             if (type == TransactionType.DEPOSIT) {
                 card.balance = card.balance.add(this.amount);
-            
+                return "SUCESS";
+
             } else if (type == TransactionType.WITHDRAWAL){
                 if (card.getBalance().compareTo(this.amount) >= 0){
                     if (card.getBalance().compareTo(minCardBalance) <= 0){ //when balance is low on card, print on screen/write to log file?
                         this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "Your card balance is less than $5.00.");
                     }
                     card.balance = card.balance.subtract(this.amount);
+                    return "SUCESS";
                 } else {
                     System.out.println("Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.");
-
                     this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "card balance is too low, can't withdraw");
+                    return "FAILED";
                 }
             }
-        } else { //card = null
-            System.out.println("Sorry your card is unavailable. Please try again.");
-            this.atmLogger.createLogMessage("Transaction.modify", StatusType.ERROR, "Sorry your card is unavailable. Please try again.");
-        }
+        } 
+        // card = null
+        this.atmLogger.createLogMessage("Transaction.modify", StatusType.ERROR, "Sorry card is unavailable. Please try again.");
+        return "Sorry your card is unavailable. Please try again.";
     }
 
     /**
@@ -233,37 +236,37 @@ public class Transaction {
      */
     public String run(TransactionType type) {
         String returnMessage = null;
-        
-        this.NOTES = this.attachedATM.askForMoneyStackNotes(type);
-        if (this.NOTES == null){
-            return "Transaction cancelled";
-        }
-        this.setAmount(this.NOTES.totalMoney()); //add notes to amount required for transaction if NOTES object isn't null
-
-        if (type == TransactionType.DEPOSIT){
-            returnMessage = this.proceedDepositTransaction(this.getCard());
-            return returnMessage;
-        
-        } else if (type == TransactionType.WITHDRAWAL){
-            this.COINS = this.attachedATM.askForMoneyStackCoins(type);
-            if (this.COINS == null){
-                return "Transaction cancelled"; //FAILED TO RETRIEVE COINS AMOUNT FROM MONEYSTACK TO WITHDRAWAL
+        if (type != TransactionType.BALANCE) {
+            this.NOTES = this.attachedATM.askForMoneyStackNotes(type);
+            if (this.NOTES == null){
+                return "Transaction cancelled";
             }
+            this.setAmount(this.NOTES.totalMoney()); //add notes to amount required for transaction if NOTES object isn't null
 
-            this.setAmount(this.COINS.totalMoney()); //add extra coins for withdrawal if NOTES object isn't null
-            returnMessage = this.proceedWithdrawalTransaction(this.getCard());
-            return returnMessage;
+            if (type == TransactionType.DEPOSIT){
+                returnMessage = this.proceedDepositTransaction(this.getCard());
+                return returnMessage;
+            
+            } else if (type == TransactionType.WITHDRAWAL){
+                this.COINS = this.attachedATM.askForMoneyStackCoins(type);
+                if (this.COINS == null){
+                    return "Transaction cancelled"; //FAILED TO RETRIEVE COINS AMOUNT FROM MONEYSTACK TO WITHDRAWAL
+                }
 
-        } else if (type == TransactionType.BALANCE) {
-            returnMessage = this.getBalanceInfo(this.getCard());
-            return returnMessage;
-        }
-        return returnMessage; //invalid type of transaction?
+                this.setAmount(this.COINS.totalMoney()); //add extra coins for withdrawal if NOTES object isn't null
+                returnMessage = this.proceedWithdrawalTransaction(this.getCard());
+                return returnMessage;
+            }
+        } //else if (type == TransactionType.BALANCE) {
+        returnMessage = this.getBalanceInfo(this.getCard());
+        return returnMessage;
     }
 
     /**
      * proceedDepositTransaction
-     * Add's money onto user's card and adds notes/coins to MoneyStack
+     * Add's money onto user's card and adds notes to MoneyStack
+     * A receipt is printed and card details are shown after every successful deposit transaction
+     * The status of the transaction is written to a log file
      * @param card a user's card
      * @return the status of the transaction
      */
@@ -271,7 +274,6 @@ public class Transaction {
         BigDecimal div = new BigDecimal("5");
         BigDecimal[] dr = amount.divideAndRemainder(div);
         if(dr[1].signum() != 0){
-            // throw new InvalidTypeException("Cannot deposit coins, only notes.");
             return "Cannot deposit coins, only notes. Deposit Unsuccessful";
         }
         // retrieve amount for each note type to add to existing money stack
@@ -282,7 +284,7 @@ public class Transaction {
             return "Deposit Unsuccessful";
         }
 
-        //now loop through depositAmountMap, to add moneytype + amount back into moneyStack
+        //now loop through depositAmountMap, to add moneytype + amount back into moneyStack for ATM
         try {
             for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {
                 this.getMoneyStackBalance().addMoney(entry.getKey(), entry.getValue());
@@ -292,9 +294,10 @@ public class Transaction {
             return "Deposit Unsuccessful";
         }
         this.modify(card, TransactionType.DEPOSIT);
-
-        //now print receipt
+         //now print card details + receipt
+        card.getCardDetails();
         this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
+
         this.attachedATM.getATMLogger().createLogMessage("Transaction.deposit", StatusType.INFO, "The Deposit Transaction was successfully completed.");
         this.resetDepositAmountMap();
         return "Deposit successful";
@@ -305,6 +308,7 @@ public class Transaction {
      * Deducts money from user's card and removes notes/coins from MoneyStack
      * Checks if user has enough money stored in card and
      * if there's enough amount stored in moneystack
+     * A receipt is printed and card details are shown after every successful withdrawal transaction
      * @param card a user's card
      * @return the status of the transaction
      */
@@ -313,16 +317,20 @@ public class Transaction {
         result = this.getMoneyStackBalance().withdraw(this.NOTES);
         result = this.getMoneyStackBalance().withdraw(this.COINS);
 
-        // this.printMoneyStack(this.getMoneyStackBalance().getMoney());
         if (result == false){
             this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
             return "insufficient cash available in ATM";
         }
 
         if (this.getMoneyStackBalance().getstatusOfMoney() == true){
-            this.modify(card, TransactionType.WITHDRAWAL);
+            String status = this.modify(card, TransactionType.WITHDRAWAL);
+            if (status != "SUCCESS"){
+                return "Withdraw unsuccessful";
+            }
             this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.INFO, "The Withdrawal Transaction was successfully completed.");
-            
+
+            card.getCardDetails();
+            this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
             return "Withdraw successful";
         }
         return null;
@@ -330,7 +338,7 @@ public class Transaction {
 
     /**
      * getBalanceInfo
-     * Prints a user's card details and a receipt
+     * Prints a user's card details
      * @param card a user's card
      * @return the status of the transaction
      */
@@ -338,8 +346,6 @@ public class Transaction {
         if (card != null){
             card.getCardDetails();
             System.out.println("The balance query was successful.");
-            //now print receipt
-            this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
             this.attachedATM.getATMLogger().createLogMessage("transaction.getBalanceInfo", StatusType.INFO, "check balance was successful!");
             return "Balance successful";
 

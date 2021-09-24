@@ -210,7 +210,7 @@ public class ATM {
       s.append("  5. $5\n");
       s.append("  6. FINISH\n");
       s.append("  7. CANCEL\n");
-      s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
+      s.append("  TOTAL TO "+ t.name().toLowerCase()+": " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
       KeypadButton pressed = keypad.pressButton();
       String howMany = "How many notes would you like to " + t.name().toLowerCase() + ":";
@@ -381,7 +381,7 @@ public class ATM {
   public int askForPIN() {
 
 
-    display.displayMessageNoNewLine("Please enter your 4 digit PIN: "); 
+    display.displayMessageNoNewLine("\nPlease enter your 4 digit PIN: "); 
 
     int pin = keypad.enterInt();
     while (pin < 1 || pin > 9999) {
@@ -407,7 +407,7 @@ public class ATM {
     StringBuilder s = new StringBuilder();
 
     s = new StringBuilder();
-    s.append("Please select the type of transaction you would like to make:\n");
+    s.append("\nPlease select the type of transaction you would like to make:\n");
     s.append("  1. WITHDRAWAL\n");
     s.append("  2. DEPOSIT\n");
     s.append("  3. BALANCE CHECK\n");
@@ -467,7 +467,7 @@ public class ATM {
         s.append(m.query(MoneyType.FIVE_CENTS) + " x 5c\n");
       }
     
-      s.append("TOTAL: $" + m.totalMoney());
+      s.append("TOTAL: $" + m.totalMoney()+"\n");
       display.displayMessage(s.toString());
     } catch (IOException e) {
       System.out.println("Error: money type doesn't exist.");

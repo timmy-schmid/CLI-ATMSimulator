@@ -100,7 +100,7 @@ public class MoneyStack{
 
     public boolean canWithdraw(MoneyStack c){
         BigDecimal needWithdraw = c.totalMoney(); //Tim - changed to double.
-        System.out.printf("TOTAL MONEY STORED IN ONEYSTACK LINE 93!!!!!!! [%.2f]\n", needWithdraw);
+        // System.out.printf("TOTAL MONEY STORED IN ONEYSTACK LINE 93!!!!!!! [%.2f]\n", needWithdraw);
         if (needWithdraw.compareTo(this.totalMoney()) > 0){ //change this.money --> this?
             return false;
         } else{
@@ -111,20 +111,16 @@ public class MoneyStack{
                 BigDecimal remainder  = (needWithdraw.subtract(key.getValue().multiply(new BigDecimal(quotient))));//typecast required, lossy conversion?
                 
 
-                if(quotient > money.get(key)){
-                    // needWithdraw -= money.get(key)*key.getValue();
-                    
+                if(quotient > money.get(key)){                    
                     needWithdraw = needWithdraw.subtract(new BigDecimal(money.get(key)).multiply(key.getValue()));
 
                 }else{
                     needWithdraw = remainder ;
                 }
             }
-            // return (needWithdraw == 0);
             if (needWithdraw.compareTo(BigDecimal.ZERO) == 0){
                 return true;
             } else { return false; }
-            // return (needWithdraw.compareTo(BigDecimal.ZERO));
         }
     }
 
