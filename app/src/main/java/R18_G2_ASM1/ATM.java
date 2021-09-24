@@ -234,7 +234,7 @@ public class ATM {
         } else if (pressed == KeypadButton.SIX) {
           break;  
         } else if (pressed == KeypadButton.SEVEN) {
-          return null; // return NULL object if cancelled.      
+          return null; // return NULL object if cancelled.
         }
       } catch (IOException e){
         System.out.println("Error: money type doesn't exist");
