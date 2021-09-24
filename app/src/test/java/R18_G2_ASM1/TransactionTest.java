@@ -1,11 +1,10 @@
 package R18_G2_ASM1;
 
-import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.*;
 import java.util.*;
+import java.io.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
@@ -39,11 +38,8 @@ class TransactionTest {
     Date date;
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream(); //for testing printing statements
-    // private final ByteArrayOutputStream errorContent = new ByteArrayOutputStream(); //writes common data into many files 
     
-    private final PrintStream originalOutput = System.out;
-    // private final PrintStream originalError = System.err;
-    
+    private final PrintStream originalOutput = System.out;    
     private BigDecimal amount;
     
     @BeforeEach
@@ -74,15 +70,16 @@ class TransactionTest {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         startDate = dateFormat.parse("2018-06-01");
         expiraryDate = dateFormat.parse("2023-05-31");
+        
         BigDecimal balance_1 = new BigDecimal("38762.99");
         BigDecimal balance_2 = new BigDecimal("10000.00");
         BigDecimal balance_3 = new BigDecimal("10000.99");
     
-        userA = new Card(new BigDecimal(38762.99), 55673, startDate, expiraryDate,
+        userA = new Card(balance_1, 55673, startDate, expiraryDate,
         false, true, false, 888888);
-        userB = new Card(new BigDecimal(10000.00), 55674, startDate, expiraryDate,
+        userB = new Card(balance_2, 55674, startDate, expiraryDate,
         false, true, true, 777777);
-        userC = new Card(new BigDecimal(10000.99), 55675, startDate, expiraryDate,
+        userC = new Card(balance_3, 55675, startDate, expiraryDate,
         false, false, false, 666666);
 
         amount = new BigDecimal(300.50); //to withdraw
@@ -95,9 +92,8 @@ class TransactionTest {
         depositC = new Transaction(atm, TransactionType.DEPOSIT, userC);
         depositC.initialSetUpMap();
 
-        //setupStreams
+        //set up streams
         System.setOut(new PrintStream(outContent));
-        // System.setErr(new PrintStream(errorContent));
     }
 
     @AfterEach
@@ -110,12 +106,9 @@ class TransactionTest {
         balanceCheckB = null;
         depositC = null;
 
-        //restoreStreams
-
         moneyStack = null;
-
+        //restoreStreams
         System.setOut(originalOutput);
-        // System.setErr(originalError);
     }
 
     @Test

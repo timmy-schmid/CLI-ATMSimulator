@@ -33,7 +33,6 @@ public class MoneyStack{
     }
 
     public BigDecimal totalMoney(){
-    // public double totalMoney() { //or double return type??
         BigDecimal totalMoney = new BigDecimal(0);
         for(MoneyType T: money.keySet()){
             totalMoney  = totalMoney.add(T.getValue().multiply(new BigDecimal(money.get(T))));
@@ -48,13 +47,9 @@ public class MoneyStack{
     //remove static? Change to invalidtype exception? or just leave as IOexception?
     // delete the exception since we have all kind of money in ATM
     public void addMoney(MoneyType m, int amount) throws IOException {
-//       if(this.getMoney().containsKey(m) == false){
-//           System.out.println("Error: money type doesn't exist");
-//           throw new IOException("Error: money type doesn't exist");
-//       }else{
-           int originalValue = this.getMoney().get(m);
-           this.getMoney().replace(m,originalValue+amount);
-       }
+        int originalValue = this.getMoney().get(m);
+        this.getMoney().replace(m,originalValue+amount);
+    }
 
 
     //consider what happens if you deduct over the original amount stored per note.. [amount becomes negative unless you set restrictions...]
@@ -99,19 +94,16 @@ public class MoneyStack{
     }
 
     public boolean canWithdraw(MoneyStack c){
-        BigDecimal needWithdraw = c.totalMoney(); //Tim - changed to double.
-        // System.out.printf("TOTAL MONEY STORED IN ONEYSTACK LINE 93!!!!!!! [%.2f]\n", needWithdraw);
-        if (needWithdraw.compareTo(this.totalMoney()) > 0){ //change this.money --> this?
+        BigDecimal needWithdraw = c.totalMoney();
+        if (needWithdraw.compareTo(this.totalMoney()) > 0){
             return false;
         } else{
             BigDecimal[] dr;
             for(MoneyType key: this.getMoney().keySet()){
                 dr = needWithdraw.divideAndRemainder(key.getValue());
                 int quotient =  dr[0].intValue(); //(int)(needWithdraw/key.getValue());
-                BigDecimal remainder  = (needWithdraw.subtract(key.getValue().multiply(new BigDecimal(quotient))));//typecast required, lossy conversion?
-                
-
-                if(quotient > money.get(key)){                    
+                BigDecimal remainder  = (needWithdraw.subtract(key.getValue().multiply(new BigDecimal(quotient))));
+                if(quotient > money.get(key)){
                     needWithdraw = needWithdraw.subtract(new BigDecimal(money.get(key)).multiply(key.getValue()));
 
                 }else{

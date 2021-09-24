@@ -3,13 +3,12 @@ package R18_G2_ASM1;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.*;
-import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
 import java.text.DateFormat;
-import java.util.Date;
+import java.util.*;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.io.IOException;
@@ -77,7 +76,7 @@ class ATM_loggerTest{
   @Test
   public void testcanWriteToNewFile() throws IOException {
     //set a new log file name to write a random log message to it
-    //assert the file exist and isnt empty (read the file?)
+    //assert the file exist and isnt empty (read the file)
     logger.setPath("src/test/logTests");
     logger.setLogFileName("/TestingLog2.log");
     logger.writeToFile("ATM_loggerTest.testcanWriteToNewFile", StatusType.INFO, "Successfully wrote to new log file!", logger.getFileName());
@@ -116,6 +115,5 @@ class ATM_loggerTest{
     
     File file = new File(logger.getPath()+logger.getFileName());
     assert(file.length() != 0);
-    
   }
 }
