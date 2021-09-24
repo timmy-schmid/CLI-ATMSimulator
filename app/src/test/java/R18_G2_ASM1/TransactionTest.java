@@ -235,7 +235,7 @@ class TransactionTest {
     public void testCanCheckBalanceInfo(){
         balanceCheckB.getBalanceInfo(userB);
         String expected = "\nPrinting card details below!!\n\n"+
-            "Card number [55674] has $10000.00 amount remaining and expires on: Wed. 31 May 2023 12:00 am AEST.\n"+
+            "Card number [55674] has $10000.00 amount remaining and expires on: Wed, 31 May 2023 12:00 am AEST.\n"+
             "The balance query was successful.\n";
         assertEquals(expected, outContent.toString());
     }

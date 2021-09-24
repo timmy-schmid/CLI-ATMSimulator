@@ -127,6 +127,7 @@ public class Card {
   public void getCardDetails(){
 
     SimpleDateFormat ft = new SimpleDateFormat ("EE d MMM yyyy hh:mm aaa z");
+    ft.setTimeZone(TimeZone.getTimeZone("AEST"));
     System.out.println("\nPrinting card details below!!\n");
     System.out.printf("Card number [%d] has $%.2f amount remaining and expires on: " + ft.format(this.expirationDate) + ".\n", cardNumber, getBalance());
   }
