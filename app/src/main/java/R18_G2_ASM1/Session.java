@@ -224,6 +224,7 @@ public class Session {
                 }
 
                 Date dateNow = new Date();
+
                 expired = expirationDate.before(dateNow);
 
                 if (infoArr[3].equals("T")) {

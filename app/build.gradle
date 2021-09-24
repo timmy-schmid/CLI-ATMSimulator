@@ -35,7 +35,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'R18_G2_ASM1.App'
+    mainClass = 'R18_G2_ASM1.XYZ_ATM'
 }
 
 run{
