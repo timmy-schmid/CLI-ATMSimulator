@@ -207,7 +207,7 @@ public class Transaction {
         if (card != null){
             if (type == TransactionType.DEPOSIT) {
                 card.balance = card.balance.add(this.amount);
-                return "SUCESS";
+                return "SUCCESS";
 
             } else if (type == TransactionType.WITHDRAWAL){
                 if (card.getBalance().compareTo(this.amount) >= 0){
@@ -215,7 +215,7 @@ public class Transaction {
                         this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "Your card balance is less than $5.00.");
                     }
                     card.balance = card.balance.subtract(this.amount);
-                    return "SUCESS";
+                    return "SUCCESS";
                 } else {
                     System.out.println("Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.");
                     this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "card balance is too low, can't withdraw");

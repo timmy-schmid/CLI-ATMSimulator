@@ -210,7 +210,7 @@ public class ATM {
       s.append("  5. $5\n");
       s.append("  6. FINISH\n");
       s.append("  7. CANCEL\n");
-      s.append("  TOTAL TO "+ t.name().toLowerCase()+": " + String.format("$%,.02f",m.totalMoney()) + "\n");
+      s.append("  TOTAL TO "+ t.name().toUpperCase()+": " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
       KeypadButton pressed = keypad.pressButton();
       String howMany = "How many notes would you like to " + t.name().toLowerCase() + ":";

@@ -219,13 +219,6 @@ class TransactionTest {
         assertEquals(outContent.toString(), "Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.\n");
         assertEquals(status, "FAILED");
     }
-
-    // @Test //negative test for when you cant withdraw money from ATM at that moment due to inadequate amount of money
-    // public void testFrozenMoney(){
-    //     // withdrawalA.setAmount(new BigDecimal(10981.25)); //withdrawal amount
-    //     String result = withdrawalA.proceedWithdrawalTransaction(userA);
-    //     assertEquals(result, "insufficient cash available in ATM");
-    // }
     
     @Test 
     public void testCanModifyCardWithdrawal(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
@@ -233,8 +226,9 @@ class TransactionTest {
         BigDecimal amount = new BigDecimal(124.35);
         //initialise amount in withdrawal
         withdrawalA.setAmount(amount);
-        withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType()); //userA
+        String status = withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType()); //userA
         assertTrue(userA.getBalance().compareTo(cardBalance.subtract(amount)) == 0);
+        assertEquals(status, "SUCCESS");
     }
 
     @Test
