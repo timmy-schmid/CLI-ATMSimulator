@@ -13,7 +13,7 @@ public class Card {
   private boolean isBlocked;
   private boolean isExpire;
   private int pin;
-  private SimpleDateFormat ft;
+
 
   
   public Card(BigDecimal balance, int cardNumber, Date startDate, Date expirationDate,
@@ -27,8 +27,7 @@ public class Card {
     this.isExpire = isExpire;
     this.pin = pin;
 
-    this.ft = new SimpleDateFormat ("yyyy-MM-dd");
-    this.ft.setTimeZone(TimeZone.getTimeZone("AEST"));
+
 
   }
 
@@ -90,6 +89,8 @@ public class Card {
 
   public boolean isExpired() {
 
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+    ft.setTimeZone(TimeZone.getTimeZone("AEST"));
     Date now_date = new Date();
     ft.format(now_date);
     boolean isExpire = false;
@@ -124,6 +125,8 @@ public class Card {
   }
 
   public void getCardDetails(){
+
+    SimpleDateFormat ft = new SimpleDateFormat ("EE d MMM yyyy hh:mm aaa z");
     System.out.println("\nPrinting card details below!!\n");
     System.out.printf("Card number [%d] has $%.2f amount remaining and expires on: " + ft.format(this.expirationDate) + ".\n", cardNumber, getBalance());
   }

@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.TimeZone;
 
 import org.junit.jupiter.api.BeforeEach;
 
@@ -70,6 +71,7 @@ public class SessionTest {
 
         String pattern = "yyyy-MM-dd";
         simpleDateFormat = new SimpleDateFormat(pattern);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("AEST"));
 
         section = new Session(new ATM("loc"));
         card = section.retrieveCardFromFile(12345, csvCardTestFinal);
