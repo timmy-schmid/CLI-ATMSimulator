@@ -224,3 +224,9 @@ Sep. 24, 2021 2:55:31 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: Transaction.deposit --> MESSAGE: The Deposit Transaction was successfully completed.
 Sep. 24, 2021 2:55:31 PM R18_G2_ASM1.ATM_logger writeToFile
 SEVERE: transaction.withdrawal --> MESSAGE: card balance is too low, can't withdraw
+Sep. 24, 2021 4:21:36 PM R18_G2_ASM1.ATM_logger writeToFile
+SEVERE: Transaction.modify --> MESSAGE: Sorry your card is unavailable. Please try again.
+Sep. 24, 2021 4:21:36 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: Transaction.deposit --> MESSAGE: The Deposit Transaction was successfully completed.
+Sep. 24, 2021 4:21:36 PM R18_G2_ASM1.ATM_logger writeToFile
+SEVERE: transaction.withdrawal --> MESSAGE: card balance is too low, can't withdraw

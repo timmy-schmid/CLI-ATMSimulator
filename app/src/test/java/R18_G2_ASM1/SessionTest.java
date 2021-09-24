@@ -52,7 +52,7 @@ public class SessionTest {
         // csvCardTest = new File(s+"app/src/test/datasets/cardTest.csv");
         // csvCard = new File(s+"app/src/main/datasets/card.csv");
 
-        // File directory = new File("");//参数为空 
+        // File directory = new File("");// 
         // String courseFile = directory.getCanonicalPath() ; 
         // System.out.println(courseFile); 
 
