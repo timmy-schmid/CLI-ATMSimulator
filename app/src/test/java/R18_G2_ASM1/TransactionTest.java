@@ -68,6 +68,7 @@ class TransactionTest {
         ATM atm = new ATM("Canberra", moneyStack);
        
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
         startDate = dateFormat.parse("2018-06-01");
         expiraryDate = dateFormat.parse("2023-05-31");
         
@@ -225,11 +226,18 @@ class TransactionTest {
     }
 
     @Test
-    public void testCanCheckBalanceInfo(){
+    public void testCanCheckBalanceInfo() throws ParseException{
         balanceCheckB.getBalanceInfo(userB);
+
+        SimpleDateFormat tmp = new SimpleDateFormat ("yyyy-MM-dd");
+        tmp.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+        Date d = tmp.parse("2023-05-31");
+
+        SimpleDateFormat ft = new SimpleDateFormat ("EE d MMM yyyy hh:mm aaa z");
+        ft.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+
         String expected = "\nPrinting card details below!!\n\n"+
-            "Card number [55674] has $10000.00 amount remaining and expires on: Wed May 31 00:00:00"+
-            " AEST 2023.\n" +
+            "Card number [55674] has $10000.00 amount remaining and expires on: " + ft.format(d) + ".\n" +
             "The balance query was successful.\n";
         assertEquals(expected, outContent.toString());
     }

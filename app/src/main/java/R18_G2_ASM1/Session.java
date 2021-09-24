@@ -214,7 +214,7 @@ public class Session {
                 }
                 String pattern = "yyyy-MM-dd";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
                 try {
                     startDate = simpleDateFormat.parse(infoArr[1]);
                     expirationDate = simpleDateFormat.parse(infoArr[2]);
@@ -224,6 +224,7 @@ public class Session {
                 }
 
                 Date dateNow = new Date();
+
                 expired = expirationDate.before(dateNow);
 
                 if (infoArr[3].equals("T")) {
