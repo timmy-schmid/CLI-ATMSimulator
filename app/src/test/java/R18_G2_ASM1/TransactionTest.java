@@ -72,6 +72,7 @@ class TransactionTest {
         ATM atm = new ATM("Canberra", moneyStack);
        
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney");
         startDate = dateFormat.parse("2018-06-01");
         expiraryDate = dateFormat.parse("2023-05-31");
         BigDecimal balance_1 = new BigDecimal("38762.99");
