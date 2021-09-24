@@ -345,16 +345,14 @@ public class Session {
 
         } else if (result == "Deposit unsuccessful" || result == "Withdraw unsuccessful"
             || result == "Balance unsuccessful"){
-            //maybe add a new status [Failure?] saying something like the above message? - Anna
-            
+            currentStatus = SessionStatus.CANCELLED;
+
         } else if (result == "Transaction cancelled") {
             currentStatus = SessionStatus.CANCELLED;
 
         } 
         //  ATM has insufficient cash available, it should provide an error message and the transaction should be cancelled
         else if (result == "insufficient cash available in ATM") {
-            //maybe add a newstatus saying something like the above message? - Anna
-            //ORRRR
             System.out.println("Transaction was unsuccessful!: inadequate amount of money stored in ATM!");
             currentStatus = SessionStatus.CANCELLED;
         }

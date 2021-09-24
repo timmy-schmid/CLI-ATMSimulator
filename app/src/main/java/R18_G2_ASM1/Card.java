@@ -118,9 +118,7 @@ public class Card {
   }
 
   public void getCardDetails(){
-    System.out.println("\nPrinting card details below!!!");
-    System.out.println("Card number " + cardNumber + ", amount stored  = " + getBalance() + ", expires on: "  + this.expirationDate);
+    System.out.println("\nPrinting card details below!!\n");
+    System.out.printf("Card number [%d] has $%.2f amount remaining and expires on: " + this.expirationDate + ".\n", cardNumber, getBalance());
   }
-
-
 }

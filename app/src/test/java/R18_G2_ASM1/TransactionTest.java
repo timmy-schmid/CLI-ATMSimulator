@@ -167,24 +167,24 @@ class TransactionTest {
         assertEquals(result, "Cannot deposit coins, only notes. Deposit Unsuccessful");
     }
 
-    @Test //testing deposit adds money to card
+    @Test 
     public void testCanModifyCardDeposit(){ //testing deposit money to card is valid
         BigDecimal cardBalance = userC.getBalance(); //initial
         BigDecimal amount = new BigDecimal(15.00);
         //initialise amount in deposit
         depositC.setAmount(amount);
-        depositC.modify(depositC.getCard(), depositC.getType()); //userC
+        depositC.modify(depositC.getCard(), depositC.getType()); 
         assertTrue(userC.getBalance().compareTo(cardBalance.add(amount)) == 0);
     }
 
-     @Test //negative test: card is invalid
+     @Test 
     public void testCantModifyCardNull(){ //testing withdrawing money from card is valid (i.e. user has enough money stored in card)
         Card failed = null;
         BigDecimal amount = new BigDecimal(15.00);
         //initialise amount in deposit
         withdrawalA.setAmount(amount);
-        withdrawalA.modify(failed, withdrawalA.getType()); //userC
-        assertEquals(outContent.toString(), "Sorry your card is unavailable. Please try again.\n");
+        String status = withdrawalA.modify(failed, withdrawalA.getType());
+        assertEquals(status, "Sorry your card is unavailable. Please try again.");
     }
 
     @Test //amount is not of type note
@@ -215,8 +215,9 @@ class TransactionTest {
         BigDecimal withdrawAmount = new BigDecimal(125.35);
         //initialise amount in deposit
         withdrawalA.setAmount(withdrawAmount);
-        withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType());
+        String status = withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType());
         assertEquals(outContent.toString(), "Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.\n");
+        assertEquals(status, "FAILED");
     }
 
     // @Test //negative test for when you cant withdraw money from ATM at that moment due to inadequate amount of money
@@ -235,41 +236,16 @@ class TransactionTest {
         withdrawalA.modify(withdrawalA.getCard(), withdrawalA.getType()); //userA
         assertTrue(userA.getBalance().compareTo(cardBalance.subtract(amount)) == 0);
     }
-    // @Test
-    // public void testCanWithdrawalAmount(){ //testing when userA's balance is too low and can't withdraw money out
-    //     BigDecimal amount = new BigDecimal(15.95);
-    //     BigDecimal cardBalance = userA.getbalance(); //38762
-    //     withdrawalA.setAmount(amount);
-    //     String result = withdrawalA.proceedWithdrawalTransaction(userA); //withdraw1 fails????
-    //     assertTrue(userA.getbalance().compareTo(cardBalance.subtract(amount)) == 0);
-    //     assertEquals(result, "Withdraw successful");
-    // }
 
-    // @Test
-    // public void testCanCheckBalanceInfo(){
-    //     balanceCheckB.getBalanceInfo(userB);
-    //     String expected = "\nPrinting card details below!!!\n"+
-    //         "Card number 55674, amount stored  = 10000.0, expires on: Wed May 31 00:00:00"+
-    //         " AEST 2023\n"+
-    //         "The balance query was successful.\n"+
-    //         "\n"+
-    //         "A receipt has been printed:\n"+
-    //         "\n"+
-    //         "--------------------------\n"+
-    //         "--- XYZ BANK RECEIPT------\n"+
-    //         "--------------------------\n"+
-    //         "Transaction Type: BALANCE\n"+
-    //         "Amount:\n"+
-    //         "--------------------------\n"+
-    //         "50 x $100\n"+
-    //         "50 x $50\n"+
-    //         "50 x $20\n"+
-    //         "50 x $10\n"+
-    //         "100 x $5\n"+
-    //         "TOTAL: $9885.0\n";
-
-    //     assertEquals(expected, outContent.toString());
-    // }
+    @Test
+    public void testCanCheckBalanceInfo(){
+        balanceCheckB.getBalanceInfo(userB);
+        String expected = "\nPrinting card details below!!\n\n"+
+            "Card number [55674] has $10000.00 amount remaining and expires on: Wed May 31 00:00:00"+
+            " AEST 2023.\n" +
+            "The balance query was successful.\n";
+        assertEquals(expected, outContent.toString());
+    }
 
     @Test
     public void testCantCheckBalanceInfo() { //negative test as card is invalid
