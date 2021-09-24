@@ -40,9 +40,15 @@ public class Session {
         attachedATM = ATM;
         //this.sessionID = sessionID;
         //this.transactionType = transactionType;
+
         csvCard = new File("src/main/datasets/card.csv");
         tempFile = new File("src/main/datasets/cardTemp.csv");
-        
+
+        // String absolutePath = this.getClass().getResource("/").getPath();
+        // absolutePath = absolutePath.substring(0,absolutePath.length()-24);
+        // csvCard = new File(absolutePath + "src/main/datasets/card.csv");
+        // tempFile = new File(absolutePath + "src/main/datasets/cardTemp.csv");
+    
     }
 
     /**
@@ -90,15 +96,27 @@ public class Session {
         this.writeCardToFile(cardNum, csvCard);
     }
 
-
+    /**
+     * Get the number of attempts
+     * 
+     * @return the number of attempts
+     */
     public int getAttemptNum(){
         return pinAttemptNum;
     }
 
+    /**
+     * When the pin value is checked out is incorrect
+     * Number of attempt will be increased
+     */
     public void ifWrongPin(){
         pinAttemptNum++;
     }
 
+    /**
+     * When we want to get the current User type
+     * @return current user type 
+     */
     public String getUserType(){
         return userType;
     }
@@ -383,6 +401,10 @@ public class Session {
         }
     }
 
+    /**
+     * When we want to change the current card database
+     * @param newFile the new csv file 
+     */
     public void changeCsvFile(File newFile){
         csvCard = newFile;
     }
