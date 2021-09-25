@@ -17,7 +17,7 @@ public class Card {
 
   
   public Card(BigDecimal balance, int cardNumber, Date startDate, Date expirationDate,
-      boolean isLost, boolean isBlocked, boolean isExpire, int pin) {
+    boolean isLost, boolean isBlocked, boolean isExpire, int pin) {
     this.balance = balance;
     this.cardNumber = cardNumber;
     this.startDate = startDate;
