@@ -154,6 +154,7 @@ public class Card {
 
   /**
    * Decide if the card is expired or not by comparing the expiration date of the card and current time.
+   * @return if the card is expired or not.
    */
   public boolean isExpired() {
 
@@ -171,6 +172,7 @@ public class Card {
 
   /**
    * Decide if the card can be used after the start date by comparing the start date of the card and the current time.
+   * @return if the current time is after the start date of the card.
    */
   public boolean isAfterStartDate() {
     Date now_date = new Date();
@@ -185,6 +187,7 @@ public class Card {
   /**
    * Check if the input pin number is correct or not.
    * @param pin An integer representation of the pin number of the card
+   * @return if the input pin number is the same as the pin number of the card.
    */
   public boolean checkPin(int pin) {
     if(this.pin - pin < 0.1) {
