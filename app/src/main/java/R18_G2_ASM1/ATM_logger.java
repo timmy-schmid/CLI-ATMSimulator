@@ -135,17 +135,20 @@ public class ATM_logger{
 
     } else {
       Logger logger = Logger.getLogger("ATM_logger");
+      Logger globalLogger = null;
       try {
         fh = new FileHandler(this.path + logFileName, true); //append to existing file 
 
         // this prevents output from showing onto console
-        Logger globalLogger = Logger.getLogger("");
-        Handler[] handlers_ls = globalLogger.getHandlers();
-        for (Handler handler : handlers_ls) {
+        globalLogger = Logger.getLogger("");
+        Handler[] list_of_handlers = globalLogger.getHandlers();
+        //loop through all default handlers to remove them
+        for (Handler handler : list_of_handlers) {
           globalLogger.removeHandler(handler);
         }
 
-        logger.addHandler(fh); //adds a log handler to receive logging msgs
+        //adds a log handler to receive logging msgs
+        logger.addHandler(fh);
 
         //this provides output in human readable format to the log file
         SimpleFormatter sFormatter = new SimpleFormatter();
