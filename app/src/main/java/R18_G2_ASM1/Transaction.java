@@ -225,20 +225,17 @@ public class Transaction {
           // when balance is low on card, print on screen/write to log file
           if (card.getBalance().compareTo(minCardBalance) <= 0){ 
             System.out.println("Warning, your card balance is less than $5.00");
-            this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.WARNING, "Your card balance is less than $5.00.");
           }
           card.balance = card.balance.subtract(this.amount);
           return "SUCCESS";
         
         } else {
           System.out.println("Sorry you don't have enough money stored on your card. Cannot proceed to withdraw money.");
-          this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "card balance is too low, can't withdraw");
           return "FAILED";
         }
       }
     }
     // card = null
-    this.atmLogger.createLogMessage("Transaction.modify", StatusType.ERROR, "Sorry card is unavailable. Please try again.");
     return "Sorry your card is unavailable. Please try again.";
   }
 
@@ -311,8 +308,6 @@ public class Transaction {
       //now print card details + receipt
     card.getCardDetails();
     this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
-
-    this.attachedATM.getATMLogger().createLogMessage("Transaction.deposit", StatusType.INFO, "The Deposit Transaction was successfully completed.");
     this.resetDepositAmountMap();
     
     return "Deposit successful";
@@ -333,7 +328,6 @@ public class Transaction {
     result = this.getMoneyStackBalance().withdraw(this.COINS);
 
     if (result == false){
-      this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.ERROR, "transaction was unsuccessful!: inadequate amount of money stored in ATM");
       return "insufficient cash available in ATM";
     }
 
@@ -342,7 +336,6 @@ public class Transaction {
       if (status != "SUCCESS"){
         return "Withdraw unsuccessful";
       }
-      this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.INFO, "The Withdrawal Transaction was successfully completed.");
 
       card.getCardDetails();
       this.attachedATM.printReceipt(this, this.getMoneyStackBalance());
@@ -361,7 +354,6 @@ public class Transaction {
     if (card != null) {
       card.getCardDetails();
       System.out.println("The balance query was successful.");
-      this.attachedATM.getATMLogger().createLogMessage("transaction.getBalanceInfo", StatusType.INFO, "check balance was successful!");
       return "Balance successful";
     } else {
       System.out.println("Sorry your card is unavailable. Please try again.");

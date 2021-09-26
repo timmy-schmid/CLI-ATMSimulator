@@ -123,14 +123,7 @@ public class ATM {
       return;
     }
 
-    //runs the session
-    //try {
     session.run(cardNum);
-    //} catch (InvalidTypeException e) {
-      //display.displayMessage(e.getMessage());
-      //this.getATMLogger().createLogMessage("Session", StatusType.ERROR, e.getMessage());
-      //return;
-    //}
 
     SessionStatus status = session.getStatus();
     display.displayMessageNoNewLine(status.toString());

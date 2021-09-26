@@ -78,7 +78,7 @@ class ATM_loggerTest{
     //set a new log file name to write a random log message to it
     //assert the file exist and isnt empty (read the file)
     logger.setPath("src/test/logTests");
-    logger.setLogFileName("/TestingLog2.log");
+    logger.setLogFileName("/TestingLog1.log");
     logger.writeToFile("ATM_loggerTest.testcanWriteToNewFile", StatusType.INFO, "Successfully wrote to new log file!", logger.getFileName());
 
     File f = new File(logger.getPath() + logger.getFileName());
@@ -91,7 +91,7 @@ class ATM_loggerTest{
     logger.setPath("src/test/logTests");
     logger.setLogFileName("/TestingLog3.log");
     logger.writeToFile(null, StatusType.INFO, null, logger.getFileName());
-
+    assertEquals(outContent.toString(), "Not time to write to file yet!\n");
     File file = new File(logger.getPath()+logger.getFileName());
     assert(file.length() == 0);
   }
