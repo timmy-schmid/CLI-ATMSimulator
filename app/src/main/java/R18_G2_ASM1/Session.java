@@ -78,7 +78,7 @@ public class Session {
 
     transactionType = attachedATM.askForTransType();
     transact(card, transactionType);
-    this.writeCardToFile(cardNum, csvCard);
+    // this.writeCardToFile(cardNum, csvCard);
   }
 
   /**
@@ -336,6 +336,7 @@ public class Session {
     if (result == "Deposit successful" || result == "Withdraw successful"
         || result == "Balance successful") {
       currentStatus = SessionStatus.SUCCESS;
+      this.writeCardToFile(c.getCardNumber(), csvCard);
 
     } else if (result == "Deposit unsuccessful" || result == "Withdraw unsuccessful"
         || result == "Balance unsuccessful"){
