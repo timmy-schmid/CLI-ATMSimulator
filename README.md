@@ -8,11 +8,11 @@ The following information contains tasks for our group members to work on, git c
 
 ### Working in progress
 
--> make sure indenting is 2 spaces, use CamelCase for variable naming!
--> add in Javadoc comments + test cases
--> ensure we all have the same format for writing test cases/files
--> Starting working on report + allocate sections to write about
--> keep code consistent + nicely styled + minimise redundancy
+* make sure indenting is 2 spaces, use CamelCase for variable naming!
+* add in Javadoc comments + test cases
+* ensure we all have the same format for writing test cases/files
+* Starting working on report + allocate sections to write about
+* keep code consistent + nicely styled + minimise redundancy
 
 ### IMPORTANT!! Working with Jenkins 
 
