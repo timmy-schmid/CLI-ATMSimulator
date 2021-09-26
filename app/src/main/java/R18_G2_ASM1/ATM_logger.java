@@ -15,11 +15,11 @@ import java.text.ParseException;
 * @version 1.0
 *
 * The .log file has the following format:
-* <ul> 
+*
 *   <li> Date - formatted as 'MMM d, yyyy HH:mm:ss a' </li>
 *   <li> Name - Package.ATM_logger</li>
 *   <li> method - writeToFile</li>
-* </ul>
+* 
 *
 * Followed by information in a similar format:
 * <ul> 
@@ -137,13 +137,13 @@ public class ATM_logger{
       Logger logger = Logger.getLogger("ATM_logger");
       Logger globalLogger = null;
       try {
-        fh = new FileHandler(this.path + logFileName, true); //append to existing file 
+        fh = new FileHandler(this.path + logFileName, true); //append to an existing file 
 
         // this prevents output from showing onto console
         globalLogger = Logger.getLogger("");
-        Handler[] list_of_handlers = globalLogger.getHandlers();
+        Handler[] listOfHandlers = globalLogger.getHandlers();
         //loop through all default handlers to remove them
-        for (Handler handler : list_of_handlers) {
+        for (Handler handler : listOfHandlers) {
           globalLogger.removeHandler(handler);
         }
 
@@ -151,8 +151,8 @@ public class ATM_logger{
         logger.addHandler(fh);
 
         //this provides output in human readable format to the log file
-        SimpleFormatter sFormatter = new SimpleFormatter();
-        fh.setFormatter(sFormatter);
+        SimpleFormatter sF = new SimpleFormatter();
+        fh.setFormatter(sF);
 
         //now log msgs
         if (type == StatusType.INFO){
