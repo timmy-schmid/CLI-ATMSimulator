@@ -20,6 +20,7 @@ Ensure that [gradle clean build test] works properly locally before you push any
 cause a build failure. Each time a build fails, we should aim to resolve the problem as soon as possible!!
 
 **How can one generate a JAR file and run it under different systems?**
+
 Check here for artifacts of the latest build: http://139.180.183.109/job/SOFT2412ASS1/lastSuccessfulBuild/artifact/
 
 Then, click on the (all files in zip) to download all files related to the assignment, include a JAR file. A JAR file is basically an archive 
@@ -31,16 +32,20 @@ Example: jar tvf archive/app/build/libs/app.jar  or jar tvf archive/app/build/li
 ### COMMAND PROCESS
 
 1. **FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB**, merging with your local branch files!!
-git checkout master --> git pull --> git checkout your_branch_name --> git merge master
+
+* git checkout master --> git pull --> git checkout your_branch_name --> git merge master
  
 2. **FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!!**
-Git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
+
+* git add . (adds all your changes) OR git add (file) --> git commit -m “message” → git push -u origin branch_name
 
 3. **FOLLOW THIS TO MERGE UR CHANGES TO MASTER!!** [ALWAYS pull before pushing!]
--> git pull (this prevents merge conflicts) -> git checkout master --> git merge branch_name --> git push
+
+* git pull (this prevents merge conflicts) -> git checkout master --> git merge branch_name --> git push
 
 4. **WHAT IF I ACCIDENTALLY ADDED FILES BUT ADDED TO THE WRONG PLACE?**
-  E.g. You accidentally added to master but wanted to add to your branch (haven't committed yet) --> UNDO action by using: reset <file>
+
+* E.g. You accidentally added to master but wanted to add to your branch (haven't committed yet) --> UNDO action by using: reset <file>
  
 ### IMPORTANT LINKS
 
@@ -66,6 +71,7 @@ Check the build.gradle file for more details on plugins, dependencies used and t
 ###  Testing Standard IN/OUT in Java
 
 Check these websites out!
+
 - https://www.danvega.dev/blog/2020/12/16/testing-standard-in-out-java/ 
 - http://one-line-it.blogspot.com/2013/05/java-testing-with-stdin-and-stdout.html
 - https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println

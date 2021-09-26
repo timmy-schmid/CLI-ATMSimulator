@@ -12,20 +12,20 @@ public class App {
     MoneyStack stack = new MoneyStack();
 
     try {
-        stack.addMoney(MoneyType.HUNDRED_DOLLARS, 50);
-        stack.addMoney(MoneyType.FIFTY_DOLLARS, 50);
-        stack.addMoney(MoneyType.TWENTY_DOLLARS, 50);
-        stack.addMoney(MoneyType.TEN_DOLLARS,  50);
-        stack.addMoney(MoneyType.FIVE_DOLLARS, 100);
-        stack.addMoney(MoneyType.TWO_DOLLARS, 100);
-        stack.addMoney(MoneyType.ONE_DOLLAR, 100);
-        stack.addMoney(MoneyType.FIFTY_CENTS,  100);
-        stack.addMoney(MoneyType.TWENTY_CENTS, 100);
-        stack.addMoney(MoneyType.TEN_CENTS, 100);
-        stack.addMoney(MoneyType.FIVE_CENTS, 100);
+      stack.addMoney(MoneyType.HUNDRED_DOLLARS, 50);
+      stack.addMoney(MoneyType.FIFTY_DOLLARS, 50);
+      stack.addMoney(MoneyType.TWENTY_DOLLARS, 50);
+      stack.addMoney(MoneyType.TEN_DOLLARS,  50);
+      stack.addMoney(MoneyType.FIVE_DOLLARS, 100);
+      stack.addMoney(MoneyType.TWO_DOLLARS, 100);
+      stack.addMoney(MoneyType.ONE_DOLLAR, 100);
+      stack.addMoney(MoneyType.FIFTY_CENTS,  100);
+      stack.addMoney(MoneyType.TWENTY_CENTS, 100);
+      stack.addMoney(MoneyType.TEN_CENTS, 100);
+      stack.addMoney(MoneyType.FIVE_CENTS, 100);
     } catch (IOException e){
-        e.printStackTrace();
-        return;
+      e.printStackTrace();
+      return;
     }
     
     ATM atm = new ATM("Canberra", stack);

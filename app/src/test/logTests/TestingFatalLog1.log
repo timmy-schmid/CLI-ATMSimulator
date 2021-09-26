@@ -1,8 +1,8 @@
-Sept 26, 2021 3:49:36 PM R18_G2_ASM1.ATM_logger writeToFile
+Sept 26, 2021 4:17:31 PM R18_G2_ASM1.ATM_logger writeToFile
 WARNING: class.method --> MESSAGE: fatal error message
-Sept 26, 2021 3:49:36 PM R18_G2_ASM1.ATM_logger writeToFile
+Sept 26, 2021 4:17:31 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
-Sept 26, 2021 3:49:36 PM R18_G2_ASM1.ATM_logger writeToFile
+Sept 26, 2021 4:17:31 PM R18_G2_ASM1.ATM_logger writeToFile
 WARNING: class.method --> MESSAGE: warning message
-Sept 26, 2021 3:49:37 PM R18_G2_ASM1.ATM_logger writeToFile
+Sept 26, 2021 4:17:31 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: transaction.withdrawal --> MESSAGE: The Withdrawal Transaction was successfully completed.

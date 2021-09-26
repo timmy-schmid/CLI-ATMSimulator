@@ -11,14 +11,13 @@ import java.util.*;
 import java.math.BigDecimal;
 
 import java.util.List;
-    /**
-     * Represents a single XYZ ATM session with a user.
-     * A session uses the ATM it is running on to interact with the user in order to validate and transact on a user's bank card.
-     * A session also stores a status which is determined by the user's actions.
-     * @author Wei Zhang
-     * @version 1.0
-     */
-
+/**
+  * Represents a single XYZ ATM session with a user.
+  * A session uses the ATM it is running on to interact with the user in order to validate and transact on a user's bank card.
+  * A session also stores a status which is determined by the user's actions.
+  * @author Wei Zhang
+  * @version 1.0
+  */
 public class Session {
   private ATM attachedATM;
   private SessionStatus currentStatus;
@@ -36,19 +35,10 @@ public class Session {
     * @param ATM the attatched ATM which the session is running on.
     */
   public Session(ATM ATM) {
-      pinAttemptNum = 0;
-      attachedATM = ATM;
-      //this.sessionID = sessionID;
-      //this.transactionType = transactionType;
-
-      csvCard = new File("src/main/datasets/card.csv");
-      tempFile = new File("src/main/datasets/cardTemp.csv");
-
-      // String absolutePath = this.getClass().getResource("/").getPath();
-      // absolutePath = absolutePath.substring(0,absolutePath.length()-24);
-      // csvCard = new File(absolutePath + "src/main/datasets/card.csv");
-      // tempFile = new File(absolutePath + "src/main/datasets/cardTemp.csv");
-  
+    pinAttemptNum = 0;
+    attachedATM = ATM;
+    csvCard = new File("src/main/datasets/card.csv");
+    tempFile = new File("src/main/datasets/cardTemp.csv");
   }
 
   /**
@@ -65,35 +55,30 @@ public class Session {
     * @param cardNum the card number that the session should interact with
     */
   public void run(int cardNum) {
+    card  = this.retrieveCardFromFile(cardNum, csvCard);
 
-      
-      card  = this.retrieveCardFromFile(cardNum, csvCard);
+    if (!validateSession(card)){
+        return;
+    }
 
-
-      if (!validateSession(card)){
-          return;
+    while (!checkPIN()){
+      System.out.println("Your PIN is not correct!"+" "+(3-pinAttemptNum)+" attempt(s) left.");
+      if (pinAttemptNum == 3){
+        card.setIsBlocked(true);
+        this.writeCardToFile(cardNum, csvCard);
+        currentStatus = SessionStatus.CARD_BLOCKED;
+        return;
       }
+    }
 
+    if (userType == "admin"){
+      currentStatus = SessionStatus.ADMIN_MODE;
+      return;
+    }
 
-      while (!checkPIN()){
-          System.out.println("Your PIN is not correct!"+" "+(3-pinAttemptNum)+" attempt(s) left.");
-          if (pinAttemptNum == 3){
-              card.setIsBlocked(true);
-              this.writeCardToFile(cardNum, csvCard);
-              currentStatus = SessionStatus.CARD_BLOCKED;
-              return;
-          }
-      }
-
-      if (userType == "admin"){
-          currentStatus = SessionStatus.ADMIN_MODE;
-          return;
-      }
-
-      transactionType = attachedATM.askForTransType();
-
-      transact(card, transactionType);
-      this.writeCardToFile(cardNum, csvCard);
+    transactionType = attachedATM.askForTransType();
+    transact(card, transactionType);
+    this.writeCardToFile(cardNum, csvCard);
   }
 
   /**
@@ -102,7 +87,7 @@ public class Session {
     * @return the number of attempts
     */
   public int getAttemptNum(){
-      return pinAttemptNum;
+    return pinAttemptNum;
   }
 
   /**
@@ -110,7 +95,7 @@ public class Session {
     * Number of attempt will be increased
     */
   public void ifWrongPin(){
-      pinAttemptNum++;
+    pinAttemptNum++;
   }
 
   /**
@@ -118,7 +103,7 @@ public class Session {
     * @return current user type 
     */
   public String getUserType(){
-      return userType;
+    return userType;
   }
 
 
@@ -141,29 +126,29 @@ public class Session {
     * @throws InvalidTypeException
     */
   private Boolean validateSession(Card card) {
-      if (card == null){
-          if (currentStatus == null){
-              currentStatus = SessionStatus.INVALID_CARD_NUMBER;
-          }
-          return false;
+    if (card == null){
+      if (currentStatus == null){
+        currentStatus = SessionStatus.INVALID_CARD_NUMBER;
       }
-      else if (card.getStartDate().after(card.getExpirationDate())){
-          currentStatus = SessionStatus.CARD_NOT_ACTIVE;
-          return false;
-      }
-      else if (card.isExpired()){
-          currentStatus = SessionStatus.CARD_EXPIRED;
-          return false;
-      }
-      else if (card.isLost()){
-          currentStatus = SessionStatus.CARD_LOST;
-          return false;
-      }
-      else if (card.isBlocked()) {
-          currentStatus = SessionStatus.CARD_BLOCKED;
-          return false;
-      }
-      return true;    
+      return false;
+    }
+    else if (card.getStartDate().after(card.getExpirationDate())){
+      currentStatus = SessionStatus.CARD_NOT_ACTIVE;
+      return false;
+    }
+    else if (card.isExpired()){
+      currentStatus = SessionStatus.CARD_EXPIRED;
+      return false;
+    }
+    else if (card.isLost()){
+      currentStatus = SessionStatus.CARD_LOST;
+      return false;
+    }
+    else if (card.isBlocked()) {
+      currentStatus = SessionStatus.CARD_BLOCKED;
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -189,106 +174,100 @@ public class Session {
     * @return a Card object that contains all the data of the 1st matching card in the file. Null if no card found.
     */
   public Card retrieveCardFromFile(int cardNum, File csvCard) {
-      int cardNumber = -1;
-      Date startDate = null;
-      Date expirationDate = null;
-      Boolean lost = false;
-      Boolean blocked = false;
-      Boolean expired = false;
-      int pin = -1;
-      // double balance = -1;
-      BigDecimal balance = new BigDecimal(-1);
-      Card thisCard;
+    int cardNumber = -1;
+    Date startDate = null;
+    Date expirationDate = null;
+    Boolean lost = false;
+    Boolean blocked = false;
+    Boolean expired = false;
+    int pin = -1;
+    // double balance = -1;
+    BigDecimal balance = new BigDecimal(-1);
+    Card thisCard;
 
-      try {
-          Scanner myReader = new Scanner(csvCard);
-          while (myReader.hasNextLine()) {
-              String data = myReader.nextLine();
-              String[] infoArr = data.split(",");
-              
-              try{
-                  cardNumber = Integer.parseInt(infoArr[0]);
-              } catch(NumberFormatException e){
-                  currentStatus = SessionStatus.CARD_READ_ERROR;
-                  break;
-              }
-              String pattern = "yyyy-MM-dd";
-              SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-              simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
-              try {
-                  startDate = simpleDateFormat.parse(infoArr[1]);
-                  expirationDate = simpleDateFormat.parse(infoArr[2]);
-              } catch (Exception e) {
-                  currentStatus = SessionStatus.CARD_READ_ERROR;
-                  break;
-              }
+    try {
+      Scanner myReader = new Scanner(csvCard);
+      while (myReader.hasNextLine()) {
+        String data = myReader.nextLine();
+        String[] infoArr = data.split(",");
+        
+        try{
+          cardNumber = Integer.parseInt(infoArr[0]);
+        } catch(NumberFormatException e){
+          currentStatus = SessionStatus.CARD_READ_ERROR;
+          break;
+        }
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+        try {
+          startDate = simpleDateFormat.parse(infoArr[1]);
+          expirationDate = simpleDateFormat.parse(infoArr[2]);
+        } catch (Exception e) {
+          currentStatus = SessionStatus.CARD_READ_ERROR;
+          break;
+        }
 
-              Date dateNow = new Date();
+        Date dateNow = new Date();
+        expired = expirationDate.before(dateNow);
 
-              expired = expirationDate.before(dateNow);
+        if (infoArr[3].equals("T")) {
+          lost = true;
+        }
+        else if (infoArr[3].equals("F")) {
+          lost = false;
+        } else {
+          currentStatus = SessionStatus.CARD_READ_ERROR;
+          //throw new InvalidTypeException("Invalid Boolean type, Expected: T or F "); Handle this internally within this class and create new SessionsStatus CARD_READ_ERROR
+        }
 
-              if (infoArr[3].equals("T")) {
-                  lost = true;
-              }
-              else if (infoArr[3].equals("F")) {
-                  lost = false;
-              } else {
-                  currentStatus = SessionStatus.CARD_READ_ERROR;
-                  //throw new InvalidTypeException("Invalid Boolean type, Expected: T or F "); Handle this internally within this class and create new SessionsStatus CARD_READ_ERROR
-              }
+        if (infoArr[4].equals("T")) {
+          blocked = Boolean.valueOf("true");
+        }
+        else if (infoArr[4].equals("F")) {
+          blocked = Boolean.valueOf("false");
+        } else {
+          currentStatus = SessionStatus.CARD_READ_ERROR;
+          break;
+          //throw new InvalidTypeException("Invalid Boolean type, Expected: T or F "); Handle this internally within this class and create new SessionsStatus CARD_READ_ERROR
+        }
 
-              if (infoArr[4].equals("T")) {
-                  blocked = Boolean.valueOf("true");
-              }
-              else if (infoArr[4].equals("F")) {
-                  blocked = Boolean.valueOf("false");
-              } else {
-                  currentStatus = SessionStatus.CARD_READ_ERROR;
-                  break;
-                  //throw new InvalidTypeException("Invalid Boolean type, Expected: T or F "); Handle this internally within this class and create new SessionsStatus CARD_READ_ERROR
-              }
+        try {
+          pin = Integer.parseInt(infoArr[5]);
+        } catch(NumberFormatException e){
+          currentStatus = SessionStatus.CARD_READ_ERROR;
+          break; // this should handled with CARD_READ_ERROR
+        }
 
-              try {
-                  pin = Integer.parseInt(infoArr[5]);
-              } catch(NumberFormatException e){
-                  currentStatus = SessionStatus.CARD_READ_ERROR;
-                  break; // this should handled with CARD_READ_ERROR
-              }
+        try {
+          // balance = Double.parseDouble(infoArr[6]);
+          balance = new BigDecimal(infoArr[6]);
+        } catch(NumberFormatException e){
+          currentStatus = SessionStatus.CARD_READ_ERROR;
+          break; // this should handled with CARD_READ_ERROR
+        }
 
-
-              //ignore account for now
-
-
-              try {
-                  // balance = Double.parseDouble(infoArr[6]);
-                  balance = new BigDecimal(infoArr[6]);
-              } catch(NumberFormatException e){
-                  currentStatus = SessionStatus.CARD_READ_ERROR;
-                  break; // this should handled with CARD_READ_ERROR
-              }
-
-              if (infoArr[7].equals("customer")) {
-                  userType = "customer";
-              }
-              else if (infoArr[7].equals("admin")) {
-                  userType = "admin";
-              } else {
-                  currentStatus = SessionStatus.CARD_READ_ERROR;
-                  break;
-                  //throw new InvalidTypeException("Invalid user type, Expected: customer or admin "); // this should handled with CARD_READ_ERROR
-              }
-              if (cardNumber == cardNum){
-                  thisCard = new Card(balance, cardNumber, startDate, expirationDate,
-                  lost, blocked, expired, pin);
-                  return thisCard;
-              }
-          }
-          myReader.close();
-      } catch (FileNotFoundException e) {
-          currentStatus = SessionStatus.DATABASE_FILE_ERROR;
+        if (infoArr[7].equals("customer")) {
+          userType = "customer";
+        }
+        else if (infoArr[7].equals("admin")) {
+          userType = "admin";
+        } else {
+          currentStatus = SessionStatus.CARD_READ_ERROR;
+          break;
+          //throw new InvalidTypeException("Invalid user type, Expected: customer or admin "); // this should handled with CARD_READ_ERROR
+        }
+        if (cardNumber == cardNum){
+          thisCard = new Card(balance, cardNumber, startDate, expirationDate,
+          lost, blocked, expired, pin);
+          return thisCard;
+        }
       }
-
-      return null;
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      currentStatus = SessionStatus.DATABASE_FILE_ERROR;
+    }
+    return null;
   }
 
   /**
@@ -313,39 +292,35 @@ public class Session {
     * @param file the relative path of the card .csv file
     */
   public void writeCardToFile(int cardNum, File file) {
-      
-      try {
-          Scanner myReader = new Scanner(file);
-          FileWriter myWriter = new FileWriter(tempFile);
-          while (myReader.hasNextLine()) {
-              String str = myReader.nextLine();
-              if (str.split(",")[0].equals(Integer.toString(cardNum))){
-                  if (card.isBlocked()){
-                      myWriter.write(str.substring(0,30)+'T'+str.substring(31,str.length())+"\n");
-
-                  }
-                  else{
-                      String[] arr = str.split(",");
-                      myWriter.write(arr[0]+","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+","+card.balance.toString()+","+arr[7]+"\n");
-                  }
-              }
-              else {
-                  myWriter.write(str+"\n");
-              }
+  
+    try {
+      Scanner myReader = new Scanner(file);
+      FileWriter myWriter = new FileWriter(tempFile);
+      while (myReader.hasNextLine()) {
+        String str = myReader.nextLine();
+        if (str.split(",")[0].equals(Integer.toString(cardNum))){
+          if (card.isBlocked()){
+            myWriter.write(str.substring(0,30)+'T'+str.substring(31,str.length())+"\n");
+          } else{
+            String[] arr = str.split(",");
+            myWriter.write(arr[0]+","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+","+card.balance.toString()+","+arr[7]+"\n");
           }
-          myReader.close();
-          myWriter.close();
-      } catch (FileNotFoundException e) {
-          currentStatus = SessionStatus.CARD_WRITE_ERROR;
-          //add some handling for FileNotFound. Use CARD_WRITE_ERROR SessionStatus. Also we need to make sure that no transactions are made if a write error occurs.
-      } catch (IOException e) {
-          currentStatus = SessionStatus.DATABASE_FILE_ERROR;
-          //add some handling for writing errors. USE DATABASE_FILE_ERROR SessionStatus.
+        } else {
+          myWriter.write(str+"\n");
+        }
       }
+      myReader.close();
+      myWriter.close();
+    } catch (FileNotFoundException e) {
+        currentStatus = SessionStatus.CARD_WRITE_ERROR;
+        //add some handling for FileNotFound. Use CARD_WRITE_ERROR SessionStatus. Also we need to make sure that no transactions are made if a write error occurs.
+    } catch (IOException e) {
+        currentStatus = SessionStatus.DATABASE_FILE_ERROR;
+        //add some handling for writing errors. USE DATABASE_FILE_ERROR SessionStatus.
+    }
 
-      // Rename file (or directory)
-      boolean success = tempFile.renameTo(file);
-
+    // Rename file (or directory)
+    boolean success = tempFile.renameTo(file);
   }
       
   /**
@@ -355,26 +330,26 @@ public class Session {
     * @param transactionType the type of transaction to perform on the card
     */
   public void transact(Card c, TransactionType transactionType){
-      Transaction transaction = new Transaction(attachedATM, transactionType, c);
-      String result = transaction.run(transactionType);
-      //check result to update sessionstatus!
-      if (result == "Deposit successful" || result == "Withdraw successful"
-          || result == "Balance successful") {
-          currentStatus = SessionStatus.SUCCESS;
+    Transaction transaction = new Transaction(attachedATM, transactionType, c);
+    String result = transaction.run(transactionType);
+    //check result to update sessionstatus!
+    if (result == "Deposit successful" || result == "Withdraw successful"
+        || result == "Balance successful") {
+      currentStatus = SessionStatus.SUCCESS;
 
-      } else if (result == "Deposit unsuccessful" || result == "Withdraw unsuccessful"
-          || result == "Balance unsuccessful"){
-          currentStatus = SessionStatus.CANCELLED;
+    } else if (result == "Deposit unsuccessful" || result == "Withdraw unsuccessful"
+        || result == "Balance unsuccessful"){
+      currentStatus = SessionStatus.CANCELLED;
 
-      } else if (result == "Transaction cancelled") {
-          currentStatus = SessionStatus.CANCELLED;
+    } else if (result == "Transaction cancelled") {
+      currentStatus = SessionStatus.CANCELLED;
 
-      } 
-      //  ATM has insufficient cash available, it should provide an error message and the transaction should be cancelled
-      else if (result == "insufficient cash available in ATM") {
-          System.out.println("Transaction was unsuccessful!: inadequate amount of money stored in ATM!");
-          currentStatus = SessionStatus.CANCELLED;
-      }
+    } 
+    //  ATM has insufficient cash available, it should provide an error message and the transaction should be cancelled
+    else if (result == "insufficient cash available in ATM") {
+      System.out.println("Transaction was unsuccessful!: inadequate amount of money stored in ATM!");
+      currentStatus = SessionStatus.CANCELLED;
+    }
   }
 
   /**
@@ -382,24 +357,24 @@ public class Session {
     * @return weather the PIN was valid or not.
     */
   public boolean checkPIN(){
-      if (card.getPin() == attachedATM.askForPIN()) {
-          return true;
-      }
-      this.ifWrongPin();
-      return false;
+    if (card.getPin() == attachedATM.askForPIN()) {
+        return true;
+    }
+    this.ifWrongPin();
+    return false;
   }
   /**
     * gets this sessions current session status
     * @return a session status based on the SessionStatus enum.
     */
-  public SessionStatus getStatus() {
+    public SessionStatus getStatus() {
       return currentStatus;
   }
 
   public class InvalidTypeException extends Exception { 
-      public InvalidTypeException(String errorMessage) {
-          super(errorMessage);
-      }
+    public InvalidTypeException(String errorMessage) {
+      super(errorMessage);
+    }
   }
 
   /**
@@ -407,6 +382,6 @@ public class Session {
     * @param newFile the new csv file 
     */
   public void changeCsvFile(File newFile){
-      csvCard = newFile;
+    csvCard = newFile;
   }
 }

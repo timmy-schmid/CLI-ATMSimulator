@@ -134,7 +134,7 @@ class TransactionTest {
     depositC.initialSetUpMap();
     depositC.resetDepositAmountMap();
     for (HashMap.Entry <MoneyType, Integer> entry: depositC.getDepositAmountMap().entrySet()){
-        assert(entry.getValue() == 0);
+      assert(entry.getValue() == 0);
     }
   }
   
@@ -252,17 +252,17 @@ class TransactionTest {
   public void testMoneyStackChanged(){
     MoneyStack withdrawAmountMap = new MoneyStack();
     try {
-        withdrawAmountMap.addMoney(MoneyType.HUNDRED_DOLLARS, 1);
-        withdrawAmountMap.addMoney(MoneyType.HUNDRED_DOLLARS, 0);
-        withdrawAmountMap.addMoney(MoneyType.FIFTY_DOLLARS, 0);
-        withdrawAmountMap.addMoney(MoneyType.TWENTY_DOLLARS, 1);
-        withdrawAmountMap.addMoney(MoneyType.TEN_DOLLARS,  0);
-        withdrawAmountMap.addMoney(MoneyType.FIVE_DOLLARS, 3);
-        withdrawAmountMap.addMoney(MoneyType.TWO_DOLLARS, 0);
-        withdrawAmountMap.addMoney(MoneyType.ONE_DOLLAR, 0);
+      withdrawAmountMap.addMoney(MoneyType.HUNDRED_DOLLARS, 1);
+      withdrawAmountMap.addMoney(MoneyType.HUNDRED_DOLLARS, 0);
+      withdrawAmountMap.addMoney(MoneyType.FIFTY_DOLLARS, 0);
+      withdrawAmountMap.addMoney(MoneyType.TWENTY_DOLLARS, 1);
+      withdrawAmountMap.addMoney(MoneyType.TEN_DOLLARS,  0);
+      withdrawAmountMap.addMoney(MoneyType.FIVE_DOLLARS, 3);
+      withdrawAmountMap.addMoney(MoneyType.TWO_DOLLARS, 0);
+      withdrawAmountMap.addMoney(MoneyType.ONE_DOLLAR, 0);
 
-    } catch (IOException e){
-        assertEquals(IOException.class, e.getClass());
+    } catch (IOException e) {
+      assertEquals(IOException.class, e.getClass());
     }
     HashMap <MoneyType, Integer> map = withdrawalA.getMoneyStackBalance().getMoney();
     
