@@ -30,12 +30,11 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:30.1.1-jre'
 
-
 }
 
 application {
     // Define the main class for the application.
-    mainClass = 'R18_G2_ASM1.XYZ_ATM'
+    mainClass = 'R18_G2_ASM1.App'
 }
 
 run{

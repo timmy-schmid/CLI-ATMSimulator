@@ -124,14 +124,7 @@ public class ATM {
       return;
     }
 
-    //runs the session
-    //try {
     session.run(cardNum);
-    //} catch (InvalidTypeException e) {
-      //display.displayMessage(e.getMessage());
-      //this.getATMLogger().createLogMessage("Session", StatusType.ERROR, e.getMessage());
-      //return;
-    //}
 
     SessionStatus status = session.getStatus();
     display.displayMessageNoNewLine(status.toString());
@@ -281,7 +274,7 @@ public class ATM {
       s.append("  6. 5c\n");
       s.append("  7. FINISH\n");
       s.append("  8. CANCEL\n");
-      s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
+      s.append("  TOTAL TO "+t.name().toUpperCase()+": " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
 
       String howMany = "How many coins would you like to " + t.name().toLowerCase() + ":";

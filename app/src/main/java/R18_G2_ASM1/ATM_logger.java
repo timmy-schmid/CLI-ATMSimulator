@@ -15,11 +15,11 @@ import java.text.ParseException;
 * @version 1.0
 *
 * The .log file has the following format:
-* <ul> 
+*
 *   <li> Date - formatted as 'MMM d, yyyy HH:mm:ss a' </li>
 *   <li> Name - Package.ATM_logger</li>
 *   <li> method - writeToFile</li>
-* </ul>
+* 
 *
 * Followed by information in a similar format:
 * <ul> 
@@ -106,11 +106,11 @@ public class ATM_logger{
   }
 
   /**
-   createLogMessage
-   This function stores the required data into variables before writing to a log file.
-   @param classMethod specific method from class that calls this function
-   @param type the type of message to write in the log file
-   @param message description to write in log file
+   * createLogMessage
+   * This function stores the required data into variables before writing to a log file.
+   * @param classMethod specific method from class that calls this function
+   * @param type the type of message to write in the log file
+   * @param message description to write in log file
    */
   public void createLogMessage(String classMethod, StatusType type, String message) {
     this.classMethod = classMethod;
@@ -120,12 +120,12 @@ public class ATM_logger{
   }
 
   /**
-   writeToFile
-   This function validates the parameters before proceeding to write to a specific log file in simple, human readable format.
-   @param classMethod specific method from class that calls this function
-   @param type type of message
-   @param message description to write in log file
-   @param logFileName The location of the file where the log is to be written to
+   * writeToFile
+   * This function validates the parameters before proceeding to write to a specific log file in simple, human readable format.
+   * @param classMethod specific method from class that calls this function
+   * @param type type of message
+   * @param message description to write in log file
+   * @param logFileName The location of the file where the log is to be written to
    */
   public void writeToFile(String classMethod, StatusType type, String message, String logFileName) {
     //if the parameters are not null, write to file otherwise keep waiting till info is provided
@@ -135,21 +135,24 @@ public class ATM_logger{
 
     } else {
       Logger logger = Logger.getLogger("ATM_logger");
+      Logger globalLogger = null;
       try {
-        fh = new FileHandler(this.path + logFileName, true); //append to existing file 
+        fh = new FileHandler(this.path + logFileName, true); //append to an existing file 
 
         // this prevents output from showing onto console
-        Logger globalLogger = Logger.getLogger("");
-        Handler[] handlers_ls = globalLogger.getHandlers();
-        for (Handler handler : handlers_ls) {
+        globalLogger = Logger.getLogger("");
+        Handler[] listOfHandlers = globalLogger.getHandlers();
+        //loop through all default handlers to remove them
+        for (Handler handler : listOfHandlers) {
           globalLogger.removeHandler(handler);
         }
 
-        logger.addHandler(fh); //adds a log handler to receive logging msgs
+        //adds a log handler to receive logging msgs
+        logger.addHandler(fh);
 
         //this provides output in human readable format to the log file
-        SimpleFormatter sFormatter = new SimpleFormatter();
-        fh.setFormatter(sFormatter);
+        SimpleFormatter sF = new SimpleFormatter();
+        fh.setFormatter(sF);
 
         //now log msgs
         if (type == StatusType.INFO){
