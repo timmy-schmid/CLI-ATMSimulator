@@ -280,7 +280,7 @@ public class ATM {
       s.append("  6. 5c\n");
       s.append("  7. FINISH\n");
       s.append("  8. CANCEL\n");
-      s.append("  TOTAL TO DEPOSIT: " + String.format("$%,.02f",m.totalMoney()) + "\n");
+      s.append("  TOTAL TO "+t.name().toUpperCase()+": " + String.format("$%,.02f",m.totalMoney()) + "\n");
       display.displayMessage(s.toString());
 
       String howMany = "How many coins would you like to " + t.name().toLowerCase() + ":";

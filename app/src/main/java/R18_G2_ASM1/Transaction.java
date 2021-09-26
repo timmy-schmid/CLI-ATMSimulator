@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 /**
  * The Transaction class processes the instructions a user makes based on
  * their input selection to either deposit, withdraw or check their account's balance.
- * This class interacts with Moneystack and ATM class to retrieve detail and check whether extraction of money is available or not.
+ * This class interacts with Moneystack and ATM class to retrieve details and check whether extraction of money is available or not.
  * @author Anna Su
  * @version 1.0
  */
@@ -50,7 +50,7 @@ public class Transaction {
     protected ATM_logger atmLogger;
 
     /**
-     * Amount to deposit (notes only), split into a map with moneyType as key and the * amount as value
+     * Amount to deposit (notes only), split into a map with moneyType as key and the amount as value
      */
     protected HashMap <MoneyType, Integer> depositAmountMap;
 
@@ -188,13 +188,11 @@ public class Transaction {
     public void splitDepositAmountUp(BigDecimal amount) { 
         BigDecimal div = new BigDecimal("5");
         BigDecimal[] dr = amount.divideAndRemainder(div);
-        if(dr[1].signum() != 0){
+        if (dr[1].signum() != 0){
             System.out.println("Error: amount should only be notes, no coins accepted");
             return;
         } else {
             BigDecimal total = amount;
-            int toStoreAmount = 0; //key amount
-
             //entry = key, map value = amount
             for (HashMap.Entry <MoneyType, Integer> entry : this.getDepositAmountMap().entrySet()) {    
                 if (total.compareTo(entry.getKey().getValue()) >= 0) {
@@ -225,7 +223,7 @@ public class Transaction {
 
             } else if (type == TransactionType.WITHDRAWAL){
                 if (card.getBalance().compareTo(this.amount) >= 0){
-                    // when balance is low on card, print on screen/write to log file?
+                    // when balance is low on card, print on screen/write to log file
                     if (card.getBalance().compareTo(minCardBalance) <= 0){ 
                         System.out.println("Warning, your card balance is less than $5.00");
                         this.attachedATM.getATMLogger().createLogMessage("transaction.withdrawal", StatusType.WARNING, "Your card balance is less than $5.00.");
