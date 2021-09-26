@@ -74,6 +74,7 @@ public class ATM {
   }
 
   /**
+   * Get's the Logger object that is repsonsible for keeping a log of the ATM activity.
   * @return an ATM logger object
   */
   public ATM_logger getATMLogger() { //newly added

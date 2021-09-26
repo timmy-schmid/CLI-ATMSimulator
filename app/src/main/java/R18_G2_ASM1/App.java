@@ -7,6 +7,9 @@ package R18_G2_ASM1;
 import java.io.IOException;
 import java.util.*;
 
+/*
+* The entry point into the ATM
+*/
 public class App {
     public static void main(String[] args) {
         MoneyStack stack = new MoneyStack();
