@@ -15,11 +15,11 @@ import java.text.ParseException;
 * @version 1.0
 *
 * The .log file has the following format:
-*
+* <ul>
 *   <li> Date - formatted as 'MMM d, yyyy HH:mm:ss a' </li>
 *   <li> Name - Package.ATM_logger</li>
 *   <li> method - writeToFile</li>
-* 
+* </ul>
 *
 * Followed by information in a similar format:
 * <ul> 

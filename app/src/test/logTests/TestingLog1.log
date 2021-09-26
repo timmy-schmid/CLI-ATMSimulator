@@ -2,3 +2,11 @@ Sept 26, 2021 8:40:45 PM R18_G2_ASM1.ATM_logger writeToFile
 INFO: null --> MESSAGE: null
 Sept 26, 2021 8:40:45 PM R18_G2_ASM1.ATM_logger writeToFile
 WARNING: class.method --> MESSAGE: warning message
+Sep. 26, 2021 9:01:13 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 26, 2021 9:01:13 PM R18_G2_ASM1.ATM_logger writeToFile
+WARNING: class.method --> MESSAGE: warning message
+Sep. 26, 2021 9:02:23 PM R18_G2_ASM1.ATM_logger writeToFile
+INFO: null --> MESSAGE: null
+Sep. 26, 2021 9:02:23 PM R18_G2_ASM1.ATM_logger writeToFile
+WARNING: class.method --> MESSAGE: warning message
