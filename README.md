@@ -19,9 +19,18 @@ The following information contains tasks for our group members to work on, git c
 Ensure that [gradle clean build test] works properly locally before you push any changes to the master branch as Jenkins will detect this and 
 cause a build failure. Each time a build fails, we should aim to resolve the problem as soon as possible!!
 
+**How can one generate a JAR file and run it under different systems?**
+Check here for artifacts of the latest build: http://139.180.183.109/job/SOFT2412ASS1/lastSuccessfulBuild/artifact/
+
+Then, click on the (all files in zip) to download all files related to the assignment, include a JAR file. A JAR file is basically an archive 
+file that zips or packages all files inside it together as one for distribution. To execute it and see what it contains, first find the location 
+of where you downloaded it, then type in 'jar tvf JARFileName.jar' in the command line.
+
+Example: jar tvf archive/app/build/libs/app.jar  or jar tvf archive/app/build/libs/app-all.jar
+
 ### COMMAND PROCESS
 
-1. **FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB**, merging with your local branch files!!!!
+1. **FOLLOW THIS TO GRAB NEWEST CHANGES FROM GITHUB**, merging with your local branch files!!
 git checkout master --> git pull --> git checkout your_branch_name --> git merge master
  
 2. **FOLLOW THIS TO SUBMIT ONLY YOUR BRANCH/PART ONTO GITHUB!!**
@@ -59,4 +68,4 @@ Check the build.gradle file for more details on plugins, dependencies used and t
 Check these websites out!
 - https://www.danvega.dev/blog/2020/12/16/testing-standard-in-out-java/ 
 - http://one-line-it.blogspot.com/2013/05/java-testing-with-stdin-and-stdout.html
-- https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println Super helpful website!!! :)
+- https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println
